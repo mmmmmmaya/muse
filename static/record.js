@@ -20,12 +20,12 @@ function onKeyPress(evt) {
     var keyPressed = evt.key;
 
     if (recording && isLetter(keyPressed)){
-        var img_filepath = 'static/images/' + keyPressed + '.png';
-        var sound_filepath = 'static/sounds/' + keyPressed + '.mp3';
-        var audio = new Audio(sound_filepath);
+        var imgFilepath = 'static/images/' + keyPressed + '.png';
+        var soundFilepath = 'static/sounds/' + keyPressed + '.mp3';
+        var audio = new Audio(soundFilepath);
 
         audio.play();
-        $('#image').attr('src', img_filepath);
+        $('#image').attr('src', imgFilepath);
     }
 }
 
