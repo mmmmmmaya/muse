@@ -16,7 +16,8 @@ CREATE TABLE Recordings (
     public boolean NOT NULL DEFAULT True,
     theme_id int REFERENCES Themes(id) NOT NULL,
     user_id int REFERENCES Users(id),
-    created_at timestamp DEFAULT now()
+    created_at timestamp DEFAULT now(),
+    data text NOT NULL
 );
 
 CREATE TABLE Views (
