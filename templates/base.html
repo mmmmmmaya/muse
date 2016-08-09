@@ -2,15 +2,30 @@
 <html>
 <head>
     <title>{% block title %} TITLE GOES HERE {% endblock %}</title>
+
     <script src='https://code.jquery.com/jquery.js'></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
 <body>
-    <a href='/login'>Log in</a>
+    {% if 'user_id' in session %}
+        <a href='/logout'>Log out</a>
+    {% else %}
+        <a href='/login'>Log in</a>
+    {% endif %}
+
     <br>
     <br>
 
-    {% block content %}
-        BODY GOES HERE
-    {% endblock %}
+    <div class='container'>
+        {% for flashed_msg in get_flashed_messages() %}
+            {{ flashed_msg }}
+        {% endfor %}
+
+        {% block content %}
+            BODY GOES HERE
+        {% endblock %}
+    </div>
 </body>
 </html>

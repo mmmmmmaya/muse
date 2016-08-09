@@ -18,7 +18,7 @@ function sendSongToServer() {
             "recording": JSON.stringify(recordingArray)
         };
 
-        $.post("/api/save_recording", params, function (data) {
+        $.post("/save_recording", params, function (data) {
             recordingArray = [];
         });
     }
