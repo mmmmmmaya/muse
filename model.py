@@ -32,13 +32,26 @@ class Recording(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     public = db.Column(db.Boolean, nullable=False, default=True)
-    theme_id = db.Column(db.Integer, db.ForeignKey('themes.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
-    content = db.Column(db.Text, nullable=False)
 
     user = db.relationship('User')
     views = db.relationship('View')
+    keypresses = db.relationship('KeyPress')
+
+
+class KeyPress(db.Model):
+    """A single keypress within a song recording."""
+
+    __tablename__ = 'keypresses'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    recording_id = db.Column(db.Integer, db.ForeignKey('recordings.id'))
+    key_pressed = db.Column(db.String(1), nullable=False)
+    pressed_at = db.Column(db.DateTime, nullable=False)
+    theme = db.Column(db.Integer, db.ForeignKey('themes.id'))
+
+    recording = db.relationship('Recording')
 
 
 class View(db.Model):

@@ -14,10 +14,16 @@ CREATE TABLE Themes (
 CREATE TABLE Recordings (
     id SERIAL PRIMARY KEY,
     public boolean NOT NULL DEFAULT True,
-    theme_id int REFERENCES Themes(id) NOT NULL,
     user_id int REFERENCES Users(id),
-    created_at timestamp DEFAULT now(),
-    data text NOT NULL
+    created_at timestamp DEFAULT now()
+);
+
+CREATE TABLE KeyPresses (
+    id SERIAL PRIMARY KEY,
+    recording_id int REFERENCES Recordings(id),
+    key_pressed varchar(1) NOT NULL,
+    pressed_at timestamp NOT NULL,
+    theme int REFERENCES Themes(id)
 );
 
 CREATE TABLE Views (
