@@ -1,29 +1,29 @@
 'use strict';
 
 // set up toggle-ability for app recording
-var recording = false;
-var song = [];
+var appIsRecording = false;
+var recordingArray = [];
 
 function toggleRecording() {
     // TODO probably update button text or img to indicate if recording is active
-    recording = !recording;
+    appIsRecording = !appIsRecording;
 }
 
 function sendSongToServer() {
-    // TODO potentially ask user if they actually want to store the song first
-    if (song.length > 0) {
+    // TODO potentially ask user if they actually want to store the recording first
+    if (recordingArray.length > 0) {
         var params = {
-            "song": JSON.stringify(song)
+            "recording": JSON.stringify(recordingArray)
         };
 
-        $.post("/api/save_song", params, function (data) {
-            song = [];
+        $.post("/api/save_recording", params, function (data) {
+            recordingArray = [];
         });
     }
 }
 
 function recordButtonPressed(evt){
-    if (recording) {
+    if (appIsRecording) {
         sendSongToServer();
     }
 
@@ -50,7 +50,7 @@ function actionApp(keyPressed) {
 }
 
 function updateSong(keyPressed) {
-    song.push({
+    recordingArray.push({
         "timestamp": Date.now(),
         "key": keyPressed
     });
@@ -62,7 +62,7 @@ function onKeyPress(evt) {
     if (isLetter(keyPressed)) {
         actionApp(keyPressed);
 
-        if (recording){
+        if (appIsRecording){
             updateSong(keyPressed);
         }
     }

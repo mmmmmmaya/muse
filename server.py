@@ -12,20 +12,20 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/api/save_song', methods=['POST'])
-def save_song():
-    """Save song data to the database."""
+@app.route('/api/save_recording', methods=['POST'])
+def save_recording():
+    """Save recording data to the database."""
 
-    song = request.form.get('song', None)
+    recording = request.form.get('recording', None)
 
-    if song:
-        add_song_to_db(song)
+    if recording:
+        add_recording_to_db(recording)
 
     return jsonify({'response': 'OK'})
 
 
-def add_song_to_db(song):
-    """Adds a new song to the database."""
+def add_recording_to_db(recording):
+    """Adds a new recording to the database."""
 
     # TODO error handling
     # TODO generate response to ajax here
