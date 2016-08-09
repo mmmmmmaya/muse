@@ -1,3 +1,5 @@
+import json
+
 from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
@@ -14,10 +16,21 @@ def index():
 def save_song():
     """Save song data to the database."""
 
-    json = request.get_json()
-    print json
+    song = request.form.get('song', None)
+
+    if song:
+        add_song_to_db(song)
 
     return jsonify({'response': 'OK'})
+
+
+def add_song_to_db(song):
+    """Adds a new song to the database."""
+
+    # TODO error handling
+    # TODO generate response to ajax here
+
+    pass
 
 
 if __name__ == '__main__':

@@ -5,17 +5,21 @@ var recording = false;
 var song = [];
 
 function toggleRecording() {
+    // TODO probably update button text or img to indicate if recording is active
     recording = !recording;
 }
 
 function sendSongToServer() {
-    var params = {
-        "song": song
-    };
+    // TODO potentially ask user if they actually want to store the song first
+    if (song.length > 0) {
+        var params = {
+            "song": JSON.stringify(song)
+        };
 
-    $.post("/api/save_song", params, function (data) {
-        song = [];
-    });
+        $.post("/api/save_song", params, function (data) {
+            song = [];
+        });
+    }
 }
 
 function recordButtonPressed(evt){
@@ -55,9 +59,12 @@ function updateSong(keyPressed) {
 function onKeyPress(evt) {
     var keyPressed = evt.key;
 
-    if (recording && isLetter(keyPressed)){
+    if (isLetter(keyPressed)) {
         actionApp(keyPressed);
-        updateSong(keyPressed);
+
+        if (recording){
+            updateSong(keyPressed);
+        }
     }
 }
 
