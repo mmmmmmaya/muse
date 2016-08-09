@@ -81,6 +81,17 @@ def verify_password(user, password):
     return response
 
 
+@app.route('/logout')
+def logout():
+    """Remove user info from browser session."""
+
+    if 'user_id' in session:
+        del session['user_id']
+    flash_message('You were successfully logged out.', ALERT_COLORS['green'])
+
+    return redirect('/')
+
+
 @app.route('/save_recording', methods=['POST'])
 def save_recording():
     """Save recording data to the database."""
