@@ -3,6 +3,8 @@
 // set up toggle-ability for app recording
 var appIsRecording = false;
 var recordingArray = [];
+// TODO placeholder for now until I get multiple themes set up
+var currentTheme = 1;
 
 function toggleRecording() {
     // TODO probably update button text or img to indicate if recording is active
@@ -52,7 +54,8 @@ function actionApp(keyPressed) {
 function updateSong(keyPressed) {
     recordingArray.push({
         "timestamp": Date.now(),
-        "key": keyPressed
+        "key": keyPressed,
+        "theme": currentTheme
     });
 }
 
