@@ -2,6 +2,9 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 
 
+db = SQLAlchemy()
+
+
 class User(db.Model):
     """User account."""
 
@@ -15,6 +18,11 @@ class User(db.Model):
 
     recordings = db.relationship('Recording')
 
+    def __repr__(self):
+        """String representation of User."""
+
+        return '<User id: %s, email:%s>' % (self.id, self.email)
+
 
 class Theme(db.Model):
     """The theme of each sound set."""
@@ -23,6 +31,11 @@ class Theme(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(25), nullable=False)
+
+    def __repr__(self):
+        """String representation of Theme."""
+
+        return '<Theme id: %s, name: %s>' % (self.id, self.name)
 
 
 class Recording(db.Model):
@@ -39,6 +52,11 @@ class Recording(db.Model):
     views = db.relationship('View')
     keypresses = db.relationship('KeyPress')
 
+    def __repr__(self):
+        """String representation of Recording."""
+
+        return '<Recording id: %s>' % (self.id)
+
 
 class KeyPress(db.Model):
     """A single keypress within a song recording."""
@@ -53,6 +71,13 @@ class KeyPress(db.Model):
 
     recording = db.relationship('Recording')
 
+    def __repr__(self):
+        """String representation of KeyPress."""
+
+        return '<KeyPress id: %s, key: %s, recording_is: %s>' % (self.id,
+                                                                 self.key_pressed,
+                                                                 self.recording_id)
+
 
 class View(db.Model):
     """Every time someone loads a particular song's link in a browser."""
@@ -65,3 +90,8 @@ class View(db.Model):
     viewed_at = db.Column(db.DateTime, default=datetime.now())
 
     recording = db.relationship('Recording')
+
+    def __repr__(self):
+        """String representation of View."""
+
+        return '<View id: %s>' % (self.id)
