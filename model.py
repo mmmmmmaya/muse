@@ -13,6 +13,8 @@ class User(db.Model):
     zipcode = db.Column(db.String(10))
     country = db.Column(db.String(2))
 
+    recordings = db.relationship('Recording')
+
 
 class Theme(db.Model):
     """The theme of each sound set."""
@@ -35,6 +37,9 @@ class Recording(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
     content = db.Column(db.Text, nullable=False)
 
+    user = db.relationship('User')
+    views = db.relationship('View')
+
 
 class View(db.Model):
     """Every time someone loads a particular song's link in a browser."""
@@ -45,3 +50,5 @@ class View(db.Model):
     recording_id = db.Column(db.Integer, db.ForeignKey('recordings.id'))
     ip_address = db.Column(db.String(15))
     viewed_at = db.Column(db.DateTime, default=datetime.now())
+
+    recording = db.relationship('Recording')
