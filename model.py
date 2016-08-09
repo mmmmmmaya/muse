@@ -66,7 +66,7 @@ class KeyPress(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     recording_id = db.Column(db.Integer, db.ForeignKey('recordings.id'))
     key_pressed = db.Column(db.String(1), nullable=False)
-    pressed_at = db.Column(db.DateTime, nullable=False)
+    pressed_at = db.Column(db.BigInteger, nullable=False)
     theme = db.Column(db.Integer, db.ForeignKey('themes.id'))
 
     recording = db.relationship('Recording')
@@ -95,3 +95,21 @@ class View(db.Model):
         """String representation of View."""
 
         return '<View id: %s>' % (self.id)
+
+
+# These help connect us to the database.
+def connect_to_db(app):
+    """Connect the database to our Flask app."""
+
+    # Configure to use our PstgreSQL database
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///muse'
+    app.config['SQLALCHEMY_ECHO'] = True
+
+    db.app = app
+    db.init_app(app)
+    print "Connected to DB."
+
+
+if __name__ == "__main__":
+    from server import app
+    connect_to_db(app)
