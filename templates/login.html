@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Log in to Muse!
+{% endblock %}
+
+{% block content %}
+    <form method='POST' action='/api/login'>
+        <label for='field-username'>E-mail Address: </label>
+            <input type='text' id='field-username' name='email' />
+
+        <label for='field-password'>Password: </label>
+            <input type='password' id='field-password' name='password' />
+
+        <input type='submit' />
+    </form>
+{% endblock %}

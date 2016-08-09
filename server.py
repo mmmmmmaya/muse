@@ -13,8 +13,25 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/login')
+def login():
+    """Show login page."""
+
+    return render_template('login.html')
+
+
+@app.route('/api/login', methods=['POST'])
+def api_login():
+    """Log user in, and redirect them somewhere."""
+
+    # TODO add option for redirect url in case user was trying to
+    # access a specific page before they got sent to login
+
+    pass
+
+
 @app.route('/api/save_recording', methods=['POST'])
-def save_recording():
+def api_save_recording():
     """Save recording data to the database."""
 
     recording_str = request.form.get('recording', None)
@@ -28,6 +45,7 @@ def save_recording():
 
         db.session.commit()
 
+    # TODO different responses if something fails here
     return jsonify({'response': 'OK'})
 
 
