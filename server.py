@@ -51,6 +51,7 @@ def attempt_login(email, password):
 
     if user:
         response = verify_password(user, password)
+
     else:
         flash_message('No registered user found. Please register.',
                       ALERT_COLORS['blue'])
@@ -64,6 +65,7 @@ def get_user_by_email(email):
 
     try:
         return db.session.query(User).filter_by(email=email).one()
+
     except NoResultFound:
         return None
 
@@ -75,6 +77,7 @@ def verify_password(user, password):
         add_session_info(user.id)
         flash_message('You were successfully logged in.', ALERT_COLORS['green'])
         response = redirect('/')
+
     else:
         flash_message('Incorrect password.', ALERT_COLORS['red'])
         response = redirect('/login')
@@ -94,6 +97,7 @@ def logout():
 
     if 'user_id' in session:
         del session['user_id']
+
     flash_message('You were successfully logged out.', ALERT_COLORS['green'])
 
     return redirect('/')
@@ -132,6 +136,7 @@ def register_user(name, email, password, zipcode, country):
         flash_message('That user already exists. Please log in.',
                       ALERT_COLORS['yellow'])
         response = redirect('/login')
+
     else:
         user_id = add_user_to_db(name, email, password, zipcode, country)
         add_session_info(user_id)
@@ -152,6 +157,7 @@ def user_already_exists(email):
     try:
         user = User.query.filter_by(email=email).one()
         exists = True
+
     except NoResultFound:
         pass
 
