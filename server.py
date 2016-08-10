@@ -112,6 +112,7 @@ def profile():
             # user_id is not in the db. If this happens, we'll log the
             # user out and then ask them to try again.
 
+            remove_session_info()
             flash_message('There was an error. Please log in and try again.',
                           ALERT_COLORS['red'])
             response = redirect('/login')
