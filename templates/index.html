@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block content %}
-    <button id='record-button'>Record</button>
+    {% set disabled = '' if 'user_id' in session else 'disabled' %}
+    <button type='button' class='btn' id='record-button' {{ disabled }}>Record</button>
     <img src="static/images/blank.png" id='image' />
 
     <script src='static/record.js'></script>
