@@ -1,5 +1,6 @@
 CREATE TABLE Users (
     id SERIAL PRIMARY KEY,
+    name varchar(100) NOT NULL,
     email varchar(50) NOT NULL UNIQUE,
     password varchar(50) NOT NULL,
     zipcode varchar(10),
@@ -34,5 +35,5 @@ CREATE TABLE Views (
 );
 
 -- Sample Data
-INSERT INTO Users (email, password) VALUES ('anr5151@gmail.com', 'pass');
+INSERT INTO Users (name, email, password) VALUES ('angie', 'anr5151@gmail.com', 'pass');
 INSERT INTO Themes (name) VALUES ('placeholder');

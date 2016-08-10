@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Register with Muse!
+{% endblock %}
+
+{% block content %}
+    <form method='POST' action='/register'>
+        <label for='field-name'>Name:</label>
+            <input type='text' id='field-name' name='name' required />
+            <br />
+
+        <label for='field-email'>Email Address:</label>
+            <input type='email' id='field-email' name='email' required />
+            <br />
+
+        <label for='field-password'>Choose Password:</label>
+            <input type='password' id='field-password' name='password' required />
+            <br />
+
+        <label for='field-confirm-password'>Confirm Password:</label>
+            <input type='password' id='field-confirm-password' required />
+            <br />
+
+        <label for='field-zipcode'>Postal Code:</label>
+            <input type='text' id='field-zipcode' name='zipcode' />
+            <br />
+
+        <label for='field-country'>Country:</label>
+            <select id='field-country' name='country'>
+                {% for country in countries %}
+                    <option value={{ country.code }}>{{ country.name }}</option>
+                {% endfor %}
+            </select>
+            <br />
+
+        <input type='submit' />
+
+    </form>
+{% endblock %}

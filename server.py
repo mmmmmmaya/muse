@@ -1,6 +1,7 @@
 import json
 import os
 
+from countries import countries
 from flask import flash, Flask, jsonify, redirect, render_template, request, session
 from markupsafe import Markup
 from model import connect_to_db, db, KeyPress, Recording, User
@@ -71,7 +72,7 @@ def verify_password(user, password):
     """Ensure user-entered password matches password in db."""
 
     if user.password == password:
-        session['user_id'] = user.id
+        add_session_info(user.id)
         flash_message('You were successfully logged in.', ALERT_COLORS['green'])
         response = redirect('/')
     else:
@@ -79,6 +80,12 @@ def verify_password(user, password):
         response = redirect('/login')
 
     return response
+
+
+def add_session_info(user_id):
+    """Add user_id to session."""
+
+    session['user_id'] = user_id
 
 
 @app.route('/logout')
@@ -90,6 +97,81 @@ def logout():
     flash_message('You were successfully logged out.', ALERT_COLORS['green'])
 
     return redirect('/')
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    """Show the registration page."""
+
+    if request.method == 'GET':
+        response = render_template('register.html',
+                                   countries=countries)
+
+    elif request.method == 'POST':
+        form = request.form
+
+        name = form.get('name')
+        email = form.get('email')
+        password = form.get('password')
+        zipcode = form.get('zipcode')
+        country = form.get('country')
+
+        response = register_user(name,
+                                 email,
+                                 password,
+                                 zipcode,
+                                 country)
+
+    return response
+
+
+def register_user(name, email, password, zipcode, country):
+    """Add new user to the database."""
+
+    if user_already_exists(email):
+        flash_message('That user already exists. Please log in.',
+                      ALERT_COLORS['yellow'])
+        response = redirect('/login')
+    else:
+        user_id = add_user_to_db(name, email, password, zipcode, country)
+        add_session_info(user_id)
+        flash_message('Account created successfully.',
+                      ALERT_COLORS['green'])
+        response = redirect('/')
+
+    return response
+
+
+def user_already_exists(email):
+    """Checks to make sure new registration does not conflict with
+    an existing user.
+    """
+
+    exists = False
+
+    try:
+        user = User.query.filter_by(email=email).one()
+        exists = True
+    except NoResultFound:
+        pass
+
+    return exists
+
+
+def add_user_to_db(name, email, password, zipcode, country):
+    """Create a new user and add to db.
+
+    Returns id of new user.
+    """
+
+    new_user = User(name=name,
+                    email=email,
+                    password=password,
+                    zipcode=zipcode,
+                    country=country)
+
+    db.session.add(new_user)
+    db.session.commit()
 
 
 @app.route('/save_recording', methods=['POST'])
