@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ user.name }}'s Profile
+{% endblock %}
+
+{% block content %}
+
+    <h2>{{ user.name }}'s Profile</h2>
+    <br>
+    {% for recording in user.recordings %}
+        <!-- TODO links should playback instead of going to anonther page -->
+        <a href=''>{{ recording.id }}</a>
+        <br>
+    {% endfor %}
+
+{% endblock %}

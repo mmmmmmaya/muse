@@ -30,7 +30,7 @@ def login():
     """Show login page."""
 
     if request.method == 'GET':
-        return render_template('login.html')
+        response = render_template('login.html')
 
     elif request.method == 'POST':
         # TODO add option for redirect url in case user was trying to
@@ -41,7 +41,7 @@ def login():
 
         response = attempt_login(email, password)
 
-        return response
+    return response
 
 
 def attempt_login(email, password):
@@ -64,7 +64,7 @@ def get_user_by_email(email):
     """Return a single User based on the email address."""
 
     try:
-        return db.session.query(User).filter_by(email=email).one()
+        return User.query.filter_by(email=email).one()
 
     except NoResultFound:
         return None
@@ -91,12 +91,73 @@ def add_session_info(user_id):
     session['user_id'] = user_id
 
 
+def remove_session_info():
+    """Remove user_id from session."""
+
+    del session['user_id']
+
+
+@app.route('/profile')
+def profile():
+    """Return the profile page for the logged in user."""
+
+    if is_logged_in():
+        user = get_current_user()
+
+        if user:
+            response = render_template('profile.html',
+                                       user=user)
+        else:
+            # in this case, there is a user_id in the session, but that
+            # user_id is not in the db. If this happens, we'll log the
+            # user out and then ask them to try again.
+
+            flash_message('There was an error. Please log in and try again.',
+                          ALERT_COLORS['red'])
+            response = redirect('/login')
+
+    else:
+        flash_message('Please log in to view your profile.',
+                      ALERT_COLORS['yellow'])
+        response = redirect('/login')
+
+    return response
+
+
+def is_logged_in():
+    """Determines whether someone is logged into the site.
+
+    Returns boolean.
+    """
+
+    logged_in = False
+
+    if 'user_id' in session:
+        logged_in = True
+
+    return logged_in
+
+
+def get_current_user():
+    """Returns the User that is currently logged into the site."""
+
+    user = None
+
+    try:
+        user = User.query.get(session['user_id'])
+
+    except NoResultFound:
+        pass
+
+    return user
+
+
 @app.route('/logout')
 def logout():
     """Remove user info from browser session."""
 
-    if 'user_id' in session:
-        del session['user_id']
+    if is_logged_in():
+        remove_session_info()
 
     flash_message('You were successfully logged out.', ALERT_COLORS['green'])
 
@@ -155,7 +216,7 @@ def user_already_exists(email):
     exists = False
 
     try:
-        user = User.query.filter_by(email=email).one()
+        user = get_user_by_email(email)
         exists = True
 
     except NoResultFound:
