@@ -9,9 +9,10 @@
     <h2>{{ user.name }}'s Profile</h2>
     <br>
     {% for recording in user.recordings %}
-        <!-- TODO links should playback instead of going to anonther page -->
-        <a href=''>{{ recording.id }}</a>
+        <button class='playback' id={{ recording.id }}>{{ recording.id }}</button>
         <br>
     {% endfor %}
 
+    <script src='static/js/record.js'></script>
+    <script src='static/js/playback.js'></script>
 {% endblock %}

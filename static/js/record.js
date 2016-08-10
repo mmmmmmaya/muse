@@ -18,15 +18,36 @@ function sendSongToServer() {
             "recording": JSON.stringify(recordingArray)
         };
 
+        $('#save-message-div').html('Saving ...');
+
         $.post("/save_recording", params, function (data) {
             recordingArray = [];
+            updateMsgDivStatus(data.status);
         });
     }
+}
+
+
+function updateMsgDivStatus(status) {
+    var msgDiv = $('#save-message-div');
+
+    if (status === 'saved'){
+        msgDiv.html('Saved!');
+    } else {
+        msgDiv.html('Error!');
+    }
+}
+
+function clearMsgDiv() {
+    $('#save-message-div').html('');
 }
 
 function recordButtonPressed(evt){
     if (appIsRecording) {
         sendSongToServer();
+    } else {
+        // so old save messages don't get confused with new ones
+        clearMsgDiv();
     }
 
     toggleRecording();
@@ -69,6 +90,7 @@ function onKeyPress(evt) {
             updateSong(keyPressed);
         }
     }
+    // TODO add elif here to change theme on space
 }
 
 $(document).keypress(onKeyPress);

@@ -258,7 +258,7 @@ def save_recording():
         db.session.commit()
 
     # TODO different responses if something fails here
-    return jsonify({'response': 'OK'})
+    return jsonify({'status': 'saved'})
 
 
 def add_recording_to_db():
@@ -289,6 +289,40 @@ def add_keypress_to_db_session(recording_id, keypress):
                             theme=theme)
 
     db.session.add(new_keypress)
+
+
+@app.route('/fetch_recording/<int:recording_id>')
+def fetch_recording(recording_id):
+    """Fetch recording with matching recording id from database."""
+
+    recording = get_recording_by_id(recording_id)
+
+    if recording:
+        response = ({
+            'status': 'success',
+            'content': 'test'
+        })
+    else:
+        response = ({
+            'status': 'failure',
+            'content': None
+        })
+
+    return jsonify(response)
+
+
+def get_recording_by_id(id):
+    """Grab recording from db using recording id."""
+
+    recording = None
+
+    try:
+        recording = Recording.query.get(id)
+
+    except NoResultFound:
+        pass
+
+    return recording
 
 
 def flash_message(msg, alert_type):
