@@ -3,19 +3,17 @@ import os
 
 from countries import countries
 from flask import flash, Flask, jsonify, redirect, render_template, request, session
-from markupsafe import Markup
 from model import connect_to_db, db, KeyPress, Recording, User
 from sqlalchemy.orm.exc import NoResultFound
 
+from utils.authentication import add_session_info, attempt_login, remove_session_info
+from utils.general import ALERT_COLORS, flash_message, get_current_user, is_logged_in
+from utils.playback import get_recording_by_id, get_keypresses_with_relative_timing
+from utils.record import add_keypress_to_db_session, add_recording_to_db
+from utils.register import register_user
+
 app = Flask(__name__)
 app.secret_key = os.environ['FLASK_APP_SECRET_KEY']
-
-ALERT_COLORS = {
-    'red': 'danger',
-    'yellow': 'warning',
-    'green': 'success',
-    'blue': 'info',
-}
 
 
 @app.route('/')
@@ -23,6 +21,27 @@ def index():
     """Show main music-making page to user."""
 
     return render_template('index.html')
+
+
+@app.route('/fetch_recording/<int:recording_id>')
+def fetch_recording(recording_id):
+    """Fetch recording with matching recording id from database."""
+
+    recording = get_recording_by_id(recording_id)
+    keypresses = get_keypresses_with_relative_timing(recording)
+
+    if recording:
+        response = ({
+            'status': 'success',
+            'content': keypresses
+        })
+    else:
+        response = ({
+            'status': 'failure',
+            'content': None
+        })
+
+    return jsonify(response)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -44,57 +63,16 @@ def login():
     return response
 
 
-def attempt_login(email, password):
-    """Try to log the user in."""
+@app.route('/logout')
+def logout():
+    """Remove user info from browser session."""
 
-    user = get_user_by_email(email)
+    if is_logged_in():
+        remove_session_info()
 
-    if user:
-        response = verify_password(user, password)
+    flash_message('You were successfully logged out.', ALERT_COLORS['green'])
 
-    else:
-        flash_message('No registered user found. Please register.',
-                      ALERT_COLORS['blue'])
-        response = redirect('/register')
-
-    return response
-
-
-def get_user_by_email(email):
-    """Return a single User based on the email address."""
-
-    try:
-        return User.query.filter_by(email=email).one()
-
-    except NoResultFound:
-        return None
-
-
-def verify_password(user, password):
-    """Ensure user-entered password matches password in db."""
-
-    if user.password == password:
-        add_session_info(user.id)
-        flash_message('You were successfully logged in.', ALERT_COLORS['green'])
-        response = redirect('/')
-
-    else:
-        flash_message('Incorrect password.', ALERT_COLORS['red'])
-        response = redirect('/login')
-
-    return response
-
-
-def add_session_info(user_id):
-    """Add user_id to session."""
-
-    session['user_id'] = user_id
-
-
-def remove_session_info():
-    """Remove user_id from session."""
-
-    del session['user_id']
+    return redirect('/')
 
 
 @app.route('/profile')
@@ -125,46 +103,6 @@ def profile():
     return response
 
 
-def is_logged_in():
-    """Determines whether someone is logged into the site.
-
-    Returns boolean.
-    """
-
-    logged_in = False
-
-    if 'user_id' in session:
-        logged_in = True
-
-    return logged_in
-
-
-def get_current_user():
-    """Returns the User that is currently logged into the site."""
-
-    user = None
-
-    try:
-        user = User.query.get(session['user_id'])
-
-    except NoResultFound:
-        pass
-
-    return user
-
-
-@app.route('/logout')
-def logout():
-    """Remove user info from browser session."""
-
-    if is_logged_in():
-        remove_session_info()
-
-    flash_message('You were successfully logged out.', ALERT_COLORS['green'])
-
-    return redirect('/')
-
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """Show the registration page."""
@@ -191,57 +129,6 @@ def register():
     return response
 
 
-def register_user(name, email, password, zipcode, country):
-    """Add new user to the database."""
-
-    if user_already_exists(email):
-        flash_message('That user already exists. Please log in.',
-                      ALERT_COLORS['yellow'])
-        response = redirect('/login')
-
-    else:
-        user_id = add_user_to_db(name, email, password, zipcode, country)
-        add_session_info(user_id)
-        flash_message('Account created successfully.',
-                      ALERT_COLORS['green'])
-        response = redirect('/')
-
-    return response
-
-
-def user_already_exists(email):
-    """Checks to make sure new registration does not conflict with
-    an existing user.
-    """
-
-    exists = False
-
-    try:
-        user = get_user_by_email(email)
-        exists = True
-
-    except NoResultFound:
-        pass
-
-    return exists
-
-
-def add_user_to_db(name, email, password, zipcode, country):
-    """Create a new user and add to db.
-
-    Returns id of new user.
-    """
-
-    new_user = User(name=name,
-                    email=email,
-                    password=password,
-                    zipcode=zipcode,
-                    country=country)
-
-    db.session.add(new_user)
-    db.session.commit()
-
-
 @app.route('/save_recording', methods=['POST'])
 def save_recording():
     """Save recording data to the database."""
@@ -259,121 +146,6 @@ def save_recording():
 
     # TODO different responses if something fails here
     return jsonify({'status': 'saved'})
-
-
-def add_recording_to_db():
-    """Create new Recording and add to db.
-
-    Returns the id of the new recording.
-    """
-
-    user_id = session['user_id']
-    new_recording = Recording(user_id=user_id)
-
-    db.session.add(new_recording)
-    db.session.commit()
-
-    return new_recording.id
-
-
-def add_keypress_to_db_session(recording_id, keypress):
-    """Create new KeyPress and add to db."""
-
-    key_pressed = keypress.get('key')
-    pressed_at = keypress.get('timestamp')
-    theme = keypress.get('theme')
-
-    new_keypress = KeyPress(recording_id=recording_id,
-                            key_pressed=key_pressed,
-                            pressed_at=pressed_at,
-                            theme=theme)
-
-    db.session.add(new_keypress)
-
-
-@app.route('/fetch_recording/<int:recording_id>')
-def fetch_recording(recording_id):
-    """Fetch recording with matching recording id from database."""
-
-    recording = get_recording_by_id(recording_id)
-    keypresses = get_keypresses_with_relative_timing(recording)
-
-    if recording:
-        response = ({
-            'status': 'success',
-            'content': keypresses
-        })
-    else:
-        response = ({
-            'status': 'failure',
-            'content': None
-        })
-
-    return jsonify(response)
-
-
-def get_keypresses_with_relative_timing(recording):
-    """Return a list of key presses and relative timing pairs."""
-
-    keypresses_with_relative_timing = []
-
-    iter_keys = iter(recording.keypresses)
-    keypress = next(iter_keys)
-
-    for next_keypress in iter_keys:
-        keypress_pair_with_timing = generate_keypress_pair(keypress, next_keypress)
-        keypresses_with_relative_timing.append(keypress_pair_with_timing)
-        keypress = next_keypress
-
-    return keypresses_with_relative_timing
-
-
-def generate_keypress_pair(keypress, next_keypress):
-    """Return a single keypress pair with relative timing."""
-
-    this_key = keypress.key_pressed
-    this_time = keypress.pressed_at
-
-    next_key = next_keypress.key_pressed
-    next_time = next_keypress.pressed_at
-
-    pair_with_timing = {
-        "this_key": this_key,
-        "time_to_next": next_time - this_time,
-        "next_key": next_key
-    }
-
-    return pair_with_timing
-
-
-def get_recording_by_id(id):
-    """Grab recording from db using recording id."""
-
-    recording = None
-
-    try:
-        recording = Recording.query.get(id)
-
-    except NoResultFound:
-        pass
-
-    return recording
-
-
-def flash_message(msg, alert_type):
-    """Add a stylized flash message to the browser session."""
-
-    html = """
-        <div class="alert alert-%s alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-                %s
-        </div>
-        """ % (alert_type, msg)
-
-    markup_msg = Markup(html)
-    flash(markup_msg)
 
 
 if __name__ == '__main__':
