@@ -99,11 +99,11 @@ class View(db.Model):
 
 
 # These help connect us to the database.
-def connect_to_db(app):
+def connect_to_db(app, uri='postgresql:///muse'):
     """Connect the database to our Flask app."""
 
     # Configure to use our PstgreSQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///muse'
+    app.config['SQLALCHEMY_DATABASE_URI'] = uri
     app.config['SQLALCHEMY_ECHO'] = True
 
     db.app = app
