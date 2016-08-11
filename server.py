@@ -3,6 +3,7 @@ import os
 
 from flask import flash, Flask, jsonify, redirect, render_template, request, session
 from sqlalchemy.orm.exc import NoResultFound
+from werkzeug.exceptions import BadRequest
 
 from countries import countries
 from model import connect_to_db, db, KeyPress, Recording, User
@@ -10,7 +11,7 @@ from utils.authentication import add_session_info, attempt_login, remove_session
 from utils.general import ALERT_COLORS, flash_message, get_current_user, is_logged_in
 from utils.playback import get_recording_by_id, get_keypresses_with_relative_timing
 from utils.record import add_keypress_to_db_session, add_recording_to_db
-from utils.register import register_user
+from utils.register import all_fields_filled, register_user
 
 app = Flask(__name__)
 app.secret_key = os.environ['FLASK_APP_SECRET_KEY']
@@ -120,11 +121,14 @@ def register():
         zipcode = form.get('zipcode')
         country = form.get('country')
 
-        response = register_user(name,
-                                 email,
-                                 password,
-                                 zipcode,
-                                 country)
+        if all_fields_filled(name, email, password):
+            response = register_user(name,
+                                     email,
+                                     password,
+                                     zipcode,
+                                     country)
+        else:
+            response = BadRequest('You are missing a field necessary for registration.')
 
     return response
 

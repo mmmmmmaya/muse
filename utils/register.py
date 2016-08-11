@@ -23,6 +23,17 @@ def add_user_to_db(name, email, password, zipcode, country):
     return new_user.id
 
 
+def all_fields_filled(name, email, password):
+    """Check to see if the following (required) fields have values."""
+
+    filled = False
+
+    if name and email and password:
+        filled = True
+
+    return filled
+
+
 def register_user(name, email, password, zipcode, country):
     """Add new user to the database."""
 
