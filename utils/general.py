@@ -15,17 +15,18 @@ ALERT_COLORS = {
 def flash_message(msg, alert_type):
     """Add a stylized flash message to the browser session."""
 
-    html = """
-        <div class="alert alert-%s alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-                %s
-        </div>
-        """ % (alert_type, msg)
+    if msg:
+        html = """
+            <div class="alert alert-%s alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                    %s
+            </div>
+            """ % (alert_type, msg)
 
-    markup_msg = Markup(html)
-    flash(markup_msg)
+        markup_msg = Markup(html)
+        flash(markup_msg)
 
 
 def get_current_user():
@@ -33,11 +34,12 @@ def get_current_user():
 
     user = None
 
-    try:
-        user = User.query.get(session['user_id'])
+    if 'user_id' in session:
+        try:
+            user = User.query.get(session['user_id'])
 
-    except NoResultFound:
-        pass
+        except NoResultFound:
+            pass
 
     return user
 
@@ -60,7 +62,8 @@ def is_logged_in():
 
     logged_in = False
 
-    if 'user_id' in session:
+    # if 'user_id' in session and session['user_id'] is not None
+    if session.get('user_id', None):
         logged_in = True
 
     return logged_in
