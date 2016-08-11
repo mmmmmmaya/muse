@@ -8,11 +8,15 @@ from utils.general import ALERT_COLORS, flash_message, get_user_by_email
 def add_session_info(user_id):
     """Add user_id to session."""
 
-    session['user_id'] = user_id
+    if user_id:
+        session['user_id'] = user_id
 
 
 def attempt_login(email, password):
-    """Try to log the user in."""
+    """Try to log the user in.
+
+    Returns Flask response.
+    """
 
     user = get_user_by_email(email)
 
