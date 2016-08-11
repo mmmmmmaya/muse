@@ -34,7 +34,8 @@ def attempt_login(email, password):
 def remove_session_info():
     """Remove user_id from session."""
 
-    del session['user_id']
+    if 'user_id' in session:
+        del session['user_id']
 
 
 def verify_password(user, password):

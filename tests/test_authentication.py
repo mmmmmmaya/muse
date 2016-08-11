@@ -13,6 +13,8 @@ class TestAddSessionInfo(unittest.TestCase):
     """Test adding info to session."""
 
     def setUp(self):
+        """Set up app and session key."""
+
         app.config['TESTING'] = True
         app.config['SECRET_KEY'] = 'super secret'
 
@@ -36,10 +38,10 @@ class TestAttemptLogin(unittest.TestCase):
     """Test an attempt to log user into site."""
 
     def setUp(self):
+        """Set up app, session key, and db."""
+
         app.config['TESTING'] = True
         app.config['SECRET_KEY'] = 'super secret'
-
-        self.client = app.test_client()
 
         # setup test db
         connect_to_db(app, 'postgresql:///testdb')
@@ -62,18 +64,72 @@ class TestAttemptLogin(unittest.TestCase):
     def test_login_valid_user_invalid_password(self):
         """Test login for an existing user with an incorrect password."""
 
-        pass
+        with app.test_request_context():
+            username = 'angie@fake.com'
+            password = 'wrong password'
+
+            response = attempt_login(username, password)
+
+            self.assertEquals('/login', response.location)
+            self.assertEquals(302, response.status_code)
+            self.assertNotIn('user_id', session)
 
     def test_login_invalid_user(self):
         """Test login for a user that does not exist."""
 
-        pass
+        with app.test_request_context():
+            username = 'not_in@db.com'
+            password = 'doesnt matter'
+
+            response = attempt_login(username, password)
+
+            self.assertEquals(302, response.status_code)
+            self.assertEquals('/register', response.location)
+            self.assertNotIn('user_id', session)
 
     def tearDown(self):
         """Clear db for next test."""
 
         db.session.close()
         db.drop_all()
+
+
+class TestRemoveSessionInfo(unittest.TestCase):
+    """Test that user_id is removed from session."""
+
+    def setUp(self):
+        """Set up app and session key."""
+
+        app.config['TESTING'] = True
+        app.config['SECRET_KEY'] = 'super secret'
+
+    def test_remove_no_user_id_in_session(self):
+        """Test removal when we start without any user_id in session."""
+
+        with app.test_request_context():
+            remove_session_info()
+
+            self.assertNotIn('user_id', session)
+
+    def test_remove_user_id_is_none(self):
+        """Test removal when user_id in session, but value is None."""
+
+        with app.test_request_context():
+            session['user_id'] = None
+            self.assertIn('user_id', session)
+
+            remove_session_info()
+            self.assertNotIn('user_id', session)
+
+    def test_remove_user_id_in_session(self):
+        """Test removal when we start with a user_id in session."""
+
+        with app.test_request_context():
+            session['user_id'] = 123
+            self.assertIn('user_id', session)
+
+            remove_session_info()
+            self.assertNotIn('user_id', session)
 
 if __name__ == '__main__':
     unittest.main()
