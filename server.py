@@ -296,11 +296,12 @@ def fetch_recording(recording_id):
     """Fetch recording with matching recording id from database."""
 
     recording = get_recording_by_id(recording_id)
+    keypresses = get_keypresses_with_relative_timing(recording)
 
     if recording:
         response = ({
             'status': 'success',
-            'content': 'test'
+            'content': keypresses
         })
     else:
         response = ({
@@ -309,6 +310,40 @@ def fetch_recording(recording_id):
         })
 
     return jsonify(response)
+
+
+def get_keypresses_with_relative_timing(recording):
+    """Return a list of key presses and relative timing pairs."""
+
+    keypresses_with_relative_timing = []
+
+    iter_keys = iter(recording.keypresses)
+    keypress = next(iter_keys)
+
+    for next_keypress in iter_keys:
+        keypress_pair_with_timing = generate_keypress_pair(keypress, next_keypress)
+        keypresses_with_relative_timing.append(keypress_pair_with_timing)
+        keypress = next_keypress
+
+    return keypresses_with_relative_timing
+
+
+def generate_keypress_pair(keypress, next_keypress):
+    """Return a single keypress pair with relative timing."""
+
+    this_key = keypress.key_pressed
+    this_time = keypress.pressed_at
+
+    next_key = next_keypress.key_pressed
+    next_time = next_keypress.pressed_at
+
+    pair_with_timing = {
+        "this_key": this_key,
+        "time_to_next": next_time - this_time,
+        "next_key": next_key
+    }
+
+    return pair_with_timing
 
 
 def get_recording_by_id(id):

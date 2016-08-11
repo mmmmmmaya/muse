@@ -51,7 +51,7 @@ class Recording(db.Model):
 
     user = db.relationship('User')
     views = db.relationship('View')
-    keypresses = db.relationship('KeyPress')
+    keypresses = db.relationship('KeyPress', order_by='KeyPress.id')
 
     def __repr__(self):
         """String representation of Recording."""
@@ -75,7 +75,7 @@ class KeyPress(db.Model):
     def __repr__(self):
         """String representation of KeyPress."""
 
-        return '<KeyPress id: %s, key: %s, recording_is: %s>' % (self.id,
+        return '<KeyPress id: %s, key: %s, recording_id: %s>' % (self.id,
                                                                  self.key_pressed,
                                                                  self.recording_id)
 
