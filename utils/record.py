@@ -11,8 +11,6 @@ def add_keypress_to_db_session(keypress):
 
     db.session.add(keypress)
 
-    return keypress.id
-
 
 def add_recording_to_db():
     """Create new Recording and add to db.
