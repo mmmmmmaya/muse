@@ -29,9 +29,12 @@ def fetch_recording(recording_id):
     """Fetch recording with matching recording id from database."""
 
     recording = get_recording_by_id(recording_id)
-    keypresses = get_keypresses_with_relative_timing(recording)
+    keypresses = None
 
     if recording:
+        keypresses = get_keypresses_with_relative_timing(recording)
+
+    if keypresses:
         response = ({
             'status': 'success',
             'content': keypresses
