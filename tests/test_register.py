@@ -2,9 +2,9 @@ import unittest
 
 from model import connect_to_db, db, User
 from server import app
-from tests.test_utils import populate_test_db_users
 from utils.register import (add_user_to_db, all_fields_filled,
                             register_user, user_already_exists)
+from utils.test import populate_test_db_users
 
 
 class TestAddUserToDb(unittest.TestCase):

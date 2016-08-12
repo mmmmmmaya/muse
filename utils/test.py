@@ -1,3 +1,4 @@
+import random
 import time
 
 from model import db, KeyPress, Recording, Theme, User
@@ -7,10 +8,10 @@ def populate_test_db_keypresses():
     """Add recording data in fake db for testing."""
 
     for num in range(6):
-        pressed_at = int(time.time()) + num
+        time_to_next_key = random.randint(5000)
         fake_keypress = KeyPress(recording_id=1,
                                  key_pressed='a',
-                                 pressed_at=pressed_at,
+                                 time_to_next_key=time_to_next_key,
                                  theme=1)
 
         db.session.add(fake_keypress)

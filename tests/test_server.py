@@ -4,10 +4,10 @@ from flask import session
 
 from model import connect_to_db, db
 from server import app
-from tests.test_utils import (populate_test_db_keypresses,
-                              populate_test_db_recordings,
-                              populate_test_db_themes,
-                              populate_test_db_users)
+from utils.test import (populate_test_db_keypresses,
+                        populate_test_db_recordings,
+                        populate_test_db_themes,
+                        populate_test_db_users)
 
 
 class TestIndex(unittest.TestCase):

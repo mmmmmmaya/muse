@@ -4,9 +4,9 @@ from flask import session
 
 from model import connect_to_db, db, User
 from server import app
-from tests.test_utils import populate_test_db_users
 from utils.general import (flash_message, get_current_user,
                            get_user_by_email, is_logged_in)
+from utils.test import populate_test_db_users
 
 
 class TestFlashMessage(unittest.TestCase):

@@ -6,7 +6,7 @@ from model import connect_to_db, db
 from server import app
 from utils.authentication import (add_session_info, attempt_login,
                                   remove_session_info, verify_password)
-from tests.test_utils import populate_test_db_users
+from utils.test import populate_test_db_users
 
 
 class TestAddSessionInfo(unittest.TestCase):
