@@ -67,7 +67,7 @@ class KeyPress(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     recording_id = db.Column(db.Integer, db.ForeignKey('recordings.id'))
     key_pressed = db.Column(db.String(1), nullable=False)
-    pressed_at = db.Column(db.BigInteger, nullable=False)
+    time_to_next_key = db.Column(db.Integer, nullable=True)
     theme = db.Column(db.Integer, db.ForeignKey('themes.id'))
 
     recording = db.relationship('Recording')

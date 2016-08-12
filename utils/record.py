@@ -3,19 +3,10 @@ from flask import session
 from model import db, KeyPress, Recording
 
 
-def add_keypress_to_db_session(recording_id, keypress):
+def add_keypress_to_db_session(keypress):
     """Create new KeyPress and add to db."""
 
-    key_pressed = keypress.get('key')
-    pressed_at = keypress.get('timestamp')
-    theme = keypress.get('theme')
-
-    new_keypress = KeyPress(recording_id=recording_id,
-                            key_pressed=key_pressed,
-                            pressed_at=pressed_at,
-                            theme=theme)
-
-    db.session.add(new_keypress)
+    db.session.add(keypress)
 
 
 def add_recording_to_db():
@@ -31,3 +22,45 @@ def add_recording_to_db():
     db.session.commit()
 
     return new_recording.id
+
+
+def generate_keypress(recording_id, keypress, next_keypress):
+    """Return a single keypress pair with relative timing."""
+
+    key_pressed = keypress.get('key')
+    time = keypress.get('timestamp')
+    time_to_next_key = None
+
+    if next_keypress:
+        next_time = next_keypress.get('timestamp')
+        time_to_next_key = next_time - time
+
+    theme = keypress.get('theme')
+
+    new_keypress = KeyPress(recording_id=recording_id,
+                            key_pressed=key_pressed,
+                            time_to_next_key=time_to_next_key,
+                            theme=theme)
+
+    return new_keypress
+
+
+def generate_keypress_list(raw_keypress_list, recording_id):
+    """Return a list of KeyPress objects."""
+
+    raw_keypress_list += [None]
+    print raw_keypress_list
+    keypresses = []
+
+    iter_keys = iter(raw_keypress_list)
+    keypress = next(iter_keys)
+
+    for next_keypress in iter_keys:
+        new_keypress = generate_keypress(recording_id,
+                                         keypress,
+                                         next_keypress)
+        keypresses.append(new_keypress)
+        keypress = next_keypress
+        print keypresses
+    print keypresses
+    return keypresses

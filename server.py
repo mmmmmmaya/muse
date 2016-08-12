@@ -9,8 +9,8 @@ from countries import countries
 from model import connect_to_db, db, KeyPress, Recording, User
 from utils.authentication import add_session_info, attempt_login, remove_session_info
 from utils.general import ALERT_COLORS, flash_message, get_current_user, is_logged_in
-from utils.playback import get_recording_by_id, get_keypresses_with_relative_timing
-from utils.record import add_keypress_to_db_session, add_recording_to_db
+from utils.playback import get_recording_by_id
+from utils.record import add_keypress_to_db_session, add_recording_to_db, generate_keypress_list
 from utils.register import all_fields_filled, register_user
 
 app = Flask(__name__)
@@ -32,7 +32,7 @@ def fetch_recording(recording_id):
     keypresses = None
 
     if recording:
-        keypresses = get_keypresses_with_relative_timing(recording)
+        keypresses = recording.keypresses
 
     if keypresses:
         response = ({
@@ -145,14 +145,15 @@ def save_recording():
     """Save recording data to the database."""
 
     if is_logged_in():
-        recording_str = request.form.get('recording', None)
-        recording = json.loads(recording_str)
+        keypress_json = request.form.get('keypresses', None)
+        raw_keypress_list = json.loads(keypress_json)
 
-        if recording:
+        if raw_keypress_list:
             recording_id = add_recording_to_db()
+            keypresses = generate_keypress_list(raw_keypress_list, recording_id)
 
-            for keypress in recording:
-                add_keypress_to_db_session(recording_id, keypress)
+            for keypress in keypresses:
+                add_keypress_to_db_session(keypress)
 
             db.session.commit()
 

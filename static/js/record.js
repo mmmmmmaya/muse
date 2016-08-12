@@ -15,7 +15,7 @@ function sendSongToServer() {
     // TODO potentially ask user if they actually want to store the recording first
     if (recordingArray.length > 0) {
         var params = {
-            "recording": JSON.stringify(recordingArray)
+            "keypresses": JSON.stringify(recordingArray)
         };
 
         $('#save-message-div').html('Saving ...');
