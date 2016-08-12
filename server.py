@@ -10,7 +10,7 @@ from model import connect_to_db, db, KeyPress, Recording, User
 from utils.authentication import add_session_info, attempt_login, remove_session_info
 from utils.general import ALERT_COLORS, flash_message, get_current_user, is_logged_in
 from utils.playback import get_recording_by_id
-from utils.record import add_keypress_to_db_session, add_recording_to_db, generate_keypress_list
+from utils.record import add_keypress_to_db_session, add_recording_to_db, process_raw_keypresses
 from utils.register import all_fields_filled, register_user
 
 app = Flask(__name__)
@@ -150,12 +150,7 @@ def save_recording():
 
         if raw_keypress_list:
             recording_id = add_recording_to_db()
-            keypresses = generate_keypress_list(raw_keypress_list, recording_id)
-
-            for keypress in keypresses:
-                add_keypress_to_db_session(keypress)
-
-            db.session.commit()
+            process_raw_keypresses(raw_keypress_list, recording_id)
 
         return jsonify({'status': 'saved'})
 

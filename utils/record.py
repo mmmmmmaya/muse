@@ -4,15 +4,20 @@ from model import db, KeyPress, Recording
 
 
 def add_keypress_to_db_session(keypress):
-    """Create new KeyPress and add to db."""
+    """Add new KeyPress to db.
+
+    Returns the id of the new KeyPress.
+    """
 
     db.session.add(keypress)
+
+    return keypress.id
 
 
 def add_recording_to_db():
     """Create new Recording and add to db.
 
-    Returns the id of the new recording.
+    Returns the id of the new Recording.
     """
 
     user_id = session['user_id']
@@ -45,12 +50,10 @@ def generate_keypress(recording_id, keypress, next_keypress):
     return new_keypress
 
 
-def generate_keypress_list(raw_keypress_list, recording_id):
-    """Return a list of KeyPress objects."""
+def process_raw_keypresses(raw_keypress_list, recording_id):
+    """Convert raw data into KeyPresses and add to db."""
 
     raw_keypress_list += [None]
-    print raw_keypress_list
-    keypresses = []
 
     iter_keys = iter(raw_keypress_list)
     keypress = next(iter_keys)
@@ -59,8 +62,6 @@ def generate_keypress_list(raw_keypress_list, recording_id):
         new_keypress = generate_keypress(recording_id,
                                          keypress,
                                          next_keypress)
-        keypresses.append(new_keypress)
-        keypress = next_keypress
-        print keypresses
-    print keypresses
-    return keypresses
+        add_keypress_to_db_session(new_keypress)
+
+    db.session.commit()
