@@ -8,7 +8,7 @@ def populate_test_db_keypresses():
     """Add recording data in fake db for testing."""
 
     for num in range(6):
-        time_to_next_key = random.randint(5000)
+        time_to_next_key = random.randint(0, 5000)
         fake_keypress = KeyPress(recording_id=1,
                                  key_pressed='a',
                                  time_to_next_key=time_to_next_key,
