@@ -62,4 +62,6 @@ def process_raw_keypresses(raw_keypress_list, recording_id):
                                          next_keypress)
         add_keypress_to_db_session(new_keypress)
 
+        keypress = next_keypress
+
     db.session.commit()
