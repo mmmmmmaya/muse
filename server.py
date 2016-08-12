@@ -112,8 +112,12 @@ def register():
     """Show the registration page."""
 
     if request.method == 'GET':
-        response = render_template('register.html',
-                                   countries=countries)
+        if is_logged_in():
+            flash_message('You are already logged in.', ALERT_COLORS['yellow'])
+            response = redirect('/')
+        else:
+            response = render_template('register.html',
+                                       countries=countries)
 
     elif request.method == 'POST':
         form = request.form
@@ -140,19 +144,22 @@ def register():
 def save_recording():
     """Save recording data to the database."""
 
-    recording_str = request.form.get('recording', None)
-    recording = json.loads(recording_str)
+    if is_logged_in():
+        recording_str = request.form.get('recording', None)
+        recording = json.loads(recording_str)
 
-    if recording:
-        recording_id = add_recording_to_db()
+        if recording:
+            recording_id = add_recording_to_db()
 
-        for keypress in recording:
-            add_keypress_to_db_session(recording_id, keypress)
+            for keypress in recording:
+                add_keypress_to_db_session(recording_id, keypress)
 
-        db.session.commit()
+            db.session.commit()
 
-    # TODO different responses if something fails here
-    return jsonify({'status': 'saved'})
+        return jsonify({'status': 'saved'})
+
+    else:
+        return jsonify({'status': 'login_required'})
 
 
 if __name__ == '__main__':

@@ -1,5 +1,7 @@
 import unittest
 
+from flask import session
+
 from model import connect_to_db, db
 from server import app
 from tests.test_utils import (populate_test_db_keypresses,
@@ -24,6 +26,7 @@ class TestIndex(unittest.TestCase):
                                    follow_redirects=True)
 
         self.assertEquals(200, response.status_code)
+        self.assertIn('Play with Muse!', response.data)
         self.assertIn('record-button', response.data)
 
 
@@ -119,15 +122,45 @@ class TestProfile(unittest.TestCase):
         app.config['SECRET_KEY'] = 'super secret'
         self.client = app.test_client()
 
+        connect_to_db(app, 'postgresql:///testdb')
+        db.create_all()
+
+        populate_test_db_themes()
+        populate_test_db_users()
+        populate_test_db_recordings()
+        populate_test_db_keypresses()
+
     def test_profile_logged_in(self):
         """Test profile page displays when logged in."""
 
-        pass
+        self.client.post('/login',
+                         data={
+                             "email": "angie@fake.com",
+                             "password": "pass"
+                         })
+
+        response = self.client.get('/profile',
+                                   follow_redirects=True)
+
+        self.assertEquals(200, response.status_code)
+        self.assertNotIn('Please log in to view your profile.', response.data)
+        self.assertIn('s Profile', response.data)
 
     def test_profile_not_logged_in(self):
         """Test profile page displays when not logged in."""
 
-        pass
+        response = self.client.get('/profile',
+                                   follow_redirects=True)
+
+        self.assertEquals(200, response.status_code)
+        self.assertIn('Please log in to view your profile.', response.data)
+        self.assertNotIn('s Profile', response.data)
+
+    def tearDown(self):
+        """Reset db for next test."""
+
+        db.session.close()
+        db.drop_all()
 
 
 class TestRegister(unittest.TestCase):
@@ -139,20 +172,76 @@ class TestRegister(unittest.TestCase):
         app.config['TESTING'] = True
         self.client = app.test_client()
 
-    def test_registration display(self):
+        connect_to_db(app, 'postgresql:///testdb')
+        db.create_all()
+
+        populate_test_db_themes()
+        populate_test_db_users()
+        populate_test_db_recordings()
+        populate_test_db_keypresses()
+
+    def test_registration_display(self):
         """Ensure registration form displays properly."""
 
-        pass
+        response = self.client.get('/register',
+                                   follow_redirects=True)
+
+        self.assertEquals(200, response.status_code)
+        self.assertIn('Register with Muse!', response.data)
+        self.assertIn('registration-form', response.data)
+
+    def test_register_logged_in(self):
+        """Test what happens when someone who is logged in tries to register."""
+
+        self.client.post('/login',
+                         data={
+                             "email": "angie@fake.com",
+                             "password": "pass"
+                         })
+
+        response = self.client.get('/register',
+                                   follow_redirects=True)
+
+        self.assertEquals(200, response.status_code)
+        self.assertIn('Play with Muse!', response.data)
+        self.assertIn('record-button', response.data)
+        self.assertNotIn('registration-form', response.data)
 
     def test_register_existing_user(self):
         """Test what happens when you try to register an existing user."""
 
-        pass
+        response = self.client.post('/register',
+                                    data={
+                                        "email": "angie@fake.com",
+                                        "password": "password",
+                                        "name": "Angie"
+                                    },
+                                    follow_redirects=True)
+
+        self.assertEquals(200, response.status_code)
+        self.assertIn('That user already exists. Please log in.', response.data)
+        self.assertNotIn('Account created successfully.', response.data)
 
     def test_register_non_existing_user(self):
         """Test what happens when you try to register a non existing user."""
 
-        pass
+        response = self.client.post('/register',
+                                    data={
+                                        "email": "angie2@fake.com",
+                                        "password": "password",
+                                        "name": "Angie"
+                                    },
+                                    follow_redirects=True)
+
+        self.assertEquals(200, response.status_code)
+        self.assertNotIn('That user already exists. Please log in.', response.data)
+        self.assertIn('Account created successfully.', response.data)
+
+    def tearDown(self):
+        """Reset db for next test."""
+
+        db.session.close()
+        db.drop_all()
 
 
 class TestSaveRecording(unittest.TestCase):
@@ -164,15 +253,36 @@ class TestSaveRecording(unittest.TestCase):
         app.config['TESTING'] = True
         self.client = app.test_client()
 
+        connect_to_db(app, 'postgresql:///testdb')
+        db.create_all()
+
+        populate_test_db_users()
+
     def test_save_recording_logged_in(self):
         """Save recording while user is logged in."""
 
-        pass
+        self.client.post('/login',
+                         data={
+                             "email": "angie@fake.com",
+                             "password": "pass"
+                         })
+
+        response = self.client.post('/save_recording',
+                                    data={"recording": "[]"},
+                                    follow_redirects=True)
+
+        self.assertEquals(200, response.status_code)
+        self.assertIn('saved', response.data)
 
     def test_save_recording_not_logged_in(self):
         """Save recording while user is not logged in."""
 
-        pass
+        response = self.client.post('/save_recording',
+                                    data={"recording": "[]"},
+                                    follow_redirects=True)
+
+        self.assertEquals(200, response.status_code)
+        self.assertIn('login_required', response.data)
 
 if __name__ == '__main__':
     unittest.main()

@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <h2>{{ user.name }}'s Profile</h2>
+    <h2 id='profile-header'>{{ user.name }}'s Profile</h2>
     <br>
     {% for recording in user.recordings %}
         <button class='playback' id={{ recording.id }}>{{ recording.id }}</button>
