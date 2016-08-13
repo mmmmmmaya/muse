@@ -55,7 +55,7 @@ class TestFetchRecording(unittest.TestCase):
 
         self.assertEquals(200, response.status_code)
         self.assertIn('success', response.data)
-        self.assertIn('this_key', response.data)
+        self.assertIn('key_pressed', response.data)
 
     def test_not_existing_recording(self):
         """Test returned JSON for a recording that does not exist."""
@@ -65,7 +65,7 @@ class TestFetchRecording(unittest.TestCase):
 
         self.assertEquals(200, response.status_code)
         self.assertIn('failure', response.data)
-        self.assertNotIn('this_key', response.data)
+        self.assertNotIn('key_pressed', response.data)
 
     def tearDown(self):
         """Reset db for next test."""

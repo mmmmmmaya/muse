@@ -183,6 +183,11 @@ class TestUserAlreadyExists(unittest.TestCase):
 
         app.config['TESTING'] = True
 
+        # setup test db
+        connect_to_db(app, 'postgresql:///testdb')
+        db.create_all()
+        populate_test_db_users()
+
     def test_user_already_exists(self):
         """Test what happens when you query with an email that is in the db."""
 
