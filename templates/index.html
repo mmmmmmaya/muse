@@ -6,9 +6,19 @@
 
 {% block content %}
     {% set disabled = '' if 'user_id' in session else 'disabled' %}
-    <button type='button' class='btn' id='record-button' {{ disabled }}>Record</button>
+    {% set wrapperTooltip = 'data-toggle="tooltip" data-placement="bottom" title="Please log in to record."'|safe if disabled else '' %}
+
+    <span {{ wrapperTooltip }}>
+        <button type='button' class='btn' id='record-button' {{ disabled }}>Record</button>
+    </span>
     <img src="static/images/blank.png" id='image' />
 
+    <!-- activate tooltips -->
+    <script type="text/javascript">
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
     <script src='static/js/record.js'></script>
     <script src='static/js/playback.js'></script>
 {% endblock %}
