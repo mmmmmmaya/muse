@@ -2,11 +2,12 @@
 
 function waitThenPress(keypress, waitTime) {
     setTimeout(function(){
-        actionApp(keypress.next_key);
+        actionApp(keypress.key_pressed);
     }, waitTime);
 }
 
 function playbackRecording(content) {
+    var keypress;
     var waitTime = 1;
 
     for (var i = 0; i < content.length; i++) {

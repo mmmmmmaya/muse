@@ -4,29 +4,29 @@ var letterAnimationMap = {
     'a': function() {hexWave()},
     'b': function() {stipple()},
     'c': function() {explode()},
-    'd': '',
-    'e': '',
-    'f': '',
-    'g': '',
-    'h': '',
-    'i': '',
-    'j': '',
-    'k': '',
-    'l': '',
-    'm': '',
-    'n': '',
-    'o': '',
-    'p': '',
-    'q': '',
-    'r': '',
-    's': '',
-    't': '',
-    'u': '',
-    'v': '',
-    'w': '',
-    'x': '',
-    'y': '',
-    'z': ''
+    'd': function() {implode()},
+    'e': function() {wiggle()},
+    'f': function() {raindrop()},
+    'g': function() {},
+    'h': function() {},
+    'i': function() {},
+    'j': function() {},
+    'k': function() {},
+    'l': function() {},
+    'm': function() {},
+    'n': function() {},
+    'o': function() {},
+    'p': function() {},
+    'q': function() {},
+    'r': function() {},
+    's': function() {},
+    't': function() {},
+    'u': function() {},
+    'v': function() {},
+    'w': function() {},
+    'x': function() {},
+    'y': function() {},
+    'z': function() {}
 }
 
 var svgContainer = d3.select("svg");
@@ -94,5 +94,6 @@ function makeHexagon(radius, x, y, fill) {
                     .attr("d", drawHexagon(hexagonData))
                     .attr("stroke", "white")
                     .attr("stroke-width", 1)
-                    .attr("fill", fill);
+                    .attr("fill", fill)
+                    .attr('class', 'magictime puffOut');
 }
