@@ -36,4 +36,8 @@ CREATE TABLE Views (
 
 -- Sample Data
 INSERT INTO Users (name, email, password) VALUES ('angie', 'angie@fake.com', 'pass');
-INSERT INTO Themes (name) VALUES ('placeholder');
+INSERT INTO Themes (name) VALUES ('Bubbly');
+INSERT INTO Themes (name) VALUES ('Meditative');
+INSERT INTO Themes (name) VALUES ('Dubstep');
+INSERT INTO Themes (name) VALUES ('Acoustic');
+INSERT INTO Themes (name) VALUES ('Weird Al');

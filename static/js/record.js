@@ -4,7 +4,8 @@
 var appIsRecording = false;
 var recordingArray = [];
 // TODO placeholder for now until I get multiple themes set up
-var currentTheme = 1;
+var currentTheme = 0;
+updateBgColor(currentTheme);
 
 function toggleRecording() {
     // TODO probably update button text or img to indicate if recording is active
@@ -80,10 +81,12 @@ function updateSong(keyPressed) {
 
 function nextTheme() {
     if (currentTheme === 4) {
-        currentTheme = 1;
+        currentTheme = 0;
     } else {
         currentTheme++;
     }
+
+    updateBgColor(currentTheme);
 }
 
 function onKeyPress(evt) {
