@@ -1,0 +1,13 @@
+html, body {
+    margin:0;
+    overflow:hidden;
+    padding:0;
+}
+
+svg {
+    height:100%;
+    left:0;
+    position:fixed;
+    top:0;
+    width:100%
+}

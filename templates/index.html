@@ -4,6 +4,11 @@
     Play with Muse!
 {% endblock %}
 
+{% block links_and_scripts %}
+    <link href='static/css/magic.min.css' rel='stylesheet'>
+    <link href='static/css/styles.css' rel='stylesheet'>
+{% endblock %}
+
 {% block content %}
     {% set disabled = '' if 'user_id' in session else 'disabled' %}
     {% set wrapperTooltip = 'data-toggle="tooltip" data-placement="bottom" title="Please log in to record."'|safe if disabled else '' %}
@@ -11,7 +16,8 @@
     <span {{ wrapperTooltip }}>
         <button type='button' class='btn' id='record-button' {{ disabled }}>Record</button>
     </span>
-    <img src="static/images/blank.png" id='image' />
+
+    <svg id='svg' />
 
     <!-- activate tooltips -->
     <script type="text/javascript">
@@ -19,6 +25,10 @@
             $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
+    <script src='static/js/themes.js'></script>
+    <script src='static/js/animations.js'></script>
     <script src='static/js/record.js'></script>
     <script src='static/js/playback.js'></script>
 {% endblock %}

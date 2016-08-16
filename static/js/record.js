@@ -27,7 +27,6 @@ function sendSongToServer() {
     }
 }
 
-
 function updateMsgDivStatus(status) {
     var msgDiv = $('#save-message-div');
 
@@ -63,13 +62,12 @@ function isLetter(char){
 }
 
 function actionApp(keyPressed) {
-    var imgFilepath = 'static/images/' + keyPressed + '.png';
     var soundFilepath = 'static/sounds/' + keyPressed + '.mp3';
 
     var audio = new Audio(soundFilepath);
 
     audio.play();
-    $('#image').attr('src', imgFilepath);
+    letterAnimationMap[keyPressed]();
 }
 
 function updateSong(keyPressed) {
@@ -78,6 +76,14 @@ function updateSong(keyPressed) {
         "key": keyPressed,
         "theme": currentTheme
     });
+}
+
+function nextTheme() {
+    if (currentTheme === 4) {
+        currentTheme = 1;
+    } else {
+        currentTheme++;
+    }
 }
 
 function onKeyPress(evt) {
@@ -89,8 +95,9 @@ function onKeyPress(evt) {
         if (appIsRecording){
             updateSong(keyPressed);
         }
+    } else if (keyPressed === ' ') {
+        nextTheme();
     }
-    // TODO add elif here to change theme on space
 }
 
 $(document).keypress(onKeyPress);
