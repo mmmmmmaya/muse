@@ -1,32 +1,32 @@
 'use strict';
 
 var letterAnimationMap = {
-    'a': function() {},
-    'b': function() {},
+    'a': function() {cluster()},
+    'b': function() {bundle()},
     'c': function() {circleGrid()},
-    'd': function() {},
+    'd': function() {chord()},
     'e': function() {explode()},
-    'f': function() {},
-    'g': function() {},
+    'f': function() {force()},
+    'g': function() {smile()},
     'h': function() {hexBurst()},
     'i': function() {implode()},
-    'j': function() {},
-    'k': function() {},
-    'l': function() {},
-    'm': function() {},
-    'n': function() {},
-    'o': function() {},
-    'p': function() {},
-    'q': function() {},
+    'j': function() {partition()},
+    'k': function() {spiral()},
+    'l': function() {flash()},
+    'm': function() {wink()},
+    'n': function() {stripes()},
+    'o': function() {rainbow()},
+    'p': function() {pack()},
+    'q': function() {suckedIn()},
     'r': function() {raindrop()},
     's': function() {stipple()},
     't': function() {takeOff()},
-    'u': function() {},
-    'v': function() {},
+    'u': function() {tree()},
+    'v': function() {treemap()},
     'w': function() {wiggle()},
-    'x': function() {},
-    'y': function() {},
-    'z': function() {}
+    'x': function() {stack()},
+    'y': function() {pie()},
+    'z': function() {zigzag()}
 }
 
 var svgContainer = d3.select("svg");
@@ -47,8 +47,12 @@ function chooseRandomY() {
     return getRandomInt(0, svgHeight);
 }
 
-function chooseRandomSize() {
+function chooseRandomSizeMultiple() {
     return getRandomInt(1, 50);
+}
+
+function chooseRandomSizeOne() {
+    return getRandomInt(25, 300);
 }
 
 function chooseRandomColor() {
@@ -58,16 +62,16 @@ function chooseRandomColor() {
     return colors[index];
 }
 
-function hexBurst() {
-    for (var i = 0; i < 20; i++){
-        var x = chooseRandomX();
-        var y = chooseRandomY();
-        var radius = chooseRandomSize();
-        var fill = chooseRandomColor();
 
-        makeHexagon(radius, x, y, fill);
-    }
+function flash() {
+    var flashColor = chooseRandomColor();
+
+    $('body').css("background-color", flashColor);
+    setTimeout(function() {
+        updateBgColor(currentTheme);
+    }, 300);
 }
+
 
 function makeHexagon(radius, x, y, fill) {
     var h = (Math.sqrt(3)/2),
@@ -89,27 +93,34 @@ function makeHexagon(radius, x, y, fill) {
 
     var enterElements = svgContainer.append("path")
                                     .attr("d", drawHexagon(hexagonData))
-                                    .attr("stroke", "white")
-                                    .attr("stroke-width", 1)
                                     .attr("fill", fill)
                                     .attr('class', 'magictime puffOut');
 }
 
-function makeCircle(radius, x, y, fill) {
+function hexBurst() {
+    for (var i = 0; i < 15; i++){
+        var x = chooseRandomX();
+        var y = chooseRandomY();
+        var radius = chooseRandomSizeMultiple();
+        var fill = chooseRandomColor();
+
+        makeHexagon(radius, x, y, fill);
+    }
+}
+
+function makeCircle(radius, x, y) {
     var circle = svgContainer.append("circle")
         .attr("cy", y)
         .attr("cx", x)
-        .attr("r", radius)
-        .attr("stroke", "white")
-        .attr("stroke-width", 1)
-        .attr("fill", fill);
+        .attr("r", radius);
 
     return circle;
 }
 
 function makeCircleWithVanish(radius, x, y) {
     var fill = chooseRandomColor();
-    var circle = makeCircle(radius, x, y, fill);
+    var circle = makeCircle(radius, x, y);
+    circle.attr("fill", fill);
 
     var randomTimeout = getRandomInt(1, 1500);
     setTimeout(function() {
@@ -118,15 +129,17 @@ function makeCircleWithVanish(radius, x, y) {
 }
 
 function circleGrid() {
-    var x = chooseRandomX();
-    var y = chooseRandomY();
-    var original_y = y;
-    var radius = chooseRandomSize();
+    var numCircles = 6;
+    var radius = chooseRandomSizeMultiple();
 
-    for (var i = 0; i < 6; i++) {
+    var x = chooseRandomX() - (radius*numCircles);
+    var y = chooseRandomY() - (radius*numCircles);
+    var original_y = y;
+
+    for (var i = 0; i < numCircles; i++) {
         y = original_y;
 
-        for (var j = 0; j < 6; j++) {
+        for (var j = 0; j < numCircles; j++) {
             makeCircleWithVanish(radius, x, y);
             y += (radius*2) + 2;
         }
@@ -135,14 +148,34 @@ function circleGrid() {
     }
 }
 
+function suckedIn() {
+    var x = svgWidth/2;
+    var y = svgHeight/2;
+    var radius = chooseRandomSizeOne();
+    var fill = '#ffffff';
+
+    var circle = makeCircle(radius, x, y);
+    circle.attr('fill', fill)
+          .attr("stroke", getThemeGray())
+          .attr("stroke-width", 2)
+          .attr("stroke-dasharray","20,5");
+
+    setTimeout(function() {
+        circle.attr('class', 'magictime holeOut');
+    }, 1000);
+}
+
+
 function takeOff() {
     var x = chooseRandomX();
     var y = chooseRandomY();
-    var radius = chooseRandomSize();
+    var radius = chooseRandomSizeOne();
     var fill = chooseRandomColor();
 
-    var takeOffCircle = makeCircle(radius, x, y, fill);
+    var circle = makeCircle(radius, x, y);
+    circle.attr('fill', fill);
+
     setTimeout(function() {
-        takeOffCircle.attr('class', 'magictime tinRightOut');
+        circle.attr('class', 'magictime tinRightOut');
     }, 1000);
 }
