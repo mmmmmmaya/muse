@@ -137,23 +137,14 @@ function generateHexData(radius, x, y) {
     ];
 }
 
-function explode() {
-    var x = chooseRandomDim(svgWidth);
-    var y = chooseRandomDim(svgHeight);
-    var explosionRadius = chooseRandomSizeOne();
-    var particleRadius = 30;
-    var particleFill = chooseRandomColor();
-
-    var center = makeCircle(particleRadius, x, y).attr('fill', chooseRandomColor())
-                                                 .attr('class', 'magictime vanishOut');
-
-    var radiusData = generateHexData(explosionRadius, x, y);
+function addParticles(radius, x, y, size, fill) {
+    var radiusData = generateHexData(radius, x, y);
 
     for (var i = 0; i < radiusData.length; i++) {
         var thisX = radiusData[i]['x'];
         var thisY = radiusData[i]['y'];
 
-        var circle = makeCircle(particleRadius, thisX, thisY).attr('fill', particleFill);
+        var circle = makeCircle(size, thisX, thisY).attr('fill', fill);
 
         if (i < 3) {
             circle.attr('class', 'magictime openDownRightOut');
@@ -161,6 +152,24 @@ function explode() {
             circle.attr('class', 'magictime openDownLeftOut');
         }
     }
+}
+
+function explode() {
+    var x = chooseRandomDim(svgWidth);
+    var y = chooseRandomDim(svgHeight);
+    var explosionRadius = chooseRandomSizeOne();
+    var centerFill = chooseRandomColor();
+    var particleSize = 30;
+    var particleFill = chooseRandomColor();
+
+    while (particleFill === centerFill) {
+        particleFill = chooseRandomColor();
+    }
+
+    var center = makeCircle(particleSize, x, y).attr('fill', centerFill)
+                                                 .attr('class', 'magictime vanishOut');
+
+    addParticles(explosionRadius, x, y, particleSize, particleFill);
 }
 
 
