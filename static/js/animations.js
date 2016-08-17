@@ -1,7 +1,7 @@
 'use strict';
 
 var letterAnimationMap = {
-    'a': function() {cluster()},
+    'a': function() {footprints()},
     'b': function() {bundle()},
     'c': function() {circleGrid()},
     'd': function() {chord()},
@@ -67,70 +67,10 @@ function chooseRandomColor() {
 }
 
 
-function makeMoreChildren(maxDepth, currentDepth) {
-    var random = getRandomInt(0, 5);
-    var children = [];
-    currentDepth++;
-
-    for (var i = 0; i < random; i++) {
-        var shouldMakeChild = getRandomInt(0, 2);
-
-        if (shouldMakeChild === 1) {
-            var child = makeTreeData(maxDepth, currentDepth);
-
-            if (child) {
-                children.push(child);
-            }
-        }
-    }
-
-    currentDepth--;
-    return children;
-}
-
-function makeTreeData(maxDepth, currentDepth) {
-    var data = {'name': chooseRandomColor()};
-
-    if (currentDepth < maxDepth) {
-        data.children = makeMoreChildren(maxDepth, currentDepth);
-    }
-
-    return data;
-}
-
-function cluster() {
-    var radius = 15;
-    var treeData = makeTreeData(6, 0);
-    var chart = svgContainer.append("svg:g");
-
-    var layout = d3.layout.cluster().size([(svgHeight-(radius*2)),(svgWidth-(radius*2))]);
-
-    var diagonal = d3.svg.diagonal()
-        .projection(function(d) { return [d.y, d.x]; });
-
-    var nodes = layout.nodes(treeData);
-    var links = layout.links(nodes);
-
-    var link = chart.selectAll("pathlink")
-                    .data(links)
-                    .enter().append("svg:path")
-                    .attr("class", "link")
-                    .attr("d", diagonal);
-
-    var node = chart.selectAll("g.node")
-                    .data(nodes)
-                    .enter().append("svg:g")
-                    .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
-                    .attr("fill", function(d) { return d.name; });
-
-    node.append("svg:circle")
-        .attr("r", radius);
-
-    setTimeout(function() {
-        chart.attr('class', 'magictime puffOut');
-    }, 1000);
+function footprints() {
 
 }
+
 
 function bundle() {
 
@@ -265,8 +205,30 @@ function wink() {
 }
 
 
-function stripes() {
+function drawStripe(i) {
+    var y = 60 * i;
+    var fill = chooseRandomColor();
 
+    var rectangle = svgContainer.append("rect")
+                         .attr('x', 0)
+                         .attr('y', y)
+                         .attr('width', '100%')
+                         .attr('height', '60')
+                         .attr('fill', fill)
+                         .attr('class', 'magictime slideLeftRetourn');
+    setTimeout(function() {
+        rectangle.attr('class', 'magictime slideRight')
+    }, 500);
+}
+
+function stripes() {
+    var numStripes = Math.floor(svgHeight/60);
+
+    for (var i = 0; i <= numStripes; i++) {
+        if (i % 2 == 0) {
+            drawStripe(i);
+        }
+    }
 }
 
 
@@ -323,7 +285,68 @@ function takeOff() {
 }
 
 
+function makeMoreChildren(maxDepth, currentDepth) {
+    var random = getRandomInt(0, 5);
+    var children = [];
+    currentDepth++;
+
+    for (var i = 0; i < random; i++) {
+        var shouldMakeChild = getRandomInt(0, 2);
+
+        if (shouldMakeChild === 1) {
+            var child = makeTreeData(maxDepth, currentDepth);
+
+            if (child) {
+                children.push(child);
+            }
+        }
+    }
+
+    currentDepth--;
+    return children;
+}
+
+function makeTreeData(maxDepth, currentDepth) {
+    var data = {'name': chooseRandomColor()};
+
+    if (currentDepth < maxDepth) {
+        data.children = makeMoreChildren(maxDepth, currentDepth);
+    }
+
+    return data;
+}
+
 function tree() {
+    var radius = 15;
+    var treeData = makeTreeData(6, 0);
+    var chart = svgContainer.append("svg:g");
+
+    var layout = d3.layout.tree().size([(svgHeight-(radius*2)),(svgWidth-(radius*2))]);
+
+    var diagonal = d3.svg.diagonal()
+        .projection(function(d) { return [d.y, d.x]; });
+
+    var nodes = layout.nodes(treeData);
+    var links = layout.links(nodes);
+
+    var link = chart.selectAll("pathlink")
+                    .data(links)
+                    .enter().append("svg:path")
+                    .attr("class", "link")
+                    .attr("d", diagonal);
+
+    var node = chart.selectAll("g.node")
+                    .data(nodes)
+                    .enter().append("svg:g")
+                    .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
+                    .attr("fill", function(d) { return d.name; });
+
+    node.append("svg:circle")
+        .attr("r", radius);
+
+    setTimeout(function() {
+        chart.attr('class', 'magictime puffOut');
+    }, 1000);
 
 }
 
