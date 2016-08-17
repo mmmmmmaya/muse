@@ -66,50 +66,15 @@ function chooseRandomColor() {
 }
 
 
-function flash() {
-    var flashColor = chooseRandomColor();
+function cluster() {
 
-    $('body').css("background-color", flashColor);
-    setTimeout(function() {
-        updateBgColor(currentTheme);
-    }, 300);
 }
 
 
-function makeHexagon(radius, x, y, fill) {
-    var h = (Math.sqrt(3)/2),
-        hexagonData = [
-          { "x":  radius+x,   "y": y}, 
-          { "x":  radius/2+x, "y": radius*h+y},
-          { "x": -radius/2+x, "y": radius*h+y},
-          { "x": -radius+x,   "y": y},
-          { "x": -radius/2+x, "y": -radius*h+y},
-          { "x":  radius/2+x, "y": -radius*h+y}
-        ];
+function bundle() {
 
-    var drawHexagon = 
-        d3.svg.line()
-            .x(function(d) { return d.x; })
-            .y(function(d) { return d.y; })
-            .interpolate("cardinal-closed")
-            .tension("1");
-
-    var enterElements = svgContainer.append("path")
-                                    .attr("d", drawHexagon(hexagonData))
-                                    .attr("fill", fill)
-                                    .attr('class', 'magictime puffOut');
 }
 
-function hexBurst() {
-    for (var i = 0; i < 15; i++){
-        var x = chooseRandomDim(svgWidth);
-        var y = chooseRandomDim(svgHeight);
-        var radius = chooseRandomSizeMultiple();
-        var fill = chooseRandomColor();
-
-        makeHexagon(radius, x, y, fill);
-    }
-}
 
 function makeCircle(radius, x, y) {
     var circle = svgContainer.append("circle")
@@ -152,21 +117,133 @@ function circleGrid() {
     }
 }
 
+
+function chord() {
+
+}
+
+
+function explode() {
+
+}
+
+
+function force() {
+
+}
+
+
+function smile() {
+
+}
+
+
+function makeHexagon(radius, x, y, fill) {
+    var h = (Math.sqrt(3)/2),
+        hexagonData = [
+          { "x":  radius+x,   "y": y}, 
+          { "x":  radius/2+x, "y": radius*h+y},
+          { "x": -radius/2+x, "y": radius*h+y},
+          { "x": -radius+x,   "y": y},
+          { "x": -radius/2+x, "y": -radius*h+y},
+          { "x":  radius/2+x, "y": -radius*h+y}
+        ];
+
+    var drawHexagon = 
+        d3.svg.line()
+            .x(function(d) { return d.x; })
+            .y(function(d) { return d.y; })
+            .interpolate("cardinal-closed")
+            .tension("1");
+
+    var enterElements = svgContainer.append("path")
+                                    .attr("d", drawHexagon(hexagonData))
+                                    .attr("fill", fill)
+                                    .attr('class', 'magictime puffOut');
+}
+
+function hexBurst() {
+    for (var i = 0; i < 15; i++){
+        var x = chooseRandomDim(svgWidth);
+        var y = chooseRandomDim(svgHeight);
+        var radius = chooseRandomSizeMultiple();
+        var fill = chooseRandomColor();
+
+        makeHexagon(radius, x, y, fill);
+    }
+}
+
+
+function implode() {
+
+}
+
+
+function partition() {
+
+}
+
+
+function spiral() {
+
+}
+
+
+function flash() {
+    var flashColor = chooseRandomColor();
+
+    $('body').css("background-color", flashColor);
+    setTimeout(function() {
+        updateBgColor(currentTheme);
+    }, 300);
+}
+
+
+function wink() {
+
+}
+
+
+function stripes() {
+
+}
+
+
+function rainbow() {
+
+}
+
+
+function pack() {
+
+}
+
+
 function suckedIn() {
     var x = svgWidth/2;
     var y = svgHeight/2;
     var radius = chooseRandomSizeOne();
-    var fill = '#ffffff';
+    var stroke = chooseRandomColor();
 
     var circle = makeCircle(radius, x, y);
-    circle.attr('fill', fill)
-          .attr("stroke", getThemeGray())
-          .attr("stroke-width", 2)
+    circle.attr('fill', 'transparent')
+          .attr("stroke", stroke)
+          .attr("stroke-width", 10)
           .attr("stroke-dasharray","20,5");
 
     setTimeout(function() {
-        circle.attr('class', 'magictime holeOut');
+        circle.attr('class', 'magictime spaceOutUp');
     }, 1000);
+}
+
+
+function raindrop() {
+
+}
+
+
+function stipple() {
+
 }
 
 
@@ -182,4 +259,34 @@ function takeOff() {
     setTimeout(function() {
         circle.attr('class', 'magictime tinRightOut');
     }, 1000);
+}
+
+
+function tree() {
+
+}
+
+
+function treemap() {
+
+}
+
+
+function wiggle() {
+
+}
+
+
+function stack() {
+
+}
+
+
+function pie(){
+
+}
+
+
+function zigzag() {
+
 }
