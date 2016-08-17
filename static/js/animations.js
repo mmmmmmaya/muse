@@ -29,7 +29,7 @@ var letterAnimationMap = {
     'z': function() {zigzag()}
 }
 
-var svgContainer = d3.select("svg");
+var svgContainer = d3.select('svg');
 var svgHeight;
 var svgWidth;
 resetSVGDims();
@@ -78,10 +78,10 @@ function bundle() {
 
 
 function makeCircle(radius, x, y) {
-    var circle = svgContainer.append("circle")
-        .attr("cy", y)
-        .attr("cx", x)
-        .attr("r", radius);
+    var circle = svgContainer.append('circle')
+        .attr('cy', y)
+        .attr('cx', x)
+        .attr('r', radius);
 
     return circle;
 }
@@ -89,7 +89,7 @@ function makeCircle(radius, x, y) {
 function makeCircleWithVanish(radius, x, y) {
     var fill = chooseRandomColor();
     var circle = makeCircle(radius, x, y);
-    circle.attr("fill", fill);
+    circle.attr('fill', fill);
 
     var randomTimeout = getRandomInt(1, 1500);
     setTimeout(function() {
@@ -104,10 +104,10 @@ function circleGrid() {
     var offset = radius * numCircles * -1;
     var x = chooseRandomDim(svgWidth, offset);
     var y = chooseRandomDim(svgHeight, offset);
-    var original_y = y;
+    var originalY = y;
 
     for (var i = 0; i < numCircles; i++) {
-        y = original_y;
+        y = originalY;
 
         for (var j = 0; j < numCircles; j++) {
             makeCircleWithVanish(radius, x, y);
@@ -128,12 +128,12 @@ function generateHexData(radius, x, y) {
     var h = (Math.sqrt(3)/2)
 
     return [
-        { "x":  radius/2+x, "y": -radius*h+y},
-        { "x":  radius+x,   "y": y},
-        { "x":  radius/2+x, "y": radius*h+y},
-        { "x": -radius/2+x, "y": radius*h+y},
-        { "x": -radius+x,   "y": y},
-        { "x": -radius/2+x, "y": -radius*h+y},
+        { 'x':  radius/2+x, 'y': -radius*h+y},
+        { 'x':  radius+x,   'y': y},
+        { 'x':  radius/2+x, 'y': radius*h+y},
+        { 'x': -radius/2+x, 'y': radius*h+y},
+        { 'x': -radius+x,   'y': y},
+        { 'x': -radius/2+x, 'y': -radius*h+y},
     ];
 }
 
@@ -190,12 +190,12 @@ function makeHexagon(radius, x, y, fill) {
         d3.svg.line()
             .x(function(d) { return d.x; })
             .y(function(d) { return d.y; })
-            .interpolate("cardinal-closed")
-            .tension("1");
+            .interpolate('cardinal-closed')
+            .tension('1');
 
-    var enterElements = svgContainer.append("path")
-                                    .attr("d", drawHexagon(hexagonData))
-                                    .attr("fill", fill)
+    var enterElements = svgContainer.append('path')
+                                    .attr('d', drawHexagon(hexagonData))
+                                    .attr('fill', fill)
                                     .attr('class', 'magictime puffOut');
 }
 
@@ -222,22 +222,21 @@ function partition() {
 
 
 function staffTwirl() {
-    var stroke = chooseRandomColor();
+    var strokeColor = chooseRandomColor();
     var x = chooseRandomDim(svgWidth);
     var x2 = chooseRandomDim(svgWidth);
 
     var y = chooseRandomDim(svgHeight);
     var y2 = chooseRandomDim(svgHeight);
 
-    var rectangle = svgContainer.append("line")
-                                .attr("x1", x)
-                                .attr("y1", y)
-                                .attr("x2", x2)
-                                .attr("y2", y2)
-                                .attr('class', 'magictime slideLeftRetourn')
-                                .attr("stroke", stroke)
-                                .attr("stroke-width", 10)
-                                .attr("stroke-dasharray","20,5");
+    var rectangle = svgContainer.append('line')
+                                .attr('x1', x)
+                                .attr('y1', y)
+                                .attr('x2', x2)
+                                .attr('y2', y2)
+                                .attr('stroke', strokeColor)
+                                .attr('stroke-width', 10)
+                                .attr('stroke-dasharray','20,5');
 
     setTimeout(function() {
         rectangle.attr('class', 'magictime foolishOut')
@@ -248,7 +247,7 @@ function staffTwirl() {
 function flash() {
     var flashColor = chooseRandomColor();
 
-    $('body').css("background-color", flashColor);
+    $('body').css('background-color', flashColor);
     setTimeout(function() {
         updateBgColor(currentTheme);
     }, 400);
@@ -264,7 +263,7 @@ function drawStripe(i) {
     var y = 60 * i;
     var fill = chooseRandomColor();
 
-    var rectangle = svgContainer.append("rect")
+    var rectangle = svgContainer.append('rect')
                          .attr('x', 0)
                          .attr('y', y)
                          .attr('width', '100%')
@@ -301,13 +300,13 @@ function suckedIn() {
     var x = svgWidth/2;
     var y = svgHeight/2;
     var radius = chooseRandomSizeOne();
-    var stroke = chooseRandomColor();
+    var strokeColor = chooseRandomColor();
 
     var circle = makeCircle(radius, x, y);
     circle.attr('fill', 'transparent')
-          .attr("stroke", stroke)
-          .attr("stroke-width", 10)
-          .attr("stroke-dasharray","20,5");
+          .attr('stroke', strokeColor)
+          .attr('stroke-width', 10)
+          .attr('stroke-dasharray','20,5');
 
     setTimeout(function() {
         circle.attr('class', 'magictime spaceOutUp');
@@ -374,7 +373,7 @@ function makeTreeData(maxDepth, currentDepth) {
 function tree() {
     var radius = 15;
     var treeData = makeTreeData(6, 0);
-    var chart = svgContainer.append("svg:g");
+    var chart = svgContainer.append('svg:g');
 
     var layout = d3.layout.tree().size([(svgHeight-(radius*2)),(svgWidth-(radius*2))]);
 
@@ -384,20 +383,20 @@ function tree() {
     var nodes = layout.nodes(treeData);
     var links = layout.links(nodes);
 
-    var link = chart.selectAll("pathlink")
+    var link = chart.selectAll('pathlink')
                     .data(links)
-                    .enter().append("svg:path")
-                    .attr("class", "link")
-                    .attr("d", diagonal);
+                    .enter().append('svg:path')
+                    .attr('class', 'link')
+                    .attr('d', diagonal);
 
-    var node = chart.selectAll("g.node")
+    var node = chart.selectAll('g.node')
                     .data(nodes)
-                    .enter().append("svg:g")
-                    .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
-                    .attr("fill", function(d) { return d.name; });
+                    .enter().append('svg:g')
+                    .attr('transform', function(d) { return 'translate(' + d.y + ',' + d.x + ')'; })
+                    .attr('fill', function(d) { return d.name; });
 
-    node.append("svg:circle")
-        .attr("r", radius);
+    node.append('svg:circle')
+        .attr('r', radius);
 
     setTimeout(function() {
         chart.attr('class', 'magictime puffOut');
@@ -426,11 +425,62 @@ function pie(){
 }
 
 
-function zigzag() {
+function getLineData(x, y) {
+    var lineData = [];
+    var randomAmplitude = getRandomInt(10, 40);
+    var length = Math.ceil(svgHeight/randomAmplitude);
 
+    for (var i = 0; i < length; i++) {
+        lineData.push({'x': x, 'y': y});
+        y += randomAmplitude;
+
+        if (i % 2 == 0) {
+            x += randomAmplitude;
+        } else{
+            x -= randomAmplitude;
+        }
+    }
+
+    return lineData;
 }
 
+function drawZigzag() {
+    var x = chooseRandomDim(svgWidth);
+    var y = chooseRandomDim(svgHeight);
+    var strokeColor = chooseRandomColor();
 
+    var lineData = getLineData(x, y);
+
+    var lineFunction = d3.svg.line()
+                             .x(function(d) { return d.x; })
+                             .y(function(d) { return d.y; })
+                             .interpolate('linear');
+
+    var lineGraph = svgContainer.append('path')
+                                .attr('d', lineFunction(lineData))
+                                .attr('stroke', strokeColor)
+                                .attr('stroke-width', 15)
+                                .attr('fill', 'transparent');
+
+    return lineGraph;
+}
+
+function animateZigZag(zigzag) {
+    zigzag.attr('class', 'magictime slideDownRetourn');
+
+    setTimeout(function() {
+        zigzag.attr('class', 'magictime slideUp');
+    }, 250);
+
+    setTimeout(function() {
+        zigzag.attr('stroke', 'transparent');
+    }, 1300);
+}
+
+function zigzag() {
+    var zigzag = drawZigzag();
+    animateZigZag(zigzag);
+}
 
 function resetSVGDims(evt){
     svgWidth = svgContainer[0][0]['clientWidth'];
