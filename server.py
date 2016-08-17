@@ -158,6 +158,29 @@ def save_recording():
         return jsonify({'status': 'login_required'})
 
 
+@app.route('/teapot', methods=['BREW', 'GET', 'PROPFIND', 'WHEN'])
+def teapot():
+    """Easter egg."""
+
+    method = request.method
+
+    if method == 'BREW':
+        return jsonify({'status': 'brewing'})
+
+    elif method == 'GET':
+        return render_template('teapot.html'), 418
+
+    elif method == 'PROPFIND':
+        return jsonify({'strength': 'strong',
+                        'origin': 'Vietnam',
+                        'name': 'Kopi Luwak',
+                        'quantity': '16 fl oz'})
+
+    elif method == 'WHEN':
+        return jsonify({'status': 'stopped_pouring',
+                        'content': 'milk'})
+
+
 if __name__ == '__main__':
     app.debug = True
     connect_to_db(app)
