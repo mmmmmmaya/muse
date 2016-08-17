@@ -124,8 +124,43 @@ function chord() {
 }
 
 
-function explode() {
+function generateHexData(radius, x, y) {
+    var h = (Math.sqrt(3)/2)
 
+    return [
+        { "x":  radius/2+x, "y": -radius*h+y},
+        { "x":  radius+x,   "y": y},
+        { "x":  radius/2+x, "y": radius*h+y},
+        { "x": -radius/2+x, "y": radius*h+y},
+        { "x": -radius+x,   "y": y},
+        { "x": -radius/2+x, "y": -radius*h+y},
+    ];
+}
+
+function explode() {
+    var x = chooseRandomDim(svgWidth);
+    var y = chooseRandomDim(svgHeight);
+    var explosionRadius = chooseRandomSizeOne();
+    var particleRadius = 30;
+    var particleFill = chooseRandomColor();
+
+    var center = makeCircle(particleRadius, x, y).attr('fill', chooseRandomColor())
+                                                 .attr('class', 'magictime vanishOut');
+
+    var radiusData = generateHexData(explosionRadius, x, y);
+
+    for (var i = 0; i < radiusData.length; i++) {
+        var thisX = radiusData[i]['x'];
+        var thisY = radiusData[i]['y'];
+
+        var circle = makeCircle(particleRadius, thisX, thisY).attr('fill', particleFill);
+
+        if (i < 3) {
+            circle.attr('class', 'magictime openDownRightOut');
+        } else {
+            circle.attr('class', 'magictime openDownLeftOut');
+        }
+    }
 }
 
 
@@ -140,15 +175,7 @@ function smile() {
 
 
 function makeHexagon(radius, x, y, fill) {
-    var h = (Math.sqrt(3)/2),
-        hexagonData = [
-          { "x":  radius+x,   "y": y}, 
-          { "x":  radius/2+x, "y": radius*h+y},
-          { "x": -radius/2+x, "y": radius*h+y},
-          { "x": -radius+x,   "y": y},
-          { "x": -radius/2+x, "y": -radius*h+y},
-          { "x":  radius/2+x, "y": -radius*h+y}
-        ];
+    var hexagonData = generateHexData(radius, x, y);
 
     var drawHexagon = 
         d3.svg.line()
