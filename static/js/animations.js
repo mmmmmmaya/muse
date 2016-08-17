@@ -39,12 +39,15 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function chooseRandomX() {
-    return getRandomInt(0, svgWidth);
-}
+function chooseRandomDim(max, offset) {
+    var offset = offset || 0;
+    var random = getRandomInt(0, max);
 
-function chooseRandomY() {
-    return getRandomInt(0, svgHeight);
+    if (offset !== 0) {
+        random += offset;
+    }
+
+    return random;
 }
 
 function chooseRandomSizeMultiple() {
@@ -99,8 +102,8 @@ function makeHexagon(radius, x, y, fill) {
 
 function hexBurst() {
     for (var i = 0; i < 15; i++){
-        var x = chooseRandomX();
-        var y = chooseRandomY();
+        var x = chooseRandomDim(svgWidth);
+        var y = chooseRandomDim(svgHeight);
         var radius = chooseRandomSizeMultiple();
         var fill = chooseRandomColor();
 
@@ -132,8 +135,9 @@ function circleGrid() {
     var numCircles = 6;
     var radius = chooseRandomSizeMultiple();
 
-    var x = chooseRandomX() - (radius*numCircles);
-    var y = chooseRandomY() - (radius*numCircles);
+    var offset = radius * numCircles * -1;
+    var x = chooseRandomDim(svgWidth, offset);
+    var y = chooseRandomDim(svgHeight, offset);
     var original_y = y;
 
     for (var i = 0; i < numCircles; i++) {
@@ -167,8 +171,8 @@ function suckedIn() {
 
 
 function takeOff() {
-    var x = chooseRandomX();
-    var y = chooseRandomY();
+    var x = chooseRandomDim();
+    var y = chooseRandomDim();
     var radius = chooseRandomSizeOne();
     var fill = chooseRandomColor();
 
