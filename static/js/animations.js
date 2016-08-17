@@ -11,7 +11,7 @@ var letterAnimationMap = {
     'h': function() {hexBurst()},
     'i': function() {implode()},
     'j': function() {partition()},
-    'k': function() {spiral()},
+    'k': function() {staffTwirl()},
     'l': function() {flash()},
     'm': function() {wink()},
     'n': function() {stripes()},
@@ -221,8 +221,27 @@ function partition() {
 }
 
 
-function spiral() {
+function staffTwirl() {
+    var stroke = chooseRandomColor();
+    var x = chooseRandomDim(svgWidth);
+    var x2 = chooseRandomDim(svgWidth);
 
+    var y = chooseRandomDim(svgHeight);
+    var y2 = chooseRandomDim(svgHeight);
+
+    var rectangle = svgContainer.append("line")
+                                .attr("x1", x)
+                                .attr("y1", y)
+                                .attr("x2", x2)
+                                .attr("y2", y2)
+                                .attr('class', 'magictime slideLeftRetourn')
+                                .attr("stroke", stroke)
+                                .attr("stroke-width", 10)
+                                .attr("stroke-dasharray","20,5");
+
+    setTimeout(function() {
+        rectangle.attr('class', 'magictime foolishOut')
+    }, 300);
 }
 
 
