@@ -1,32 +1,32 @@
 'use strict';
 
 var letterAnimationMap = {
-    'a': function() {footprints()},
-    'b': function() {bundle()},
-    'c': function() {circleGrid()},
-    'd': function() {chord()},
-    'e': function() {explode()},
-    'f': function() {force()},
-    'g': function() {smile()},
-    'h': function() {hexBurst()},
-    'i': function() {implode()},
-    'j': function() {partition()},
-    'k': function() {staffTwirl()},
-    'l': function() {flash()},
-    'm': function() {wink()},
-    'n': function() {stripes()},
-    'o': function() {rainbow()},
-    'p': function() {pack()},
-    'q': function() {suckedIn()},
-    'r': function() {raindrop()},
-    's': function() {stipple()},
-    't': function() {takeOff()},
-    'u': function() {tree()},
-    'v': function() {treemap()},
-    'w': function() {wiggle()},
-    'x': function() {stack()},
-    'y': function() {pie()},
-    'z': function() {zigzag()}
+    'a': function() {footprints();},
+    'b': function() {bundle();},
+    'c': function() {circleGrid();},
+    'd': function() {chord();},
+    'e': function() {explode();},
+    'f': function() {force();},
+    'g': function() {smile();},
+    'h': function() {hexBurst();},
+    'i': function() {implode();},
+    'j': function() {partition();},
+    'k': function() {staffTwirl();},
+    'l': function() {flash();},
+    'm': function() {wink();},
+    'n': function() {stripes();},
+    'o': function() {rainbow();},
+    'p': function() {pack();},
+    'q': function() {suckedIn();},
+    'r': function() {raindrop();},
+    's': function() {stipple();},
+    't': function() {takeOff();},
+    'u': function() {tree();},
+    'v': function() {treemap();},
+    'w': function() {wiggle();},
+    'x': function() {stack();},
+    'y': function() {pie();},
+    'z': function() {zigzag();}
 }
 
 var svgContainer = d3.select('svg');
@@ -64,6 +64,20 @@ function chooseRandomColor() {
     var index = getRandomInt(0, colors.length);
 
     return colors[index];
+}
+
+function collectGarbage() {
+    var maxElements = 500;
+    var svg = $('#svg')[0];
+
+    if (svg.childElementCount > maxElements) {
+        var maxDeleteIndex = svg.childElementCount - maxElements;
+        var children = svg.children;
+
+        for (var i = 0; i < maxDeleteIndex; i++) {
+            svg.removeChild(children[0]);
+        }
+    }
 }
 
 
@@ -286,13 +300,78 @@ function stripes() {
 }
 
 
-function rainbow() {
+function drawOverlappingCircles(x, y) {
+    var radius = Math.min(x, y) * .8;
+    var colors = getThemeColors(currentTheme);
+    var bgColor = getThemeBg(currentTheme)
+    var radiusDecrement = radius / (colors.length + 2);
 
+    for (var i = 0; i < colors.length; i++) {
+        var circle = makeCircle(radius, x, y);
+        circle.attr('fill', colors[i])
+              .attr('class', 'rainbow');
+        radius -= radiusDecrement;
+    }
+
+    var centerCircle = makeCircle(radius, x, y);
+    centerCircle.attr('fill', bgColor)
+                .attr('class', 'rainbow');
+}
+
+function drawRainbowRect(x, y, height) {
+    var fill = getThemeBg(currentTheme);
+
+    var rectangle = svgContainer.append('rect')
+                         .attr('x', x)
+                         .attr('y', y)
+                         .attr('width', '100%')
+                         .attr('height', height)
+                         .attr('fill', fill)
+                         .attr('class', 'rainbow');
+
+    return rectangle;
+}
+
+function rainbow() {
+    var x = svgWidth/2;
+    var y = (4/5) * svgHeight;
+    var height = (svgHeight/2) + 1;
+
+    drawOverlappingCircles(x, y);
+
+
+    var bottom = drawRainbowRect(0, y, height);
+    var top = drawRainbowRect(0, 0, y);
+    top.attr('class', 'rainbow magictime rainbowAnimate');
+
+    setTimeout(function () {
+        d3.selectAll(".rainbow").remove();
+    }, 1000);
 }
 
 
 function pack() {
+    var data = makeData(8, 0);
 
+    var nodes = d3.layout.pack()
+      .value(function(d) { return d.size;})
+      .size([svgWidth, svgHeight])
+      .nodes(data);
+
+    nodes.shift();
+
+    var chart = svgContainer.selectAll('circles')
+                            .data(nodes)
+                        .enter().append('svg:circle')
+                            .attr('cx', function(d) { return d.x; })
+                            .attr('cy', function(d) { return d.y; })
+                            .attr('r', function(d) { return d.r; })
+                            .attr('fill', function(d) { return d.name; })
+                            .attr('stroke', 'grey');
+
+    setTimeout(function() {
+        chart.attr('class', 'magictime packAnimate');
+    }, 100);
 }
 
 
@@ -344,7 +423,7 @@ function makeMoreChildren(maxDepth, currentDepth) {
         var shouldMakeChild = getRandomInt(0, 2);
 
         if (shouldMakeChild === 1) {
-            var child = makeTreeData(maxDepth, currentDepth);
+            var child = makeData(maxDepth, currentDepth);
 
             if (child) {
                 children.push(child);
@@ -356,8 +435,9 @@ function makeMoreChildren(maxDepth, currentDepth) {
     return children;
 }
 
-function makeTreeData(maxDepth, currentDepth) {
-    var data = {'name': chooseRandomColor()};
+function makeData(maxDepth, currentDepth) {
+    var data = {'name': chooseRandomColor(),
+                'size': getRandomInt(1, 1000)};
 
     if (currentDepth < maxDepth) {
         data.children = makeMoreChildren(maxDepth, currentDepth);
@@ -368,7 +448,7 @@ function makeTreeData(maxDepth, currentDepth) {
 
 function tree() {
     var radius = 15;
-    var treeData = makeTreeData(6, 0);
+    var treeData = makeData(6, 0);
     var chart = svgContainer.append('svg:g');
 
     var layout = d3.layout.tree().size([(svgHeight-(radius*2)),(svgWidth-(radius*2))]);

@@ -69,6 +69,7 @@ function actionApp(keyPressed) {
 
     audio.play();
     letterAnimationMap[keyPressed]();
+    collectGarbage();
 }
 
 function updateSong(keyPressed) {

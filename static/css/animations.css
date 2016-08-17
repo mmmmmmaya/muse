@@ -1,0 +1,73 @@
+/*************************/
+/* Animation for rainbow */
+/*************************/
+
+.rainbowAnimate {
+  -webkit-animation-name: rainbowAnimate;
+  animation-name: rainbowAnimate;
+}
+
+@-webkit-keyframes rainbowAnimate {
+    0% {
+        -webkit-transform-origin: bottom center;
+        -webkit-transform: rotate(0deg);
+        -webkit-animation-timing-function: linear;
+    }
+
+    100% {
+        -webkit-transform-origin: bottom center;
+        -webkit-transform: rotate(360deg);
+        -webkit-animation-timing-function: linear;
+    }
+}
+
+@keyframes rainbowAnimate {
+    0% {
+        transform-origin: bottom center;
+        transform: rotate(0deg);
+        animation-timing-function: linear;
+    }
+
+    100% {
+        transform-origin: bottom center;
+        transform: rotate(360deg);
+        animation-timing-function: linear;
+    }
+}
+
+/*************************/
+/* Animation for pack */
+/*************************/
+
+.packAnimate {
+  -webkit-animation-name: packAnimate;
+  animation-name: packAnimate;
+}
+
+@-webkit-keyframes packAnimate {
+    0% {
+        -webkit-transform-origin: center center;
+        -webkit-transform: scale(1);
+        -webkit-animation-timing-function: linear;
+    }
+
+    100% {
+        -webkit-transform-origin: center center;
+        -webkit-transform: scale(0);
+        -webkit-animation-timing-function: linear;
+    }
+}
+
+@keyframes packAnimate {
+    0% {
+        transform-origin: center center;
+        transform: scale(1);
+        animation-timing-function: linear;
+    }
+
+    100% {
+        transform-origin: center center;
+        transform: scale(0);
+        animation-timing-function: linear;
+    }
+}
