@@ -306,13 +306,9 @@ function suckedIn() {
     circle.attr('fill', 'transparent')
           .attr('stroke', strokeColor)
           .attr('stroke-width', 10)
-          .attr('stroke-dasharray','20,5');
-
-    setTimeout(function() {
-        circle.attr('class', 'magictime spaceOutUp');
-    }, 1000);
+          .attr('stroke-dasharray','20,5')
+          .attr('class', 'magictime spaceOutUp');
 }
-
 
 function raindrop() {
 
