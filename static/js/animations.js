@@ -66,10 +66,70 @@ function chooseRandomColor() {
 }
 
 
-function cluster() {
+function makeMoreChildren(maxDepth, currentDepth) {
+    var random = getRandomInt(0, 5);
+    var children = [];
+    currentDepth++;
 
+    for (var i = 0; i < random; i++) {
+        var shouldMakeChild = getRandomInt(0, 2);
+
+        if (shouldMakeChild === 1) {
+            var child = makeTreeData(maxDepth, currentDepth);
+
+            if (child) {
+                children.push(child);
+            }
+        }
+    }
+
+    currentDepth--;
+    return children;
 }
 
+function makeTreeData(maxDepth, currentDepth) {
+    var data = {'name': chooseRandomColor()};
+
+    if (currentDepth < maxDepth) {
+        data.children = makeMoreChildren(maxDepth, currentDepth);
+    }
+
+    return data;
+}
+
+function cluster() {
+    var radius = 15;
+    var treeData = makeTreeData(6, 0);
+    var chart = svgContainer.append("svg:g");
+
+    var layout = d3.layout.cluster().size([(svgHeight-(radius*2)),(svgWidth-(radius*2))]);
+
+    var diagonal = d3.svg.diagonal()
+        .projection(function(d) { return [d.y, d.x]; });
+
+    var nodes = layout.nodes(treeData);
+    var links = layout.links(nodes);
+
+    var link = chart.selectAll("pathlink")
+                    .data(links)
+                    .enter().append("svg:path")
+                    .attr("class", "link")
+                    .attr("d", diagonal);
+
+    var node = chart.selectAll("g.node")
+                    .data(nodes)
+                    .enter().append("svg:g")
+                    .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
+                    .attr("fill", function(d) { return d.name; });
+
+    node.append("svg:circle")
+        .attr("r", radius);
+
+    setTimeout(function() {
+        chart.attr('class', 'magictime puffOut');
+    }, 1000);
+
+}
 
 function bundle() {
 
@@ -195,7 +255,7 @@ function flash() {
     $('body').css("background-color", flashColor);
     setTimeout(function() {
         updateBgColor(currentTheme);
-    }, 300);
+    }, 400);
 }
 
 
