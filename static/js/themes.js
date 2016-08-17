@@ -18,7 +18,7 @@ function getThemeColors(theme) {
     return themeColors[theme];
 }
 
-function getThemeGray(theme) {
+function getThemeBg(theme) {
     return backgrounds[theme];
 }
 
