@@ -30,8 +30,9 @@ var letterAnimationMap = {
 }
 
 var svgContainer = d3.select("svg");
-var svgWidth = svgContainer[0][0]['clientWidth'];
-var svgHeight = svgContainer[0][0]['clientHeight'];
+var svgHeight;
+var svgWidth;
+resetSVGDims();
 
 function getRandomInt(min, max) {
     var min = Math.ceil(min);
@@ -308,8 +309,8 @@ function stipple() {
 
 
 function takeOff() {
-    var x = chooseRandomDim();
-    var y = chooseRandomDim();
+    var x = chooseRandomDim(svgWidth);
+    var y = chooseRandomDim(svgHeight);
     var radius = chooseRandomSizeOne();
     var fill = chooseRandomColor();
 
@@ -350,3 +351,12 @@ function pie(){
 function zigzag() {
 
 }
+
+
+
+function resetSVGDims(evt){
+    svgWidth = svgContainer[0][0]['clientWidth'];
+    svgHeight = svgContainer[0][0]['clientHeight'];
+}
+
+$(window).resize(resetSVGDims);
