@@ -19,7 +19,7 @@ function getThemeColors(theme) {
 }
 
 function getThemeGray(theme) {
-    return grays[theme];
+    return backgrounds[theme];
 }
 
 function updateBgColor(theme) {
