@@ -4,7 +4,7 @@ var letterAnimationMap = {
     'a': function() {footprints();},
     'b': function() {bundle();},
     'c': function() {circleGrid();},
-    'd': function() {chord();},
+    'd': function() {piano();},
     'e': function() {explode();},
     'f': function() {force();},
     'g': function() {smile();},
@@ -133,10 +133,111 @@ function circleGrid() {
 }
 
 
-function chord() {
+function drawMajorKeys(x, y, numKeys, pianoKeyWidth,
+                        spaceBetweenKeys, pianoHeight) {
+    var x = x;
+    var keyColor = chooseRandomColor();
+    var keys = [];
+
+    for (var i = 0; i < numKeys; i++) {
+        var rectangle = svgContainer.append('rect')
+                         .attr('x', x)
+                         .attr('y', y)
+                         .attr('width', pianoKeyWidth)
+                         .attr('height', pianoHeight)
+                         .attr('fill', keyColor)
+                         .attr('class', 'piano');
+        keys.push(rectangle);
+        x += (pianoKeyWidth + spaceBetweenKeys);
+    }
+
+    return keys;
+}
+
+function drawMinorKeys(x, y, numKeys, pianoKeyWidth,
+                        spaceBetweenKeys, pianoHeight, majorKeyColor) {
+    var minorKeyWidth = (2/3)*pianoKeyWidth;
+    var x = x + minorKeyWidth;
+    var keyColor = ensureDifferentColor(majorKeyColor);
+    var strokeFill = getThemeBg(currentTheme);
+
+    for (var i = 0; i < numKeys-1; i++) {
+        if (i !== 2) {
+            var rectangle = svgContainer.append('rect')
+                             .attr('x', x)
+                             .attr('y', y)
+                             .attr('width', minorKeyWidth)
+                             .attr('height', pianoHeight/2)
+                             .attr('fill', keyColor)
+                             .attr('stroke', strokeFill)
+                             .attr('stroke-width', spaceBetweenKeys)
+                             .attr('class', 'piano');
+        }
+
+        x += (pianoKeyWidth + spaceBetweenKeys);
+    }
+}
+
+function d3Delete(className, time) {
+    setTimeout(function () {
+        var selector = "." + className;
+        d3.selectAll(selector).remove();
+    }, time);
+}
+
+function animatePiano(keyColor) {
+
+    setInterval(function(){
+
+    }, 500);
+
+    var keys = d3.selectAll('.piano')[0];
+    var activeFill = ensureDifferentColor(keyColor);
+    var timePressed = 200;
+    var timeToNextKey = 100;
+    var timer = timeToNextKey;
+
+    for (var i = 0; i < keys.length; i++) {
+        var originalColor;
+        console.log(keys[i]);
+        setTimeout(function() {
+            console.log(keys[i]);
+            originalColor = keys[i].attr('fill');
+            keys[i].attr('fill', activeFill);
+        }, timer);
+
+        timer += timePressed;
+
+        setTimeout(function() {
+            keys[i].attr('fill', originalColor);
+        }, timer);
+
+        timer += timeToNextKey;
+    }
 
 }
 
+function piano() {
+    var numKeys = 7;
+    var pianoKeyWidth = (svgWidth * (2/3))/numKeys;
+    var spaceBetweenKeys = 5;
+    var totalPianoWidth = (numKeys * pianoKeyWidth)
+                        + ((numKeys - 1) * spaceBetweenKeys);
+    var pianoHeight = (2/3) * svgHeight;
+
+    var x = (svgWidth - totalPianoWidth) / 2;
+    var y = (svgHeight - pianoHeight) / 2;
+
+    var majorKeys = drawMajorKeys(x, y, numKeys, pianoKeyWidth,
+                                        spaceBetweenKeys, pianoHeight);
+    var majorKeyColor = d3.select('.piano').attr('fill');
+    drawMinorKeys(x, y, numKeys, pianoKeyWidth,
+                    spaceBetweenKeys, pianoHeight, majorKeyColor);
+
+    // TODO finish animate
+    // animatePiano(majorKeyColor);
+    d3Delete('piano', 3000);
+}
 
 function generateHexData(radius, x, y) {
     var h = (Math.sqrt(3)/2)
@@ -168,17 +269,23 @@ function addParticles(radius, x, y, size, fill) {
     }
 }
 
+function ensureDifferentColor(color) {
+    var secondColor = chooseRandomColor();
+
+    while (color === secondColor) {
+        secondColor = chooseRandomColor();
+    }
+
+    return secondColor;
+}
+
 function explode() {
     var x = chooseRandomDim(svgWidth);
     var y = chooseRandomDim(svgHeight);
     var explosionRadius = chooseRandomSizeOne();
     var centerFill = chooseRandomColor();
     var particleSize = 30;
-    var particleFill = chooseRandomColor();
-
-    while (particleFill === centerFill) {
-        particleFill = chooseRandomColor();
-    }
+    var particleFill = ensureDifferentColor(centerFill);
 
     var center = makeCircle(particleSize, x, y).attr('fill', centerFill)
                                                  .attr('class', 'magictime vanishOut');
@@ -344,9 +451,7 @@ function rainbow() {
     var top = drawRainbowRect(0, 0, y);
     top.attr('class', 'rainbow magictime rainbowAnimate');
 
-    setTimeout(function () {
-        d3.selectAll(".rainbow").remove();
-    }, 1000);
+    d3Delete('rainbow', 1000);
 }
 
 
@@ -436,6 +541,7 @@ function makeMoreChildren(maxDepth, currentDepth) {
 }
 
 function makeData(maxDepth, currentDepth) {
+    // TODO prevent 1 level return
     var data = {'name': chooseRandomColor(),
                 'size': getRandomInt(1, 1000)};
 
