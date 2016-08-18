@@ -15,13 +15,13 @@ var backgrounds = [
 ]
 
 function getThemeColors(theme) {
-    return themeColors[theme];
+    return themeColors[theme-1];
 }
 
 function getThemeBg(theme) {
-    return backgrounds[theme];
+    return backgrounds[theme-1];
 }
 
 function updateBgColor(theme) {
-    $('body').css("background-color", backgrounds[theme]);
+    $('body').css("background-color", backgrounds[theme-1]);
 }

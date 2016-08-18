@@ -4,7 +4,7 @@
 var appIsRecording = false;
 var recordingArray = [];
 // TODO placeholder for now until I get multiple themes set up
-var currentTheme = 0;
+var currentTheme = 1;
 updateBgColor(currentTheme);
 
 function toggleRecording() {
@@ -81,8 +81,8 @@ function updateSong(keyPressed) {
 }
 
 function nextTheme() {
-    if (currentTheme === 4) {
-        currentTheme = 0;
+    if (currentTheme === 5) {
+        currentTheme = 1;
     } else {
         currentTheme++;
     }
