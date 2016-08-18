@@ -17,11 +17,17 @@ app = Flask(__name__)
 app.secret_key = os.environ['FLASK_APP_SECRET_KEY']
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
     """Show main music-making page to user."""
 
-    return render_template('index.html')
+    konami = None
+
+    if request.method == 'POST':
+        konami = request.form.get('konami')
+
+    return render_template('index.html',
+                           konami=konami)
 
 
 @app.route('/fetch_recording/<int:recording_id>')
