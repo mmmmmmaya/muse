@@ -120,3 +120,36 @@
         animation-timing-function: linear;
     }
 }
+
+/***********************************/
+/* Animation for Sliding to Bottom */
+/***********************************/
+
+.slideToBottom {
+  -webkit-animation-name: slideToBottom;
+  animation-name: slideToBottom;
+}
+
+@-webkit-keyframes slideToBottom {
+    0% {
+        -webkit-transform: translateY(0%);
+        -webkit-animation-timing-function: linear;
+    }
+
+    100% {
+        -webkit-transform: translateY(5000%);
+        -webkit-animation-timing-function: linear;
+    }
+}
+
+@keyframes slideToBottom {
+    0% {
+        transform: translateY(0%);
+        animation-timing-function: linear;
+    }
+
+    100% {
+        transform: translateY(5000%);
+        animation-timing-function: linear;
+    }
+}

@@ -10,7 +10,7 @@ var letterAnimationMap = {
     'g': function() {splatter();},
     'h': function() {hexBurst();},
     'i': function() {implode();},
-    'j': function() {partition();},
+    'j': function() {verticalChecker();},
     'k': function() {staffTwirl();},
     'l': function() {flash();},
     'm': function() {wink();},
@@ -22,7 +22,7 @@ var letterAnimationMap = {
     's': function() {stipple();},
     't': function() {takeOff();},
     'u': function() {tree();},
-    'v': function() {treemap();},
+    'v': function() {flashingLights();},
     'w': function() {wiggle();},
     'x': function() {starburst();},
     'y': function() {speedy();},
@@ -430,8 +430,31 @@ function implode() {
 }
 
 
-function partition() {
+function drawChecker(i) {
+    var x = 20 * i;
+    var fill = chooseRandomColor();
 
+    var rectangle = svgContainer.append('rect')
+                         .attr('x', x)
+                         .attr('y', 0)
+                         .attr('width', '20')
+                         .attr('height', '20')
+                         .attr('fill', fill)
+                         .attr('class', 'magictime slideToBottom');
+}
+
+function ceilingDraw(func) {
+    var num = Math.floor(svgWidth/20);
+
+    for (var i = 0; i <= num; i++) {
+        if (i % 2 == 0) {
+            func(i);
+        }
+    }
+}
+
+function verticalChecker() {
+    ceilingDraw(drawChecker);
 }
 
 
@@ -680,8 +703,29 @@ function tree() {
 }
 
 
-function treemap() {
+function drawLights(i) {
+    var radius = 20;
+    var x = radius * (i+1);
+    var fill = chooseRandomColor();
 
+    var light = makeCircle(radius/2, x, 0)
+                    .attr('fill', fill)
+                    .attr('class', 'lights');
+
+    d3Delete('lights', 2500);
+
+}
+
+function flashingLights() {
+    var flashLength = 5;
+
+    for (var i = 0; i < flashLength; i++) {
+        var timer = 500 * i;
+
+        setTimeout(function() {
+            ceilingDraw(drawLights);
+        }, timer);
+    }
 }
 
 
