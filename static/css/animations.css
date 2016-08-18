@@ -153,3 +153,73 @@
         animation-timing-function: linear;
     }
 }
+
+/***************************/
+/* Animation for Spiraling */
+/***************************/
+
+.spiralIn {
+  -webkit-animation-name: spiralIn;
+  animation-name: spiralIn;
+}
+
+@-webkit-keyframes spiralIn
+{
+    0% {
+        -webkit-transform-origin: bottom center;
+        -webkit-transform: scale(2)
+                   rotate(120deg)
+                   translate(350px)
+                   rotate(-120deg);
+        -webkit-animation-timing-function: linear;
+    }
+
+    50% {
+        -webkit-transform-origin: bottom center;
+        -webkit-transform: scale(1)
+                   rotate(480deg)
+                   translate(175px)
+                   rotate(-840deg);
+        -webkit-animation-timing-function: linear;
+    }
+
+    100% {
+        -webkit-transform-origin: bottom center;
+        -webkit-transform: scale(0)
+                   rotate(840deg)
+                   translate(0px)
+                   rotate(-840deg);
+        -webkit-animation-timing-function: linear;
+    }
+}
+
+
+@keyframes spiralIn
+{
+    0% {
+        transform-origin: bottom center;
+        transform: scale(2)
+                   rotate(120deg)
+                   translate(350px)
+                   rotate(-120deg);
+        animation-timing-function: linear;
+    }
+
+    50% {
+        transform-origin: bottom center;
+        transform: scale(1)
+                   rotate(480deg)
+                   translate(175px)
+                   rotate(-840deg);
+        animation-timing-function: linear;
+    }
+
+    100% {
+        transform-origin: bottom center;
+        transform: scale(0)
+                   rotate(840deg)
+                   translate(0px)
+                   rotate(-840deg);
+        animation-timing-function: linear;
+    }
+}

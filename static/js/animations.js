@@ -2,7 +2,7 @@
 
 var letterAnimationMap = {
     'a': function() {footprints();},
-    'b': function() {bundle();},
+    'b': function() {spiral();},
     'c': function() {circleGrid();},
     'd': function() {piano();},
     'e': function() {explode();},
@@ -86,8 +86,15 @@ function footprints() {
 }
 
 
-function bundle() {
+function spiral() {
+    var x = chooseRandomDim(svgWidth);
+    var y = chooseRandomDim(svgHeight);
+    var radius = chooseRandomSizeMultiple();
+    var fill = chooseRandomColor();
 
+    var circle = makeCircle(radius, x, y)
+                .attr('class', 'magictime spiralIn')
+                .attr('fill', fill);
 }
 
 
