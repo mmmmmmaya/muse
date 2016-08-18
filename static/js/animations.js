@@ -18,7 +18,7 @@ var letterAnimationMap = {
     'o': function() {rainbow();},
     'p': function() {pack();},
     'q': function() {suckedIn();},
-    'r': function() {raindrop();},
+    'r': function() {bombDrop();},
     's': function() {stipple();},
     't': function() {takeOff();},
     'u': function() {tree();},
@@ -588,7 +588,7 @@ function pack() {
 
     nodes.shift();
 
-    var chart = svgContainer.selectAll('circles')
+    var chart = svgContainer.selectAll('circle')
                             .data(nodes)
                         .enter().append('svg:circle')
                             .attr('cx', function(d) { return d.x; })
@@ -617,8 +617,20 @@ function suckedIn() {
           .attr('class', 'magictime spaceOutUp');
 }
 
-function raindrop() {
+function bombDrop() {
+    var colors = getThemeColors(currentTheme);
+    var radius = 20;
+    var decayFactor = 1/2;
 
+    for (var i = 0; i < colors.length; i++) {
+        radius = (radius * decayFactor) + radius;
+        var strokeWeight = radius * decayFactor;
+        var circle = makeCircle(radius, svgWidth/2, svgHeight/2)
+                    .attr('stroke', colors[i])
+                    .attr('stroke-width', strokeWeight)
+                    .attr('fill', 'transparent')
+                    .attr('class', 'magictime zoomInToExit');
+    }
 }
 
 
@@ -768,7 +780,7 @@ function CalculateStarPoints(centerX, centerY, arms,
 
 function starburst() {
     var fill = chooseRandomColor();
-    var points = CalculateStarPoints(svgWidth/2, svgHeight/2, 5, 100, 50);
+    var points = CalculateStarPoints(svgWidth/2, svgHeight/2, 5, 50, 25);
     var star = svgContainer.append('svg:polygon')
                            .attr('points', points)
                            .attr('fill', fill);
