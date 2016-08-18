@@ -92,6 +92,7 @@ function nextTheme() {
 
 function onKeyPress(evt) {
     var keyPressed = evt.key;
+    konamiTracker(keyPressed);
 
     if (isLetter(keyPressed)) {
         actionApp(keyPressed);
@@ -104,4 +105,4 @@ function onKeyPress(evt) {
     }
 }
 
-$(document).keypress(onKeyPress);
+$(document).keydown(onKeyPress);
