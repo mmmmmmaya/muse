@@ -7,7 +7,7 @@ var letterAnimationMap = {
     'd': function() {piano();},
     'e': function() {explode();},
     'f': function() {force();},
-    'g': function() {splatter();},
+    'g': function() {speedy();},
     'h': function() {hexBurst();},
     'i': function() {implode();},
     'j': function() {verticalChecker();},
@@ -25,7 +25,7 @@ var letterAnimationMap = {
     'v': function() {flashingLights();},
     'w': function() {wiggle();},
     'x': function() {starburst();},
-    'y': function() {speedy();},
+    'y': function() {splatter();},
     'z': function() {zigzag();}
 }
 
