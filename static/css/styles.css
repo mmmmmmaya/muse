@@ -22,3 +22,11 @@ svg {
     stroke: #ccc;
     stroke-width: 1.5px;
 }
+
+.fa-circle {
+    color: red;
+}
+
+.fa-square {
+    color: black;
+}

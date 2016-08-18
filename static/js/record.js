@@ -3,17 +3,18 @@
 // set up toggle-ability for app recording
 var appIsRecording = false;
 var recordingArray = [];
-// TODO placeholder for now until I get multiple themes set up
 var currentTheme = 1;
 updateBgColor(currentTheme);
 
 function toggleRecording() {
-    // TODO probably update button text or img to indicate if recording is active
     appIsRecording = !appIsRecording;
+
+    var icon = $('#record-button-icon');
+    icon.toggleClass('fa-circle');
+    icon.toggleClass('fa-square');
 }
 
 function sendSongToServer() {
-    // TODO potentially ask user if they actually want to store the recording first
     if (recordingArray.length > 0) {
         var params = {
             "keypresses": JSON.stringify(recordingArray)

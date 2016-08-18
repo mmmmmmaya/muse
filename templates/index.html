@@ -6,8 +6,10 @@
 
 {% block links_and_scripts %}
     <link href='/static/css/magic.min.css' rel='stylesheet'>
+    <link href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css' rel='stylesheet'>
     <link href='/static/css/styles.css' rel='stylesheet'>
     <link href='/static/css/animations.css' rel='stylesheet'>
+
 {% endblock %}
 
 
@@ -19,7 +21,10 @@
         {% set wrapperTooltip = 'data-toggle="tooltip" data-placement="bottom" title="Please log in to record."'|safe if disabled else '' %}
 
         <span {{ wrapperTooltip }}>
-            <button type='button' class='btn' id='record-button' {{ disabled }}>Record</button>
+            <button type='button' class='btn' id='record-button' {{ disabled }}>
+                <i class='fa fa-circle' id='record-button-icon' aria-hidden='true'> </i>
+                Record
+            </button>
         </span>
 
         <svg id='svg' />
