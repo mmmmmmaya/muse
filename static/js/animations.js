@@ -7,7 +7,7 @@ var letterAnimationMap = {
     'd': function() {piano();},
     'e': function() {explode();},
     'f': function() {force();},
-    'g': function() {smile();},
+    'g': function() {splatter();},
     'h': function() {hexBurst();},
     'i': function() {implode();},
     'j': function() {partition();},
@@ -293,14 +293,107 @@ function explode() {
     addParticles(explosionRadius, x, y, particleSize, particleFill);
 }
 
+// gives the force its bounciness
+function bounce(link, node) {
+    link.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
 
-function force() {
+    node.attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; });
+}
 
+// Returns a list of all nodes under the root.
+function flatten(root) {
+    var nodes = []
+    var i = 0;
+
+    function recurse(node) {
+        if (node.children) {
+            node.children.forEach(recurse);
+        }
+
+        if (!node.id) {
+            node.id = ++i;
+            nodes.push(node);
+        }
+    }
+
+    recurse(root);
+    return nodes;
+}
+
+function makeForce() {
+    var link = svgContainer.selectAll(".link");
+    var node = svgContainer.selectAll(".node");
+
+    var root = makeData(9,0);
+    var nodes = flatten(root);
+    var links = d3.layout.tree().links(nodes);
+
+    var force = d3.layout.force()
+                         .size([svgWidth, svgHeight])
+                         .friction(0.1)
+                         .charge(-500)
+                         .gravity(0)
+                         .on("tick", function(){ bounce(link, node); })
+                         .nodes(nodes)
+                         .links(links)
+                         .start();
+
+    // Update the links…
+    link = link.data(links, function(d) { return d.target.id; });
+
+    // Exit any old links.
+    link.exit().remove();
+
+    // Enter any new links.
+    link.enter().insert("line", ".node")
+        .attr("class", "link")
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+
+      // Update the nodes…
+      node = node.data(nodes, function(d) { return d.id; }).style("fill", function(d) { return d.name; });
+
+      // Exit any old nodes.
+      node.exit().remove();
+
+      // Enter any new nodes.
+      node.enter().append("circle")
+          .attr("class", "node")
+          .attr("cx", function(d) { return d.x; })
+          .attr("cy", function(d) { return d.y; })
+          .attr("r", function(d) { return Math.sqrt(d.size) / 10 || 4.5; })
+          .style("fill", function(d) { return d.name; })
+          .call(force.drag);
+
+    return [links, nodes];
 }
 
 
-function smile() {
+function force() {
+    makeForce();
 
+    setTimeout(function() {
+        var links = svgContainer.selectAll(".link")
+                                .attr('class', 'magictime bombOutLeft');
+        var nodes = svgContainer.selectAll(".node")
+                                .attr('class', 'magictime puffOut');
+    }, 500);
+}
+
+function splatter() {
+    makeForce();
+
+    var links = svgContainer.selectAll(".link");
+    var nodes = svgContainer.selectAll(".node");
+
+    links.attr('class', 'magictime shrinkToCenter');
+    nodes.attr('class', 'magictime shrinkToCenter');
 }
 
 
@@ -475,7 +568,7 @@ function pack() {
                             .attr('stroke', 'grey');
 
     setTimeout(function() {
-        chart.attr('class', 'magictime packAnimate');
+        chart.attr('class', 'magictime shrinkToCenter');
     }, 100);
 }
 
@@ -543,7 +636,7 @@ function makeMoreChildren(maxDepth, currentDepth) {
 function makeData(maxDepth, currentDepth) {
     // TODO prevent 1 level return
     var data = {'name': chooseRandomColor(),
-                'size': getRandomInt(1, 1000)};
+                'size': getRandomInt(1, 10000)};
 
     if (currentDepth < maxDepth) {
         data.children = makeMoreChildren(maxDepth, currentDepth);

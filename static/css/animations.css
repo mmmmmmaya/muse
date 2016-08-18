@@ -35,16 +35,16 @@
     }
 }
 
-/*************************/
-/* Animation for pack */
-/*************************/
+/***************************/
+/* Animation for Shrinking */
+/***************************/
 
-.packAnimate {
-  -webkit-animation-name: packAnimate;
-  animation-name: packAnimate;
+.shrinkToCenter {
+  -webkit-animation-name: shrinkToCenter;
+  animation-name: shrinkToCenter;
 }
 
-@-webkit-keyframes packAnimate {
+@-webkit-keyframes shrinkToCenter {
     0% {
         -webkit-transform-origin: center center;
         -webkit-transform: scale(1);
@@ -58,7 +58,7 @@
     }
 }
 
-@keyframes packAnimate {
+@keyframes shrinkToCenter {
     0% {
         transform-origin: center center;
         transform: scale(1);
