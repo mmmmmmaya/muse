@@ -1,6 +1,22 @@
 import json
 
+from md5 import md5
+
 from model import Recording
+
+
+def get_recording_by_checksum(checksum):
+    """Grab a recording from db using md5."""
+
+    recording = None
+
+    try:
+        recording = db.session.query(Recording).filter(md5(id) == checksum).one()
+
+    except NoResultFound:
+        pass
+
+    return recording
 
 
 def get_recording_by_id(id):
