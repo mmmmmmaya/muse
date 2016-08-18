@@ -24,8 +24,8 @@ var letterAnimationMap = {
     'u': function() {tree();},
     'v': function() {treemap();},
     'w': function() {wiggle();},
-    'x': function() {stack();},
-    'y': function() {pie();},
+    'x': function() {starburst();},
+    'y': function() {speedy();},
     'z': function() {zigzag();}
 }
 
@@ -690,13 +690,42 @@ function wiggle() {
 }
 
 
-function stack() {
+function CalculateStarPoints(centerX, centerY, arms,
+                                outerRadius, innerRadius) {
+   var results = '';
+   var pairs = []
 
+   var angle = Math.PI / arms;
+
+   for (var i = 0; i < 2 * arms; i++) {
+        if (i % 2 == 0) {
+            var r = outerRadius;
+        } else {
+            var r = innerRadius;
+        }
+
+      var currX = centerX + Math.cos(i * angle) * r;
+      var currY = centerY + Math.sin(i * angle) * r;
+      var pair = currX + "," + currY;
+
+      pairs.push(pair);
+      results = pairs.join(' ');
+   }
+
+   return results;
+}
+
+function starburst() {
+    var fill = chooseRandomColor();
+    var points = CalculateStarPoints(svgWidth/2, svgHeight/2, 5, 100, 50);
+    var star = svgContainer.append('svg:polygon')
+                           .attr('points', points)
+                           .attr('fill', fill);
+    star.attr('class', 'magictime zoomInToExit');
 }
 
 
-function pie(){
-
+function speedy(){
 }
 
 

@@ -71,3 +71,52 @@
         animation-timing-function: linear;
     }
 }
+
+/****************************/
+/* Animation for Zooming In */
+/****************************/
+
+.zoomInToExit {
+  -webkit-animation-name: zoomInToExit;
+  animation-name: zoomInToExit;
+}
+
+@-webkit-keyframes zoomInToExit {
+    0% {
+        -webkit-transform-origin: center center;
+        -webkit-transform: scale(1);
+        -webkit-opacity: 1;
+        -webkit-animation-timing-function: linear;
+    }
+
+    75% {
+        -webkit-opacity: 1;
+    }
+
+    100% {
+        -webkit-transform-origin: center center;
+        -webkit-transform: scale(7);
+        -webkit-opacity: 0;
+        -webkit-animation-timing-function: linear;
+    }
+}
+
+@keyframes zoomInToExit {
+    0% {
+        transform-origin: center center;
+        transform: scale(1);
+        opacity: 1;
+        animation-timing-function: linear;
+    }
+
+    75% {
+        opacity: 1;
+    }
+
+    100% {
+        transform-origin: center center;
+        transform: scale(7);
+        opacity: 0;
+        animation-timing-function: linear;
+    }
+}
