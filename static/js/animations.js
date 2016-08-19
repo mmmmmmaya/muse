@@ -30,6 +30,9 @@ var letterAnimationMap = {
 }
 
 var svgContainer = d3.select('svg');
+var bottomSVGLayer = svgContainer.append('g');
+var topSVGLayer = svgContainer.append('g');
+
 var svgHeight;
 var svgWidth;
 resetSVGDims();
@@ -98,11 +101,18 @@ function spiral() {
 }
 
 
-function makeCircle(radius, x, y) {
-    var circle = svgContainer.append('circle')
-        .attr('cy', y)
-        .attr('cx', x)
-        .attr('r', radius);
+function makeCircle(radius, x, y, layer) {
+    var layer = layer || 'top';
+
+    if (layer === 'top') {
+        var circle = topSVGLayer.append('circle');;
+    } else {
+        var circle = bottomSVGLayer.append('circle');
+    }
+
+    circle.attr('cy', y)
+          .attr('cx', x)
+          .attr('r', radius);
 
     return circle;
 }
@@ -147,7 +157,7 @@ function drawMajorKeys(x, y, numKeys, pianoKeyWidth,
     var keys = [];
 
     for (var i = 0; i < numKeys; i++) {
-        var rectangle = svgContainer.append('rect')
+        var rectangle = topSVGLayer.append('rect')
                          .attr('x', x)
                          .attr('y', y)
                          .attr('width', pianoKeyWidth)
@@ -170,7 +180,7 @@ function drawMinorKeys(x, y, numKeys, pianoKeyWidth,
 
     for (var i = 0; i < numKeys-1; i++) {
         if (i !== 2) {
-            var rectangle = svgContainer.append('rect')
+            var rectangle = topSVGLayer.append('rect')
                              .attr('x', x)
                              .attr('y', y)
                              .attr('width', minorKeyWidth)
@@ -332,8 +342,8 @@ function flatten(root) {
 }
 
 function makeForce() {
-    var link = svgContainer.selectAll(".link");
-    var node = svgContainer.selectAll(".node");
+    var link = topSVGLayer.selectAll(".link");
+    var node = topSVGLayer.selectAll(".node");
 
     var root = makeData(9,0);
     var nodes = flatten(root);
@@ -386,9 +396,9 @@ function force() {
     makeForce();
 
     setTimeout(function() {
-        var links = svgContainer.selectAll(".link")
+        var links = topSVGLayer.selectAll(".link")
                                 .attr('class', 'magictime bombOutLeft');
-        var nodes = svgContainer.selectAll(".node")
+        var nodes = topSVGLayer.selectAll(".node")
                                 .attr('class', 'magictime puffOut');
     }, 500);
 }
@@ -396,8 +406,8 @@ function force() {
 function splatter() {
     makeForce();
 
-    var links = svgContainer.selectAll(".link");
-    var nodes = svgContainer.selectAll(".node");
+    var links = topSVGLayer.selectAll(".link");
+    var nodes = topSVGLayer.selectAll(".node");
 
     links.attr('class', 'shrinkToCenter');
     nodes.attr('class', 'shrinkToCenter');
@@ -414,7 +424,7 @@ function makeHexagon(radius, x, y, fill) {
             .interpolate('cardinal-closed')
             .tension('1');
 
-    var enterElements = svgContainer.append('path')
+    var enterElements = topSVGLayer.append('path')
                                     .attr('d', drawHexagon(hexagonData))
                                     .attr('fill', fill)
                                     .attr('class', 'magictime puffOut');
@@ -441,7 +451,7 @@ function drawChecker(i) {
     var x = 20 * i;
     var fill = chooseRandomColor();
 
-    var rectangle = svgContainer.append('rect')
+    var rectangle = topSVGLayer.append('rect')
                          .attr('x', x)
                          .attr('y', 0)
                          .attr('width', '20')
@@ -473,7 +483,7 @@ function staffTwirl() {
     var y = chooseRandomDim(svgHeight);
     var y2 = chooseRandomDim(svgHeight);
 
-    var rectangle = svgContainer.append('line')
+    var rectangle = topSVGLayer.append('line')
                                 .attr('x1', x)
                                 .attr('y1', y)
                                 .attr('x2', x2)
@@ -507,7 +517,7 @@ function drawStripe(i) {
     var y = 60 * i;
     var fill = chooseRandomColor();
 
-    var rectangle = svgContainer.append('rect')
+    var rectangle = topSVGLayer.append('rect')
                          .attr('x', 0)
                          .attr('y', y)
                          .attr('width', '100%')
@@ -537,13 +547,13 @@ function drawOverlappingCircles(x, y) {
     var radiusDecrement = radius / (colors.length + 2);
 
     for (var i = 0; i < colors.length; i++) {
-        var circle = makeCircle(radius, x, y);
+        var circle = makeCircle(radius, x, y, 'bottom');
         circle.attr('fill', colors[i])
               .attr('class', 'rainbow');
         radius -= radiusDecrement;
     }
 
-    var centerCircle = makeCircle(radius, x, y);
+    var centerCircle = makeCircle(radius, x, y, 'bottom');
     centerCircle.attr('fill', bgColor)
                 .attr('class', 'rainbow');
 }
@@ -551,7 +561,7 @@ function drawOverlappingCircles(x, y) {
 function drawRainbowRect(x, y, height) {
     var fill = getThemeBg(currentTheme);
 
-    var rectangle = svgContainer.append('rect')
+    var rectangle = bottomSVGLayer.append('rect')
                          .attr('x', x)
                          .attr('y', y)
                          .attr('width', '100%')
@@ -568,7 +578,6 @@ function rainbow() {
     var height = (svgHeight/2) + 1;
 
     drawOverlappingCircles(x, y);
-
 
     var bottom = drawRainbowRect(0, y, height);
     var top = drawRainbowRect(0, 0, y);
@@ -588,7 +597,7 @@ function pack() {
 
     nodes.shift();
 
-    var chart = svgContainer.selectAll('circle')
+    var chart = topSVGLayer.selectAll('circle')
                             .data(nodes)
                         .enter().append('svg:circle')
                             .attr('cx', function(d) { return d.x; })
@@ -690,7 +699,7 @@ function makeData(maxDepth, currentDepth) {
 function tree() {
     var radius = 15;
     var treeData = makeData(6, 0);
-    var chart = svgContainer.append('svg:g');
+    var chart = topSVGLayer.append('svg:g');
 
     var layout = d3.layout.tree().size([(svgHeight-(radius*2)),(svgWidth-(radius*2))]);
 
@@ -758,7 +767,7 @@ function makeAndFlashStar(points) {
     var fill = chooseRandomColor();
     var randTime = getRandomInt(1, 500);
 
-    var star = svgContainer.append('svg:polygon')
+    var star = topSVGLayer.append('svg:polygon')
                            .attr('points', points)
                            .attr('fill', fill);
 
@@ -809,7 +818,7 @@ function CalculateStarPoints(centerX, centerY, arms,
 function starburst() {
     var fill = chooseRandomColor();
     var points = CalculateStarPoints(svgWidth/2, svgHeight/2, 5, 50, 25);
-    var star = svgContainer.append('svg:polygon')
+    var star = topSVGLayer.append('svg:polygon')
                            .attr('points', points)
                            .attr('fill', fill);
     star.attr('class', 'zoomInToExit');
@@ -851,7 +860,7 @@ function drawZigzag() {
                              .y(function(d) { return d.y; })
                              .interpolate('linear');
 
-    var lineGraph = svgContainer.append('path')
+    var lineGraph = topSVGLayer.append('path')
                                 .attr('d', lineFunction(lineData))
                                 .attr('stroke', strokeColor)
                                 .attr('stroke-width', 15)
