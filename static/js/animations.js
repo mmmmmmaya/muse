@@ -1,7 +1,7 @@
 'use strict';
 
 var letterAnimationMap = {
-    'a': function() {footprints();},    //
+    'a': function() {footprints();},
     'b': function() {spiral();},
     'c': function() {circleGrid();},
     'd': function() {piano();},
@@ -9,7 +9,7 @@ var letterAnimationMap = {
     'f': function() {force();},
     'g': function() {twinkle();},
     'h': function() {hexBurst();},
-    'i': function() {rotateCircles();},       //
+    'i': function() {rotateCircles();},
     'j': function() {verticalChecker();},
     'k': function() {staffTwirl();},
     'l': function() {flash();},
@@ -19,7 +19,7 @@ var letterAnimationMap = {
     'p': function() {pack();},
     'q': function() {starburst();},
     'r': function() {bombDrop();},
-    's': function() {stipple();},       //
+    's': function() {squareStipple();},
     't': function() {spinDiamond();},
     'u': function() {tree();},
     'v': function() {flashingLights();},
@@ -95,32 +95,49 @@ function spiral() {
     var radius = chooseRandomSizeMultiple();
     var fill = chooseRandomColor();
 
-    var circle = makeCircle(radius, x, y)
-                .attr('class', 'spiralIn')
-                .attr('fill', fill);
+    var circle = makeCircle(radius, x, y, fill)
+                .attr('class', 'spiralIn');
 }
 
 
-function makeCircle(radius, x, y, layer) {
+function makeRect(x, y, width, height, fill, layer) {
     var layer = layer || 'top';
 
     if (layer === 'top') {
-        var circle = topSVGLayer.append('circle');;
+        var rect = topSVGLayer.append('rect');
+    } else {
+        var rect = bottomSVGLayer.append('rect');
+    }
+
+    rect.attr('x', x)
+        .attr('y', y)
+        .attr('width', width)
+        .attr('height',height)
+        .attr('fill', fill);
+
+    return rect;
+}
+
+function makeCircle(radius, x, y, fill, layer) {
+    var layer = layer || 'top';
+
+    if (layer === 'top') {
+        var circle = topSVGLayer.append('circle');
     } else {
         var circle = bottomSVGLayer.append('circle');
     }
 
     circle.attr('cy', y)
           .attr('cx', x)
-          .attr('r', radius);
+          .attr('r', radius)
+          .attr('fill', fill);
 
     return circle;
 }
 
 function makeCircleWithVanish(radius, x, y) {
     var fill = chooseRandomColor();
-    var circle = makeCircle(radius, x, y);
-    circle.attr('fill', fill);
+    var circle = makeCircle(radius, x, y, fill);
 
     var randomTimeout = getRandomInt(1, 1500);
     setTimeout(function() {
@@ -151,20 +168,14 @@ function circleGrid() {
 
 
 function drawMajorKeys(x, y, numKeys, pianoKeyWidth,
-                        spaceBetweenKeys, pianoHeight) {
+                        spaceBetweenKeys, pianoHeight, majorKeyColor) {
     var x = x;
-    var keyColor = chooseRandomColor();
     var keys = [];
 
     for (var i = 0; i < numKeys; i++) {
-        var rectangle = topSVGLayer.append('rect')
-                         .attr('x', x)
-                         .attr('y', y)
-                         .attr('width', pianoKeyWidth)
-                         .attr('height', pianoHeight)
-                         .attr('fill', keyColor)
+        var rect = makeRect(x, y, pianoKeyWidth, pianoHeight, majorKeyColor)
                          .attr('class', 'piano');
-        keys.push(rectangle);
+        keys.push(rect);
         x += (pianoKeyWidth + spaceBetweenKeys);
     }
 
@@ -172,20 +183,14 @@ function drawMajorKeys(x, y, numKeys, pianoKeyWidth,
 }
 
 function drawMinorKeys(x, y, numKeys, pianoKeyWidth,
-                        spaceBetweenKeys, pianoHeight, majorKeyColor) {
+                        spaceBetweenKeys, pianoHeight, minorKeyColor) {
     var minorKeyWidth = (2/3)*pianoKeyWidth;
     var x = x + minorKeyWidth;
-    var keyColor = ensureDifferentColor(majorKeyColor);
     var strokeFill = getThemeBg(currentTheme);
 
     for (var i = 0; i < numKeys-1; i++) {
         if (i !== 2) {
-            var rectangle = topSVGLayer.append('rect')
-                             .attr('x', x)
-                             .attr('y', y)
-                             .attr('width', minorKeyWidth)
-                             .attr('height', pianoHeight/2)
-                             .attr('fill', keyColor)
+            var rectangle = makeRect(x, y, minorKeyWidth, pianoHeight/2, minorKeyColor)
                              .attr('stroke', strokeFill)
                              .attr('stroke-width', spaceBetweenKeys)
                              .attr('class', 'piano');
@@ -202,35 +207,8 @@ function d3Delete(className, time) {
     }, time);
 }
 
-function animatePiano(keyColor) {
+function animatePiano() {
 
-    setInterval(function() {
-
-    }, 500);
-
-    var keys = d3.selectAll('.piano')[0];
-    var activeFill = ensureDifferentColor(keyColor);
-    var timePressed = 200;
-    var timeToNextKey = 100;
-    var timer = timeToNextKey;
-
-    for (var i = 0; i < keys.length; i++) {
-        var originalColor;
-        console.log(keys[i]);
-        setTimeout(function() {
-            console.log(keys[i]);
-            originalColor = keys[i].attr('fill');
-            keys[i].attr('fill', activeFill);
-        }, timer);
-
-        timer += timePressed;
-
-        setTimeout(function() {
-            keys[i].attr('fill', originalColor);
-        }, timer);
-
-        timer += timeToNextKey;
-    }
 
 }
 
@@ -245,15 +223,16 @@ function piano() {
     var x = (svgWidth - totalPianoWidth) / 2;
     var y = (svgHeight - pianoHeight) / 2;
 
-    var majorKeys = drawMajorKeys(x, y, numKeys, pianoKeyWidth,
-                                        spaceBetweenKeys, pianoHeight);
-    var majorKeyColor = d3.select('.piano').attr('fill');
-    drawMinorKeys(x, y, numKeys, pianoKeyWidth,
-                    spaceBetweenKeys, pianoHeight, majorKeyColor);
+    var majorKeyColor = chooseRandomColor();
+    var minorKeyColor = ensureDifferentColor(majorKeyColor);
 
-    // TODO finish animate
-    // animatePiano(majorKeyColor);
-    d3Delete('piano', 3000);
+    drawMajorKeys(x, y, numKeys, pianoKeyWidth, spaceBetweenKeys,
+                    pianoHeight, majorKeyColor);
+    drawMinorKeys(x, y, numKeys, pianoKeyWidth,
+                    spaceBetweenKeys, pianoHeight, minorKeyColor);
+
+    animatePiano(majorKeyColor);
+    d3Delete('piano', 2000);
 }
 
 function generateHexData(radius, x, y) {
@@ -276,7 +255,7 @@ function addParticles(radius, x, y, size, fill) {
         var thisX = radiusData[i]['x'];
         var thisY = radiusData[i]['y'];
 
-        var circle = makeCircle(size, thisX, thisY).attr('fill', fill);
+        var circle = makeCircle(size, thisX, thisY, fill);
 
         if (i < 3) {
             circle.attr('class', 'magictime openDownRightOut');
@@ -304,7 +283,7 @@ function explode() {
     var particleSize = 30;
     var particleFill = ensureDifferentColor(centerFill);
 
-    var center = makeCircle(particleSize, x, y).attr('fill', centerFill)
+    var center = makeCircle(particleSize, x, y, centerFill)
                                                  .attr('class', 'magictime vanishOut');
 
     addParticles(explosionRadius, x, y, particleSize, particleFill);
@@ -447,31 +426,26 @@ function rotateCircles() {
 }
 
 
-function drawChecker(i) {
-    var x = 20 * i;
+function drawChecker(i, size) {
+    var x = size * i;
     var fill = chooseRandomColor();
 
-    var rectangle = topSVGLayer.append('rect')
-                         .attr('x', x)
-                         .attr('y', 0)
-                         .attr('width', '20')
-                         .attr('height', '20')
-                         .attr('fill', fill)
+    var rectangle = makeRect(x, 0, size, size, fill)
                          .attr('class', 'slideToBottom');
 }
 
-function ceilingDraw(func) {
-    var num = Math.floor(svgWidth/20);
+function edgeDraw(edge, size, func) {
+    var num = Math.floor(edge/size);
 
     for (var i = 0; i <= num; i++) {
         if (i % 2 == 0) {
-            func(i);
+            func(i, size);
         }
     }
 }
 
 function verticalChecker() {
-    ceilingDraw(drawChecker);
+    edgeDraw(svgWidth, 20, drawChecker);
 }
 
 
@@ -514,13 +488,8 @@ function newDiamond() {
     var y = (svgHeight/2) - halfWidth;
     var fill = chooseRandomColor();
 
-    topSVGLayer.append('rect')
-               .attr('x', x)
-               .attr('y', y)
-               .attr('width', 2*halfWidth)
-               .attr('height', 2*halfWidth)
-               .attr('fill', fill)
-               .attr('class', 'spinDiamond');
+    makeRect(x, y, 2*halfWidth, 2*halfWidth, fill)
+        .attr('class', 'spinDiamond');
 }
 
 function spinDiamond() {
@@ -535,16 +504,13 @@ function spinDiamond() {
 
 
 function drawStripe(i) {
-    var y = 60 * i;
+    var stripeSize = 60;
+    var y = stripeSize * i;
     var fill = chooseRandomColor();
 
-    var rectangle = topSVGLayer.append('rect')
-                         .attr('x', 0)
-                         .attr('y', y)
-                         .attr('width', '100%')
-                         .attr('height', '60')
-                         .attr('fill', fill)
-                         .attr('class', 'magictime slideLeftRetourn');
+    var rectangle = makeRect(0, y, '100%', stripeSize, fill)
+                        .attr('class', 'magictime slideLeftRetourn');
+
     setTimeout(function() {
         rectangle.attr('class', 'magictime slideRight')
     }, 500);
@@ -568,27 +534,20 @@ function drawOverlappingCircles(x, y) {
     var radiusDecrement = radius / (colors.length + 2);
 
     for (var i = 0; i < colors.length; i++) {
-        var circle = makeCircle(radius, x, y, 'bottom');
-        circle.attr('fill', colors[i])
-              .attr('class', 'rainbow');
+        var circle = makeCircle(radius, x, y, colors[i], 'bottom');
+        circle.attr('class', 'rainbow');
         radius -= radiusDecrement;
     }
 
-    var centerCircle = makeCircle(radius, x, y, 'bottom');
-    centerCircle.attr('fill', bgColor)
-                .attr('class', 'rainbow');
+    var centerCircle = makeCircle(radius, x, y, bgColor, 'bottom');
+    centerCircle.attr('class', 'rainbow');
 }
 
 function drawRainbowRect(x, y, height) {
     var fill = getThemeBg(currentTheme);
 
-    var rectangle = bottomSVGLayer.append('rect')
-                         .attr('x', x)
-                         .attr('y', y)
-                         .attr('width', '100%')
-                         .attr('height', height)
-                         .attr('fill', fill)
-                         .attr('class', 'rainbow');
+    var rectangle = makeRect(x, y, '100%', height, fill, 'bottom')
+                        .attr('class', 'rainbow');
 
     return rectangle;
 }
@@ -639,9 +598,8 @@ function suckedIn() {
     var radius = chooseRandomSizeOne();
     var strokeColor = chooseRandomColor();
 
-    var circle = makeCircle(radius, x, y);
-    circle.attr('fill', 'transparent')
-          .attr('stroke', strokeColor)
+    var circle = makeCircle(radius, x, y, 'transparent');
+    circle.attr('stroke', strokeColor)
           .attr('stroke-width', 10)
           .attr('stroke-dasharray','20,5')
           .attr('class', 'magictime spaceOutUp');
@@ -655,17 +613,34 @@ function bombDrop() {
     for (var i = 0; i < colors.length; i++) {
         radius = (radius * decayFactor) + radius;
         var strokeWeight = radius * decayFactor;
-        var circle = makeCircle(radius, svgWidth/2, svgHeight/2)
+        var circle = makeCircle(radius, svgWidth/2, svgHeight/2, 'transparent')
                     .attr('stroke', colors[i])
                     .attr('stroke-width', strokeWeight)
-                    .attr('fill', 'transparent')
                     .attr('class', 'zoomInToExit');
     }
 }
 
 
-function stipple() {
+function stipple(x, y, size) {
+    var x = x * size;
+    var y = y * size;
+    var fill = chooseRandomColor();
 
+    setTimeout(function() {
+        makeRect(x, y, size, size, fill)
+            .attr('class', 'shrinkToCenter');
+    }, 100);
+}
+
+function stippleColumn(x, size) {
+    edgeDraw(svgHeight, size, function (y, size) {
+        stipple(x, y, size);
+    });
+}
+
+function squareStipple() {
+    var size = 20;
+    edgeDraw(svgWidth, size, stippleColumn);
 }
 
 
@@ -675,8 +650,7 @@ function takeOff() {
     var radius = chooseRandomSizeOne();
     var fill = chooseRandomColor();
 
-    var circle = makeCircle(radius, x, y);
-    circle.attr('fill', fill);
+    var circle = makeCircle(radius, x, y, fill);
 
     setTimeout(function() {
         circle.attr('class', 'magictime tinRightOut');
@@ -752,13 +726,11 @@ function tree() {
 }
 
 
-function drawLights(i) {
-    var radius = 20;
-    var x = radius * (i+1);
+function drawLights(i, size) {
+    var x = size * (i+1);
     var fill = chooseRandomColor();
 
-    var light = makeCircle(radius/2, x, 0)
-                    .attr('fill', fill)
+    var light = makeCircle(size/2, x, 0, fill)
                     .attr('class', 'lights');
 
     d3Delete('lights', 2500);
@@ -772,7 +744,7 @@ function flashingLights() {
         var timer = 500 * i;
 
         setTimeout(function() {
-            ceilingDraw(drawLights);
+            edgeDraw(svgWidth, 20, drawLights);
         }, timer);
     }
 }
