@@ -1,29 +1,29 @@
 'use strict';
 
 var letterAnimationMap = {
-    'a': function() {footprints();},
+    'a': function() {footprints();},    //
     'b': function() {spiral();},
     'c': function() {circleGrid();},
     'd': function() {piano();},
     'e': function() {explode();},
     'f': function() {force();},
-    'g': function() {speedy();},
+    'g': function() {twinkle();},       //
     'h': function() {hexBurst();},
-    'i': function() {implode();},
+    'i': function() {implode();},       //
     'j': function() {verticalChecker();},
     'k': function() {staffTwirl();},
     'l': function() {flash();},
-    'm': function() {wink();},
+    'm': function() {wink();},          //
     'n': function() {stripes();},
     'o': function() {rainbow();},
     'p': function() {pack();},
     'q': function() {suckedIn();},
     'r': function() {bombDrop();},
-    's': function() {stipple();},
+    's': function() {stipple();},       //
     't': function() {takeOff();},
     'u': function() {tree();},
     'v': function() {flashingLights();},
-    'w': function() {wiggle();},
+    'w': function() {wiggle();},        //
     'x': function() {starburst();},
     'y': function() {splatter();},
     'z': function() {zigzag();}
@@ -93,7 +93,7 @@ function spiral() {
     var fill = chooseRandomColor();
 
     var circle = makeCircle(radius, x, y)
-                .attr('class', 'magictime spiralIn')
+                .attr('class', 'spiralIn')
                 .attr('fill', fill);
 }
 
@@ -399,8 +399,8 @@ function splatter() {
     var links = svgContainer.selectAll(".link");
     var nodes = svgContainer.selectAll(".node");
 
-    links.attr('class', 'magictime shrinkToCenter');
-    nodes.attr('class', 'magictime shrinkToCenter');
+    links.attr('class', 'shrinkToCenter');
+    nodes.attr('class', 'shrinkToCenter');
 }
 
 
@@ -447,7 +447,7 @@ function drawChecker(i) {
                          .attr('width', '20')
                          .attr('height', '20')
                          .attr('fill', fill)
-                         .attr('class', 'magictime slideToBottom');
+                         .attr('class', 'slideToBottom');
 }
 
 function ceilingDraw(func) {
@@ -572,7 +572,7 @@ function rainbow() {
 
     var bottom = drawRainbowRect(0, y, height);
     var top = drawRainbowRect(0, 0, y);
-    top.attr('class', 'rainbow magictime rainbowAnimate');
+    top.attr('class', 'rainbow rainbowAnimate');
 
     d3Delete('rainbow', 1000);
 }
@@ -598,7 +598,7 @@ function pack() {
                             .attr('stroke', 'grey');
 
     setTimeout(function() {
-        chart.attr('class', 'magictime shrinkToCenter');
+        chart.attr('class', 'shrinkToCenter');
     }, 100);
 }
 
@@ -629,7 +629,7 @@ function bombDrop() {
                     .attr('stroke', colors[i])
                     .attr('stroke-width', strokeWeight)
                     .attr('fill', 'transparent')
-                    .attr('class', 'magictime zoomInToExit');
+                    .attr('class', 'zoomInToExit');
     }
 }
 
@@ -750,6 +750,34 @@ function flashingLights() {
 
 function wiggle() {
 
+
+}
+
+
+function makeAndFlashStar(points) {
+    var fill = chooseRandomColor();
+    var randTime = getRandomInt(1, 500);
+
+    var star = svgContainer.append('svg:polygon')
+                           .attr('points', points)
+                           .attr('fill', fill);
+
+    setTimeout(function() {
+        star.attr('class', 'twinkleLeft');
+    }, randTime);
+}
+
+function twinkle() {
+    var numStars = 15;
+
+    for (var i = 0; i < numStars; i++) {
+        var x = chooseRandomDim(svgWidth) + 150;
+        var y = chooseRandomDim(svgHeight);
+        var radius = chooseRandomSizeMultiple();
+
+        var points = CalculateStarPoints(x, y, 8, radius, radius/5);
+        makeAndFlashStar(points);
+    }
 }
 
 
@@ -784,7 +812,7 @@ function starburst() {
     var star = svgContainer.append('svg:polygon')
                            .attr('points', points)
                            .attr('fill', fill);
-    star.attr('class', 'magictime zoomInToExit');
+    star.attr('class', 'zoomInToExit');
 }
 
 
