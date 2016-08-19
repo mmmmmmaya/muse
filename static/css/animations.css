@@ -43,13 +43,13 @@
 
 .shrinkToCenter {
     -webkit-animation-name: shrinkToCenter;
-    animation-name: shrinkToCenter;
+            animation-name: shrinkToCenter;
     -webkit-animation-timing-function: linear;
-    animation-timing-function: linear;
+            animation-timing-function: linear;
     -webkit-animation-duration: 1s;
-    animation-duration: 1s;
+            animation-duration: 1s;
     -webkit-animation-fill-mode:both;
-    animation-fill-mode:both;
+            animation-fill-mode:both;
 }
 
 @-webkit-keyframes shrinkToCenter {
@@ -82,13 +82,13 @@
 
 .zoomInToExit {
     -webkit-animation-name: zoomInToExit;
-    animation-name: zoomInToExit;
+            animation-name: zoomInToExit;
     -webkit-animation-timing-function: linear;
-    animation-timing-function: linear;
+            animation-timing-function: linear;
     -webkit-animation-duration: 1s;
-    animation-duration: 1s;
+            animation-duration: 1s;
     -webkit-animation-fill-mode:both;
-    animation-fill-mode:both;
+            animation-fill-mode:both;
 }
 
 @-webkit-keyframes zoomInToExit {
@@ -133,13 +133,13 @@
 
 .slideToBottom {
     -webkit-animation-name: slideToBottom;
-    animation-name: slideToBottom;
+            animation-name: slideToBottom;
     -webkit-animation-timing-function: linear;
-    animation-timing-function: linear;
+            animation-timing-function: linear;
     -webkit-animation-duration: 1s;
-    animation-duration: 1s;
+            animation-duration: 1s;
     -webkit-animation-fill-mode:both;
-    animation-fill-mode:both;
+            animation-fill-mode:both;
 }
 
 @-webkit-keyframes slideToBottom {
@@ -168,13 +168,13 @@
 
 .spiralIn {
     -webkit-animation-name: spiralIn;
-    animation-name: spiralIn;
+            animation-name: spiralIn;
     -webkit-animation-timing-function: linear;
-    animation-timing-function: linear;
+            animation-timing-function: linear;
     -webkit-animation-duration: 1s;
-    animation-duration: 1s;
+            animation-duration: 1s;
     -webkit-animation-fill-mode:both;
-    animation-fill-mode:both;
+            animation-fill-mode:both;
 }
 
 @-webkit-keyframes spiralIn {
@@ -202,7 +202,6 @@
                    rotate(-840deg);
     }
 }
-
 
 @keyframes spiralIn {
     0% {
@@ -236,13 +235,13 @@
 
 .twinkleLeft {
     -webkit-animation-timing-function: linear;
-    animation-timing-function: linear;
+            animation-timing-function: linear;
     -webkit-animation-name: twinkleLeft;
-    animation-name: twinkleLeft;
+            animation-name: twinkleLeft;
     -webkit-animation-duration: 3s;
-    animation-duration: 3s;
+            animation-duration: 3s;
     -webkit-animation-fill-mode:both;
-    animation-fill-mode:both;
+            animation-fill-mode:both;
 }
 
 @-webkit-keyframes twinkleLeft {
@@ -277,8 +276,6 @@
     }
 }
 
-
-
 @keyframes twinkleLeft {
     0% {
         transform: translateX(0);
@@ -308,5 +305,56 @@
     100% {
         transform: translateX(-300px);
         opacity: 0;
+    }
+}
+
+/*****************************/
+/* CSS for Spinning Diamonds */
+/*****************************/
+
+.spinDiamond {
+    -webkit-animation-name: spinDiamond;
+            animation-name: spinDiamond;
+    -webkit-animation-timing-function: linear;
+            animation-timing-function: linear;
+    -webkit-animation-duration: 0.25s;
+            animation-duration: 0.25s;
+    -webkit-animation-fill-mode:both;
+            animation-fill-mode:both;
+    -webkit-transform-origin: center center;
+            transform-origin: center center;
+}
+
+@-webkit-keyframes spinDiamond {
+    0% {
+        -webkit-transform: scaleX(0)
+                           rotate(45deg);
+    }
+
+    50% {
+        -webkit-transform: scaleX(1)
+                           rotate(45deg);
+    }
+
+    100% {
+        -webkit-transform: scaleX(0)
+                           rotate(45deg);
+    }
+}
+
+@keyframes spinDiamond {
+    0% {
+        transform: scaleX(0)
+                   rotate(45deg);
+    }
+
+    50% {
+        transform: scaleX(1)
+                   rotate(45deg);
+    }
+
+    100% {
+        transform: scaleX(0)
+                   rotate(45deg);
     }
 }

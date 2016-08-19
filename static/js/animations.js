@@ -7,13 +7,13 @@ var letterAnimationMap = {
     'd': function() {piano();},
     'e': function() {explode();},
     'f': function() {force();},
-    'g': function() {twinkle();},       //
+    'g': function() {twinkle();},
     'h': function() {hexBurst();},
-    'i': function() {implode();},       //
+    'i': function() {rotateCircles();},       //
     'j': function() {verticalChecker();},
     'k': function() {staffTwirl();},
     'l': function() {flash();},
-    'm': function() {wink();},          //
+    'm': function() {spinDiamond();},
     'n': function() {stripes();},
     'o': function() {rainbow();},
     'p': function() {pack();},
@@ -23,7 +23,7 @@ var letterAnimationMap = {
     't': function() {takeOff();},
     'u': function() {tree();},
     'v': function() {flashingLights();},
-    'w': function() {wiggle();},        //
+    'w': function() {zoomOutOutline();},        //
     'x': function() {starburst();},
     'y': function() {splatter();},
     'z': function() {zigzag();}
@@ -204,7 +204,7 @@ function d3Delete(className, time) {
 
 function animatePiano(keyColor) {
 
-    setInterval(function(){
+    setInterval(function() {
 
     }, 500);
 
@@ -354,7 +354,7 @@ function makeForce() {
                          .friction(0.1)
                          .charge(-500)
                          .gravity(0)
-                         .on("tick", function(){ bounce(link, node); })
+                         .on("tick", function() { bounce(link, node); })
                          .nodes(nodes)
                          .links(links)
                          .start();
@@ -431,7 +431,7 @@ function makeHexagon(radius, x, y, fill) {
 }
 
 function hexBurst() {
-    for (var i = 0; i < 15; i++){
+    for (var i = 0; i < 15; i++) {
         var x = chooseRandomDim(svgWidth);
         var y = chooseRandomDim(svgHeight);
         var radius = chooseRandomSizeMultiple();
@@ -442,7 +442,7 @@ function hexBurst() {
 }
 
 
-function implode() {
+function rotateCircles() {
 
 }
 
@@ -508,8 +508,29 @@ function flash() {
 }
 
 
-function wink() {
+function newDiamond() {
+    var halfWidth = 40;
+    var x = (svgWidth/2) - halfWidth;
+    var y = (svgHeight/2) - halfWidth;
+    var fill = chooseRandomColor();
 
+    topSVGLayer.append('rect')
+               .attr('x', x)
+               .attr('y', y)
+               .attr('width', 2*halfWidth)
+               .attr('height', 2*halfWidth)
+               .attr('fill', fill)
+               .attr('class', 'spinDiamond');
+}
+
+function spinDiamond() {
+    for (var i = 0; i < 6; i ++) {
+        var timer = i * 250;
+
+        setTimeout(function() {
+            newDiamond();
+        }, timer);
+    }
 }
 
 
@@ -757,7 +778,7 @@ function flashingLights() {
 }
 
 
-function wiggle() {
+function zoomOutOutline() {
 
 
 }
@@ -825,7 +846,7 @@ function starburst() {
 }
 
 
-function speedy(){
+function speedy() {
 }
 
 
@@ -886,7 +907,7 @@ function zigzag() {
     animateZigZag(zigzag);
 }
 
-function resetSVGDims(evt){
+function resetSVGDims(evt) {
     svgWidth = svgContainer[0][0]['clientWidth'];
     svgHeight = svgContainer[0][0]['clientHeight'];
 }
