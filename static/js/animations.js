@@ -170,16 +170,13 @@ function circleGrid() {
 function drawMajorKeys(x, y, numKeys, pianoKeyWidth,
                         spaceBetweenKeys, pianoHeight, majorKeyColor) {
     var x = x;
-    var keys = [];
 
     for (var i = 0; i < numKeys; i++) {
-        var rect = makeRect(x, y, pianoKeyWidth, pianoHeight, majorKeyColor)
-                         .attr('class', 'piano');
-        keys.push(rect);
+        var key = makeRect(x, y, pianoKeyWidth, pianoHeight, majorKeyColor)
+                    .attr('class', 'piano');
+
         x += (pianoKeyWidth + spaceBetweenKeys);
     }
-
-    return keys;
 }
 
 function drawMinorKeys(x, y, numKeys, pianoKeyWidth,
@@ -190,10 +187,10 @@ function drawMinorKeys(x, y, numKeys, pianoKeyWidth,
 
     for (var i = 0; i < numKeys-1; i++) {
         if (i !== 2) {
-            var rectangle = makeRect(x, y, minorKeyWidth, pianoHeight/2, minorKeyColor)
-                             .attr('stroke', strokeFill)
-                             .attr('stroke-width', spaceBetweenKeys)
-                             .attr('class', 'piano');
+            var key = makeRect(x, y, minorKeyWidth, pianoHeight/2, minorKeyColor)
+                            .attr('stroke', strokeFill)
+                            .attr('stroke-width', spaceBetweenKeys)
+                            .attr('class', 'piano');
         }
 
         x += (pianoKeyWidth + spaceBetweenKeys);
@@ -201,14 +198,42 @@ function drawMinorKeys(x, y, numKeys, pianoKeyWidth,
 }
 
 function d3Delete(className, time) {
+    var classSelector = '.' + className;
+
     setTimeout(function () {
-        var selector = "." + className;
-        d3.selectAll(selector).remove();
+        $(classSelector).toggle();
+        $(classSelector).attr('class', '');
     }, time);
 }
 
-function animatePiano() {
+function chooseRandomKeyToPress(fill) {
+    var keys = d3.selectAll('.piano')[0];
+    var index = getRandomInt(1, keys.length+1);
+    var selector = '.piano:nth-child(' + index + ')';
 
+    var key = d3.select(selector);
+    var originalColor = key.attr('fill');
+
+    if (originalColor !== fill) {
+
+        key.attr('fill', fill);
+
+        setTimeout(function() {
+            key.attr('fill', originalColor);
+        }, 200);
+    }
+}
+
+function animatePiano(majorKeyColor) {
+    var numPress = 5;
+    var fill = ensureDifferentColor(majorKeyColor);
+
+    for (var i = 0; i < numPress; i++) {
+        var timer = 200 * i;
+        setTimeout(function() {
+            chooseRandomKeyToPress(fill);
+        }, timer);
+    }
 
 }
 
@@ -232,6 +257,7 @@ function piano() {
                     spaceBetweenKeys, pianoHeight, minorKeyColor);
 
     animatePiano(majorKeyColor);
+
     d3Delete('piano', 2000);
 }
 
