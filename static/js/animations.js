@@ -84,8 +84,79 @@ function collectGarbage() {
 }
 
 
-function footprints() {
+function makeToes(centerRadius, x, y, fill, footprint) {
+    var toeRadius = centerRadius / 3;
 
+    var leftX = x - centerRadius;
+    var leftCenterX = x - ((1/3) * centerRadius);
+    var rightCenterX = x + ((1/3) * centerRadius);
+    var rightX = x + centerRadius;
+
+    var topY = y - ((4/3) * centerRadius);
+    var bottomY = y - centerRadius;
+
+    var bottomLeft = footprint.append('circle')
+                          .attr('cy', bottomY)
+                          .attr('cx', leftX)
+                          .attr('r', toeRadius)
+                          .attr('fill', fill);
+
+    var topLeft = footprint.append('circle')
+                          .attr('cy', topY)
+                          .attr('cx', leftCenterX)
+                          .attr('r', toeRadius)
+                          .attr('fill', fill);
+
+    var topRight = footprint.append('circle')
+                          .attr('cy', topY)
+                          .attr('cx', rightCenterX)
+                          .attr('r', toeRadius)
+                          .attr('fill', fill);
+
+    var bottomRight = footprint.append('circle')
+                          .attr('cy', bottomY)
+                          .attr('cx', rightX)
+                          .attr('r', toeRadius)
+                          .attr('fill', fill);
+
+}
+
+function makeFootprint(x, y, timer) {
+    setTimeout(function() {
+        var centerRadius = 25;
+        var fill = chooseRandomColor();
+
+        var footprint = topSVGLayer.append('g')
+                                   .attr('class', 'footprint');
+
+        footprint.append('circle')
+                  .attr('cy', y)
+                  .attr('cx', x)
+                  .attr('r', centerRadius)
+                  .attr('fill', fill);
+
+        makeToes(centerRadius, x, y, fill, footprint);
+    }, timer);
+}
+
+function footprints() {
+    var x = chooseRandomDim(svgWidth);
+    var y = chooseRandomDim(svgHeight);
+
+    var delta = 100;
+    var numFootprints = 3;
+    var timerInterval = 100;
+    var timer = 0;
+
+    for (var i = 0; i < numFootprints; i++) {
+        makeFootprint(x, y, timer);
+        y -= delta;
+        timer += timerInterval;
+
+        makeFootprint(x, y, timer);
+        x -= delta;
+        timer += timerInterval;
+    }
 }
 
 

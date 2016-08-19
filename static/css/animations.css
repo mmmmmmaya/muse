@@ -395,3 +395,56 @@
                    rotate(45deg);
     }
 }
+
+
+
+/**********************/
+/* CSS for Footprints */
+/**********************/
+
+.footprint {
+    -webkit-animation-name: footprint;
+            animation-name: footprint;
+    -webkit-animation-timing-function: linear;
+            animation-timing-function: linear;
+    -webkit-animation-duration: .5s;
+            animation-duration: .5s;
+    -webkit-animation-fill-mode:both;
+            animation-fill-mode:both;
+    -webkit-transform-origin: center center;
+            transform-origin: center center;
+}
+
+@-webkit-keyframes footprint {
+    0% {
+        -webkit-transform: scale(1)
+                           rotateZ(-30deg);
+    }
+
+    99% {
+        -webkit-transform: scale(1)
+                           rotateZ(-30deg);
+    }
+
+    100% {
+        -webkit-transform: scale(0)
+                           rotateZ(-30deg);
+    }
+}
+
+@keyframes footprint {
+    0% {
+        transform: scale(1)
+                   rotateZ(-30deg);
+    }
+
+    99% {
+        transform: scale(1)
+                   rotateZ(-30deg);
+    }
+
+    100% {
+        transform: scale(0)
+                   rotateZ(-30deg);
+    }
+}
