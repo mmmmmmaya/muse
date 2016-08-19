@@ -13,18 +13,18 @@ var letterAnimationMap = {
     'j': function() {verticalChecker();},
     'k': function() {staffTwirl();},
     'l': function() {flash();},
-    'm': function() {spinDiamond();},
+    'm': function() {takeOff();},
     'n': function() {stripes();},
     'o': function() {rainbow();},
     'p': function() {pack();},
-    'q': function() {suckedIn();},
+    'q': function() {starburst();},
     'r': function() {bombDrop();},
     's': function() {stipple();},       //
-    't': function() {takeOff();},
+    't': function() {spinDiamond();},
     'u': function() {tree();},
     'v': function() {flashingLights();},
-    'w': function() {zoomOutOutline();},        //
-    'x': function() {starburst();},
+    'w': function() {zoomOutOutline();},
+    'x': function() {suckedIn();},
     'y': function() {splatter();},
     'z': function() {zigzag();}
 }
@@ -779,8 +779,14 @@ function flashingLights() {
 
 
 function zoomOutOutline() {
-
-
+    var strokeColor = chooseRandomColor();
+    var points = CalculateStarPoints(svgWidth/2, svgHeight/2, 20, 6, 5);
+    var star = topSVGLayer.append('svg:polygon')
+                           .attr('points', points)
+                           .attr('fill', 'transparent')
+                           .attr('stroke-width', 1)
+                           .attr('stroke', strokeColor)
+                           .attr('class', 'zoomOutToExitFast');
 }
 
 

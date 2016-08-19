@@ -116,7 +116,7 @@
         opacity: 1;
     }
 
-    75% {
+    80% {
         opacity: 1;
     }
 
@@ -124,6 +124,43 @@
         transform-origin: center center;
         transform: scale(12);
         opacity: 0;
+    }
+}
+
+/*********************************/
+/* Animation for Zooming In Fast */
+/*********************************/
+
+.zoomOutToExitFast {
+    -webkit-animation-name: zoomOutToExitFast;
+            animation-name: zoomOutToExitFast;
+    -webkit-animation-timing-function: linear;
+            animation-timing-function: linear;
+    -webkit-animation-duration: 1s;
+            animation-duration: 1s;
+    -webkit-animation-fill-mode:both;
+            animation-fill-mode:both;
+    -webkit-transform-origin: center center;
+            transform-origin: center center;
+}
+
+@-webkit-keyframes zoomOutToExitFast {
+    0% {
+        -webkit-transform: scale(200);
+    }
+
+    100% {
+        -webkit-transform: scale(0);
+    }
+}
+
+@keyframes zoomOutToExitFast {
+    0% {
+        transform: scale(200);
+    }
+
+    100% {
+        transform: scale(0);
     }
 }
 
