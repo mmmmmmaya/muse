@@ -1,7 +1,7 @@
 'use strict';
 
 function waitThenPress(keypress, waitTime) {
-    setTimeout(function(){
+    setTimeout(function() {
         actionApp(keypress.key_pressed);
     }, waitTime);
 }
@@ -20,7 +20,7 @@ function playbackRecording(content) {
 function playbackButtonClicked(evt) {
     var urlString = '/fetch_recording/' + this.id;
 
-    $.get(urlString, function(data){
+    $.get(urlString, function(data) {
         if (data.status === 'success') {
             playbackRecording(data.content);
         } else {

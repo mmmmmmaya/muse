@@ -32,7 +32,7 @@ function sendSongToServer() {
 function updateMsgDivStatus(status) {
     var msgDiv = $('#save-message-div');
 
-    if (status === 'saved'){
+    if (status === 'saved') {
         msgDiv.html('Saved!');
     } else {
         msgDiv.html('Error!');
@@ -43,7 +43,7 @@ function clearMsgDiv() {
     $('#save-message-div').html('');
 }
 
-function recordButtonPressed(evt){
+function recordButtonPressed(evt) {
     if (appIsRecording) {
         sendSongToServer();
     } else {
@@ -59,7 +59,7 @@ $('#record-button').click(recordButtonPressed);
 
 // validate key pressed is a letter
 // and action app based on input
-function isLetter(char){
+function isLetter(char) {
     return /^[A-Za-z]$/.test(char);
 }
 
@@ -98,7 +98,7 @@ function onKeyPress(evt) {
     if (isLetter(keyPressed)) {
         actionApp(keyPressed);
 
-        if (appIsRecording){
+        if (appIsRecording) {
             updateSong(keyPressed);
         }
     } else if (keyPressed === ' ') {
