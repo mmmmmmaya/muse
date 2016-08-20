@@ -556,10 +556,11 @@ function drawChecker(i, size) {
 
 function edgeDraw(edge, size, func) {
     var num = Math.floor(edge/size);
+    var uniqueClass = Date.now();
 
     for (var i = 0; i <= num; i++) {
         if (i % 2 == 0) {
-            func(i, size);
+            func(i, size, uniqueClass);
         }
     }
 }
@@ -690,16 +691,13 @@ function rainbow() {
 
 
 function pack() {
+    var uniqueClass = Date.now() + 'pack';
     var data = makeData(7, 0);
-    console.log(data);
 
     var nodes = d3.layout.pack()
       .value(function(d) { return d.size; })
       .size([svgWidth, svgHeight])
       .nodes(data);
-
-    nodes.shift();
-    console.log(nodes);
 
     var chart = topSVGLayer.selectAll('circle')
                             .data(nodes)
@@ -708,11 +706,14 @@ function pack() {
                             .attr('cy', function(d) { return d.y; })
                             .attr('r', function(d) { return d.r; })
                             .attr('fill', function(d) { return d.name; })
-                            .attr('stroke', 'grey');
+                            .attr('stroke', 'grey')
+                            .attr('class', uniqueClass);
 
     setTimeout(function() {
         chart.attr('class', 'shrinkToCenter');
     }, 100);
+
+    d3Delete(uniqueClass, 1100);
 }
 
 
@@ -788,7 +789,7 @@ function makeMoreChildren(maxDepth, currentDepth) {
     currentDepth++;
 
     for (var i = 0; i < random; i++) {
-        var shouldMakeChild = getRandomInt(0, 4);
+        var shouldMakeChild = getRandomInt(0, 3);
 
         if (shouldMakeChild > 0) {
             var child = makeData(maxDepth, currentDepth);
@@ -849,14 +850,14 @@ function tree() {
 }
 
 
-function drawLights(i, size) {
+function drawLights(i, size, uniqueClass) {
     var x = size * (i+1);
     var fill = chooseRandomColor();
 
     var light = makeCircle(size/2, x, 0, fill)
-                    .attr('class', 'lights');
+                    .attr('class', uniqueClass);
 
-    d3Delete('lights', 2500);
+    d3Delete(uniqueClass, 2500);
 
 }
 
