@@ -273,7 +273,6 @@ function d3Delete(className, time) {
 
     setTimeout(function () {
         $(classSelector).toggle();
-        $(classSelector).attr('class', '');
     }, time);
 }
 
@@ -648,7 +647,7 @@ function stripes() {
 }
 
 
-function drawOverlappingCircles(x, y) {
+function drawOverlappingCircles(uniqueClass, x, y) {
     var radius = Math.min(x, y) * .8;
     var colors = getThemeColors(currentTheme);
     var bgColor = getThemeBg(currentTheme)
@@ -656,47 +655,51 @@ function drawOverlappingCircles(x, y) {
 
     for (var i = 0; i < colors.length; i++) {
         var circle = makeCircle(radius, x, y, colors[i], 'bottom');
-        circle.attr('class', 'rainbow');
+        circle.attr('class', uniqueClass);
         radius -= radiusDecrement;
     }
 
     var centerCircle = makeCircle(radius, x, y, bgColor, 'bottom');
-    centerCircle.attr('class', 'rainbow');
+    centerCircle.attr('class', uniqueClass);
 }
 
-function drawRainbowRect(x, y, height) {
+function drawRainbowRect(uniqueClass, x, y, height) {
     var fill = getThemeBg(currentTheme);
 
     var rectangle = makeRect(x, y, '100%', height, fill, 'bottom')
-                        .attr('class', 'rainbow');
+                        .attr('class', uniqueClass);
 
     return rectangle;
 }
 
 function rainbow() {
+    var uniqueClass = Date.now() + 'rainbow';
     var x = svgWidth/2;
     var y = (4/5) * svgHeight;
     var height = (svgHeight/2) + 1;
 
-    drawOverlappingCircles(x, y);
+    drawOverlappingCircles(uniqueClass, x, y);
 
-    var bottom = drawRainbowRect(0, y, height);
-    var top = drawRainbowRect(0, 0, y);
-    top.attr('class', 'rainbow rainbowAnimate');
+    var bottom = drawRainbowRect(uniqueClass, 0, y, height);
+    var top = drawRainbowRect(uniqueClass, 0, 0, y);
+    var classes = uniqueClass + ' rainbowAnimate';
+    top.attr('class', classes);
 
-    d3Delete('rainbow', 1000);
+    d3Delete(uniqueClass, 1000);
 }
 
 
 function pack() {
-    var data = makeData(8, 0);
+    var data = makeData(7, 0);
+    console.log(data);
 
     var nodes = d3.layout.pack()
-      .value(function(d) { return d.size;})
+      .value(function(d) { return d.size; })
       .size([svgWidth, svgHeight])
       .nodes(data);
 
     nodes.shift();
+    console.log(nodes);
 
     var chart = topSVGLayer.selectAll('circle')
                             .data(nodes)
@@ -785,9 +788,9 @@ function makeMoreChildren(maxDepth, currentDepth) {
     currentDepth++;
 
     for (var i = 0; i < random; i++) {
-        var shouldMakeChild = getRandomInt(0, 2);
+        var shouldMakeChild = getRandomInt(0, 4);
 
-        if (shouldMakeChild === 1) {
+        if (shouldMakeChild > 0) {
             var child = makeData(maxDepth, currentDepth);
 
             if (child) {
@@ -801,7 +804,6 @@ function makeMoreChildren(maxDepth, currentDepth) {
 }
 
 function makeData(maxDepth, currentDepth) {
-    // TODO prevent 1 level return
     var data = {'name': chooseRandomColor(),
                 'size': getRandomInt(1, 10000)};
 
