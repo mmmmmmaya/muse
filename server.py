@@ -9,7 +9,8 @@ from countries import countries
 from model import connect_to_db, db, KeyPress, Recording, User
 from utils.authentication import add_session_info, attempt_login, remove_session_info
 from utils.general import ALERT_COLORS, flash_message, get_current_user, is_logged_in
-from utils.playback import get_recording_by_checksum, get_recording_by_id, make_keypress_list
+from utils.playback import (get_recording_by_checksum, get_recording_by_id,
+                            make_keypress_list, rename_song)
 from utils.record import add_keypress_to_db_session, add_recording_to_db, process_raw_keypresses
 from utils.register import all_fields_filled, register_user
 
@@ -157,6 +158,25 @@ def register():
             response = BadRequest('You are missing a field necessary for registration.')
 
     return response
+
+
+@app.route('/rename', methods=['POST'])
+def rename():
+    """Rename a recording."""
+
+    title = request.form.get('title')
+    id = request.form.get('id')
+
+    print request.form
+
+    if id and title:
+        rename_song(id, title)
+
+        return jsonify({'status': 'saved',
+                        'title': title})
+
+    else:
+        return jsonify({'status': 'malformed request'})
 
 
 @app.route('/save_recording', methods=['POST'])

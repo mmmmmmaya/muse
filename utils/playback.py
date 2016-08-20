@@ -2,7 +2,7 @@ import json
 
 from md5 import md5
 
-from model import Recording
+from model import db, Recording
 
 
 def get_recording_by_checksum(checksum):
@@ -47,3 +47,13 @@ def make_keypress_list(keypresses):
         keypress_list.append(keypress_dict)
 
     return keypress_list
+
+
+def rename_song(id, title):
+    """Rename a song, given a new name and a recording id."""
+
+    recording = get_recording_by_id(id)
+
+    if recording:
+        recording.name = title
+        db.session.commit()
