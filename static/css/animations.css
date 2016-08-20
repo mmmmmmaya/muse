@@ -448,3 +448,46 @@
                    rotateZ(-30deg);
     }
 }
+
+/**********************************************/
+/* CSS for making something disappear quickly */
+/**********************************************/
+
+.disappear {
+    -webkit-animation-name: disappear;
+            animation-name: disappear;
+    -webkit-animation-timing-function: linear;
+            animation-timing-function: linear;
+    -webkit-animation-duration: .75s;
+            animation-duration: .75s;
+    -webkit-animation-fill-mode:both;
+            animation-fill-mode:both;
+}
+
+@-webkit-keyframes disappear {
+    0% {
+        -webkit-opacity: 1;
+    }
+
+    99% {
+        -webkit-opacity: 1;
+    }
+
+    100% {
+        -webkit-opacity: 0;
+    }
+}
+
+@keyframes disappear {
+    0% {
+        opacity: 1;
+    }
+
+    99% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}

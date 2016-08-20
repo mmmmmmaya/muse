@@ -9,7 +9,7 @@ var letterAnimationMap = {
     'f': function() {force();},
     'g': function() {twinkle();},
     'h': function() {hexBurst();},
-    'i': function() {rotateCircles();},
+    'i': function() {squareParty();},
     'j': function() {verticalChecker();},
     'k': function() {staffTwirl();},
     'l': function() {flash();},
@@ -144,7 +144,7 @@ function footprints() {
     var y = chooseRandomDim(svgHeight);
 
     var delta = 100;
-    var numFootprints = 3;
+    var numFootprints = 5;
     var timerInterval = 100;
     var timer = 0;
 
@@ -518,8 +518,32 @@ function hexBurst() {
 }
 
 
-function rotateCircles() {
+function flashSquares(numX, numY, squareSize) {
+    for (var i = 0; i < numX; i++) {
+        for (var j = 0; j < numY; j++) {
+            var x= squareSize * i;
+            var y = squareSize * j;
+            var fill = chooseRandomColor();
 
+            makeRect(x, y, squareSize, squareSize, fill)
+                .attr('class', 'disappear');
+        }
+    }
+}
+
+function squareParty() {
+    var numFlashes = 5;
+    var squareSize = 100;
+    var numX = svgWidth/squareSize ;
+    var numY = svgHeight/squareSize;
+
+    for (var i = 0; i < numFlashes; i++) {
+        var timer = i * 750;
+
+        setTimeout(function() {
+            flashSquares(numX, numY, squareSize);
+        }, timer);
+    }
 }
 
 
