@@ -238,19 +238,19 @@ function circleGrid() {
 }
 
 
-function drawMajorKeys(x, y, numKeys, pianoKeyWidth,
+function drawMajorKeys(uniqueClass, x, y, numKeys, pianoKeyWidth,
                         spaceBetweenKeys, pianoHeight, majorKeyColor) {
     var x = x;
 
     for (var i = 0; i < numKeys; i++) {
         var key = makeRect(x, y, pianoKeyWidth, pianoHeight, majorKeyColor)
-                    .attr('class', 'piano');
+                    .attr('class', uniqueClass);
 
         x += (pianoKeyWidth + spaceBetweenKeys);
     }
 }
 
-function drawMinorKeys(x, y, numKeys, pianoKeyWidth,
+function drawMinorKeys(uniqueClass, x, y, numKeys, pianoKeyWidth,
                         spaceBetweenKeys, pianoHeight, minorKeyColor) {
     var minorKeyWidth = (2/3)*pianoKeyWidth;
     var x = x + minorKeyWidth;
@@ -261,7 +261,7 @@ function drawMinorKeys(x, y, numKeys, pianoKeyWidth,
             var key = makeRect(x, y, minorKeyWidth, pianoHeight/2, minorKeyColor)
                             .attr('stroke', strokeFill)
                             .attr('stroke-width', spaceBetweenKeys)
-                            .attr('class', 'piano');
+                            .attr('class', uniqueClass);
         }
 
         x += (pianoKeyWidth + spaceBetweenKeys);
@@ -277,38 +277,38 @@ function d3Delete(className, time) {
     }, time);
 }
 
-function chooseRandomKeyToPress(fill) {
-    var keys = d3.selectAll('.piano')[0];
-    var index = getRandomInt(1, keys.length+1);
-    var selector = '.piano:nth-child(' + index + ')';
+function chooseRandomKeyToPress(uniqueClass, fill) {
+    var selector = '.' + uniqueClass;
+    var keys = $(selector);
+    var index = getRandomInt(0, keys.length);
+    var key = keys[index];
 
-    var key = d3.select(selector);
-    var originalColor = key.attr('fill');
+    var originalColor = key.getAttribute('fill');
 
     if (originalColor !== fill) {
-
-        key.attr('fill', fill);
+        key.setAttribute('fill', fill);
 
         setTimeout(function() {
-            key.attr('fill', originalColor);
+            key.setAttribute('fill', originalColor);
         }, 200);
     }
 }
 
-function animatePiano(majorKeyColor) {
+function animatePiano(uniqueClass, majorKeyColor) {
     var numPress = 5;
     var fill = ensureDifferentColor(majorKeyColor);
 
     for (var i = 0; i < numPress; i++) {
         var timer = 200 * i;
         setTimeout(function() {
-            chooseRandomKeyToPress(fill);
+            chooseRandomKeyToPress(uniqueClass, fill);
         }, timer);
     }
 
 }
 
 function piano() {
+    var uniqueClass = Date.now() + 'piano';
     var numKeys = 7;
     var pianoKeyWidth = (svgWidth * (2/3))/numKeys;
     var spaceBetweenKeys = 5;
@@ -322,14 +322,14 @@ function piano() {
     var majorKeyColor = chooseRandomColor();
     var minorKeyColor = ensureDifferentColor(majorKeyColor);
 
-    drawMajorKeys(x, y, numKeys, pianoKeyWidth, spaceBetweenKeys,
+    drawMajorKeys(uniqueClass, x, y, numKeys, pianoKeyWidth, spaceBetweenKeys,
                     pianoHeight, majorKeyColor);
-    drawMinorKeys(x, y, numKeys, pianoKeyWidth,
+    drawMinorKeys(uniqueClass, x, y, numKeys, pianoKeyWidth,
                     spaceBetweenKeys, pianoHeight, minorKeyColor);
 
-    animatePiano(majorKeyColor);
+    animatePiano(uniqueClass, majorKeyColor);
 
-    d3Delete('piano', 2000);
+    d3Delete(uniqueClass, 2000);
 }
 
 function generateHexData(radius, x, y) {
