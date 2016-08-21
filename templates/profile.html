@@ -15,13 +15,56 @@
     <h2 id='profile-header'>{{ user.name }}'s Profile</h2>
     <br>
     {% for recording in user.recordings %}
-        <button class='playback' id={{ recording.id }}>{{ recording.id }}</button>
-        <br>
+        <form class='renameForm' action='#' data-id={{ recording.id }}>
+            <input type='text' name='title' value='{{ recording.name }}' />
+            <input type='hidden' name='id' value={{ recording.id }} />
+            <br>
+        </form>
+
+        <button class='btn playback' data-id={{ recording.id }}>
+            Play
+        </button>
+        <button class='btn delete' data-id={{ recording.id }}>
+            Delete
+        </button>
+
+        <script type="text/javascript">
+            'use strict';
+
+            function songRenamed(evt) {
+                evt.preventDefault();
+                $('#save-message-div').html('Saving ...');
+
+                var data = $(evt.originalEvent.target).serialize();
+
+                $.post("/rename", data, function (data) {
+                    updateMsgDivStatus(data.status);
+                    $('.renameForm').find("input[name='title']")
+                                    .attr('value', data.title);
+                });
+            }
+
+            $('.renameForm').submit(songRenamed);
+
+
+            function songDeleted(evt) {
+                $('#save-message-div').html('Deleting ...');
+
+                var id = $(evt.originalEvent.target).data('id');
+                var params = {"id": id};
+
+                $.post("/delete", params, function (data) {
+                    updateMsgDivStatus(data.status);
+                    var selector = '[data-id*="' + data.id + '"]';
+                    $(selector).remove();
+                });
+            }
+
+            $('.delete').click(songDeleted);
+        </script>
     {% endfor %}
 
-    <svg id='svg' />
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
-    <script src='/static/js/animations.js'></script>
+    <!-- <script src='/static/js/animations.js'></script> -->
     <script src='/static/js/playback.js'></script>
 {% endblock %}

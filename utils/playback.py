@@ -2,7 +2,29 @@ import json
 
 from md5 import md5
 
-from model import db, Recording
+from model import db, KeyPress, Recording
+
+
+def delete_recording_from_db(id):
+    """Remove a recording from the db, given an id."""
+
+    recording = get_recording_by_id(id)
+
+    if recording:
+        delete_keypresses_by_recording_id(id)
+        db.session.delete(recording)
+        db.session.commit()
+
+
+def delete_keypresses_by_recording_id(id):
+    """Delete all keypressess associated with a given recording."""
+
+    keypresses = KeyPress.query.filter_by(recording_id=id).all()
+
+    for keypress in keypresses:
+        db.session.delete(keypress)
+
+    db.session.commit()
 
 
 def get_recording_by_checksum(checksum):

@@ -18,7 +18,7 @@ function playbackRecording(content) {
 }
 
 function playbackButtonClicked(evt) {
-    var urlString = '/fetch_recording/' + this.id;
+    var urlString = '/fetch_recording/' + $(this).data('id');
 
     $.get(urlString, function(data) {
         if (data.status === 'success') {

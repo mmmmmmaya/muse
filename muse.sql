@@ -14,22 +14,23 @@ CREATE TABLE Themes (
 
 CREATE TABLE Recordings (
     id SERIAL PRIMARY KEY,
+    name varchar(200) DEFAULT 'Untitled',
     public boolean NOT NULL DEFAULT True,
-    user_id int REFERENCES Users(id),
+    user_id int REFERENCES Users(id) NOT NULL,
     created_at timestamp DEFAULT now()
 );
 
 CREATE TABLE KeyPresses (
     id SERIAL PRIMARY KEY,
-    recording_id int REFERENCES Recordings(id),
+    recording_id int REFERENCES Recordings(id) NOT NULL,
     key_pressed varchar(1) NOT NULL,
     time_to_next_key int,
-    theme int REFERENCES Themes(id)
+    theme int REFERENCES Themes(id) NOT NULL
 );
 
 CREATE TABLE Views (
     id SERIAL PRIMARY KEY,
-    recording_id int REFERENCES Recordings(id),
+    recording_id int REFERENCES Recordings(id) NOT NULL,
     ip_address inet,
     viewed_at timestamp DEFAULT now()
 );

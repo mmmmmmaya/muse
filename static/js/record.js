@@ -32,7 +32,7 @@ function sendSongToServer() {
 function updateMsgDivStatus(status) {
     var msgDiv = $('#save-message-div');
 
-    if (status === 'saved') {
+    if (status === 'success') {
         msgDiv.html('Saved!');
     } else {
         msgDiv.html('Error!');
