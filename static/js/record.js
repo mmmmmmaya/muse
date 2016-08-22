@@ -64,7 +64,7 @@ function isLetter(char) {
 }
 
 function actionApp(keyPressed) {
-    var soundFilepath = 'static/sounds/' + keyPressed + '.mp3';
+    var soundFilepath = 'static/sounds/' + currentTheme + '/' + keyPressed + '.mp3';
 
     var audio = new Audio(soundFilepath);
 
