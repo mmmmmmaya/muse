@@ -2,7 +2,7 @@ CREATE TABLE Users (
     id SERIAL PRIMARY KEY,
     name varchar(100) NOT NULL,
     email varchar(50) NOT NULL UNIQUE,
-    password varchar(50) NOT NULL,
+    password varchar(64) NOT NULL,
     zipcode varchar(10),
     country varchar(2)
 );
@@ -36,7 +36,8 @@ CREATE TABLE Views (
 );
 
 -- Sample Data
-INSERT INTO Users (name, email, password) VALUES ('angie', 'angie@fake.com', 'pass');
+INSERT INTO Users (name, email, password) VALUES ('angie', 'angie@fake.com',
+        'd74ff0ee8da3b9806b18c877dbf29bbde50b5bd8e4dad7a3a725000feb82e8f1');
 INSERT INTO Themes (name) VALUES ('Bubbly');
 INSERT INTO Themes (name) VALUES ('Meditative');
 INSERT INTO Themes (name) VALUES ('Dubstep');

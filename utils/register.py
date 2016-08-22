@@ -1,7 +1,7 @@
 from flask import redirect
 
 from model import db, User
-from utils.authentication import add_session_info
+from utils.authentication import add_session_info, hash_password
 from utils.general import ALERT_COLORS, flash_message, get_user_by_email
 
 
@@ -11,9 +11,11 @@ def add_user_to_db(name, email, password, zipcode, country):
     Returns id of new user.
     """
 
+    hashed_password = hash_password(password)
+
     new_user = User(name=name,
                     email=email,
-                    password=password,
+                    password=hashed_password,
                     zipcode=zipcode,
                     country=country)
 
