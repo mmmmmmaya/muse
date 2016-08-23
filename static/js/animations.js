@@ -71,14 +71,18 @@ function chooseRandomColor() {
 
 function collectGarbage() {
     var maxElements = 500;
-    var svg = $('#svg')[0];
+    var svgLayers = $('#svg g');
 
-    if (svg.childElementCount > maxElements) {
-        var maxDeleteIndex = svg.childElementCount - maxElements;
-        var children = svg.children;
+    for (var i = 0; i < svgLayers.length; i++) {
+        var layer = svgLayers[i];
 
-        for (var i = 0; i < maxDeleteIndex; i++) {
-            svg.removeChild(children[0]);
+        if (layer.childElementCount > maxElements) {
+            var maxDeleteIndex = layer.childElementCount - maxElements;
+            var children = layer.children;
+
+            for (var j = 0; j < maxDeleteIndex; j++) {
+                layer.removeChild(children[0]);
+            }
         }
     }
 }
