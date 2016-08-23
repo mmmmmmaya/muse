@@ -73,17 +73,39 @@ function chooseRandomColor() {
 }
 
 
+function fetchAudio(theme, charCode, percentSoFar) {
+    var audio = new Audio();
+    audio.addEventListener('canplaythrough', function() {
+        updateProgressBar(percentSoFar);
+    });
+
+    var src = '/static/sounds/' + theme + '/' + String.fromCharCode(charCode) + '.mp3';
+    audio.src = src;
+}
+
+function updateProgressBar(percent) {
+    var progressBar = $('#audio-progress');
+    var loadingScreen = $('#loading-screen-div');
+
+    var width = Math.trunc(percent);
+
+    progressBar.css('width', width+'%').attr('aria-valuenow', width);
+
+    if (percent >= 100) {
+        loadingScreen.toggle();
+    }
+}
+
 function preloadAudio() {
-    var src;
+    var numThemes= getNumThemes();
 
-    for (var i = 1; i <= getNumThemes(); i++) {
+    var percentPerFile = 100 / (numThemes * 26);
+    var percentSoFar = 0;
+
+    for (var i = 1; i <= numThemes; i++) {
         for (var j = 97; j <= 122; j++) {
-            var audio = new Audio();
-
-            audio.addEventListener('canplaythrough', function() {});
-
-            src = '/static/sounds/' + i + '/' + String.fromCharCode(j) + '.mp3';
-            audio.src = src;
+            percentSoFar += percentPerFile;
+            fetchAudio(i, j, percentSoFar);
         }
     }
 }
