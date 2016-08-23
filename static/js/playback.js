@@ -2,6 +2,7 @@
 
 function waitThenPress(keypress, waitTime) {
     setTimeout(function() {
+        currentTheme = keypress.theme;
         actionApp(keypress.key_pressed);
     }, waitTime);
 }
@@ -17,8 +18,9 @@ function playbackRecording(content) {
     }
 }
 
-function playbackButtonClicked(evt) {
-    var urlString = '/fetch_recording/' + $(this).data('id');
+function playbackPageLoaded(evt) {
+    var recordingId = $('#svg').data('id');
+    var urlString = '/fetch_recording/' + recordingId;
 
     $.get(urlString, function(data) {
         if (data.status === 'success') {
@@ -29,4 +31,4 @@ function playbackButtonClicked(evt) {
     });
 }
 
-$('.playback').click(playbackButtonClicked);
+$(document).ready(playbackPageLoaded);

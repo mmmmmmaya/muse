@@ -5,9 +5,9 @@
 
     <script src='https://code.jquery.com/jquery.js'></script>
     <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css' rel='stylesheet'>
 
-    {% block links_and_scripts %}
-    {% endblock %}
+    {% block links_and_scripts %}{% endblock %}
 
 </head>
 <body>
@@ -35,19 +35,16 @@
 
     <script href='https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.4/js/tether.min.js'></script>
     <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
-    <script src='/static/js/konami.js'></script>
-    <script src='/static/js/themes.js'></script>
-    <script src='/static/js/record.js'></script>
 
-{% block more_scripts %}{% endblock %}
+    {% block more_scripts %}{% endblock %}
 
 
-{% if g.jasmine_tests %}
-    <link rel="stylesheet" href="/static/jasmine/jasmine.css">
-    <script src="/static/jasmine/jasmine.js"></script>
-    <script src="/static/jasmine//jasmine-html.js"></script>
-    <script src="/static/jasmine/boot.js"></script>
-{% endif %}
+    {% if g.jasmine_tests %}
+        <link rel="stylesheet" href="/static/jasmine/jasmine.css">
+        <script src="/static/jasmine/jasmine.js"></script>
+        <script src="/static/jasmine/jasmine-html.js"></script>
+        <script src="/static/jasmine/boot.js"></script>
+    {% endif %}
 
 </body>
 </html>

@@ -11,11 +11,13 @@
 {% endblock %}
 
 {% block content %}
-    <svg id='svg' />
+    <svg id='svg' data-id={{ recording_id }} />
 {% endblock %}
 
 {% block more_scripts %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
+    <script src='/static/js/themes.js'></script>
+    <script src='/static/js/record.js'></script>
     <script src='/static/js/animations.js'></script>
     <script src='/static/js/playback.js'></script>
 {% endblock %}

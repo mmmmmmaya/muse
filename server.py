@@ -9,8 +9,8 @@ from countries import countries
 from model import connect_to_db, db, KeyPress, Recording, User
 from utils.authentication import add_session_info, attempt_login, remove_session_info
 from utils.general import ALERT_COLORS, flash_message, get_current_user, is_logged_in
-from utils.playback import (delete_recording_from_db, get_recording_by_checksum,
-                            get_recording_by_id, make_keypress_list, rename_song)
+from utils.playback import (delete_recording_from_db, get_recording_by_id,
+                            make_keypress_list, rename_song)
 from utils.record import add_keypress_to_db_session, add_recording_to_db, process_raw_keypresses
 from utils.register import all_fields_filled, register_user
 
@@ -73,17 +73,12 @@ def fetch_recording(recording_id):
     return jsonify(response)
 
 
-@app.route('/listen/<string:md5>')
-def listen(md5):
-    """Playback a song, given a recording's md5 checksum."""
+@app.route('/listen/<string:recording_id>')
+def listen(recording_id):
+    """Playback a song, given a recording's id."""
 
-    recording = get_recording_by_checksum(md5)
-    id = -1
-
-    if recording and recording.public:
-        id = recording.id
-
-    return fetch_recording(id)
+    return render_template('listen.html',
+                           recording_id=recording_id)
 
 
 @app.route('/login', methods=['GET', 'POST'])

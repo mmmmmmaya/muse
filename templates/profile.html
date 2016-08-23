@@ -4,12 +4,6 @@
     {{ user.name }}'s Profile
 {% endblock %}
 
-{% block links_and_scripts %}
-    <link href='/static/css/magic.min.css' rel='stylesheet'>
-    <link href='/static/css/styles.css' rel='stylesheet'>
-    <link href='/static/css/animations.css' rel='stylesheet'>
-{% endblock %}
-
 {% block content %}
 
     <h2 id='profile-header'>{{ user.name }}'s Profile</h2>
@@ -28,45 +22,10 @@
             Delete
         </button>
 
-        <script type="text/javascript">
-            'use strict';
-
-            function songRenamed(evt) {
-                evt.preventDefault();
-                $('#save-message-div').html('Saving ...');
-
-                var data = $(evt.originalEvent.target).serialize();
-
-                $.post("/rename", data, function (data) {
-                    updateMsgDivStatus(data.status);
-
-                    var dataIdSelector = '[data-id*="' + data.id + '"]';
-
-                    $('.renameForm').find(dataIdSelector)
-                                    .attr('value', data.title);
-                });
-            }
-
-            $('.renameForm').submit(songRenamed);
-
-
-            function songDeleted(evt) {
-                $('#save-message-div').html('Deleting ...');
-
-                var id = $(evt.originalEvent.target).data('id');
-                var params = {"id": id};
-
-                $.post("/delete", params, function (data) {
-                    updateMsgDivStatus(data.status);
-                    var selector = '[data-id*="' + data.id + '"]';
-                    $(selector).remove();
-                });
-            }
-
-            $('.delete').click(songDeleted);
-        </script>
     {% endfor %}
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
-    <script src='/static/js/playback.js'></script>
+{% endblock %}
+
+{% block more_scripts %}
+    <script src='/static/js/profile.js'></script>
 {% endblock %}
