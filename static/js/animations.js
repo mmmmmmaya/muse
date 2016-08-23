@@ -35,7 +35,10 @@ var topSVGLayer = svgContainer.append('g');
 
 var svgHeight;
 var svgWidth;
+
 resetSVGDims();
+preloadAudio();
+
 
 function getRandomInt(min, max) {
     var min = Math.ceil(min);
@@ -68,6 +71,23 @@ function chooseRandomColor() {
 
     return colors[index];
 }
+
+
+function preloadAudio() {
+    var src;
+
+    for (var i = 1; i <= getNumThemes(); i++) {
+        for (var j = 97; j <= 122; j++) {
+            var audio = new Audio();
+
+            audio.addEventListener('canplaythrough', function() {});
+
+            src = '/static/sounds/' + i + '/' + String.fromCharCode(j) + '.mp3';
+            audio.src = src;
+        }
+    }
+}
+
 
 function collectGarbage() {
     var maxElements = 500;
@@ -734,6 +754,7 @@ function suckedIn() {
           .attr('class', 'magictime spaceOutUp');
 }
 
+
 function bombDrop() {
     var colors = getThemeColors(currentTheme);
     var radius = 20;
@@ -952,10 +973,6 @@ function starburst() {
 }
 
 
-function speedy() {
-}
-
-
 function getLineData(x, y) {
     var lineData = [];
     var randomAmplitude = getRandomInt(10, 40);
@@ -1012,6 +1029,7 @@ function zigzag() {
     var zigzag = drawZigzag();
     animateZigZag(zigzag);
 }
+
 
 function resetSVGDims(evt) {
     svgWidth = svgContainer[0][0]['clientWidth'];

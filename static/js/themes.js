@@ -14,6 +14,10 @@ var backgrounds = [
     '#ffffff'   // symphony: brass, strings, woodwind, percussion
 ]
 
+function getNumThemes() {
+    return themeColors.length;
+}
+
 function getThemeColors(theme) {
     return themeColors[theme-1];
 }
