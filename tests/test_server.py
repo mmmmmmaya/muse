@@ -1,3 +1,4 @@
+import json
 import unittest
 
 from flask import session
@@ -257,6 +258,7 @@ class TestSaveRecording(unittest.TestCase):
         db.create_all()
 
         populate_test_db_users()
+        populate_test_db_themes()
 
     def test_save_recording_logged_in(self):
         """Save recording while user is logged in."""
@@ -267,22 +269,34 @@ class TestSaveRecording(unittest.TestCase):
                              "password": "pass"
                          })
 
+        keypresses = json.dumps(
+            [{"timestamp": 1471993671612,
+              "key": "r",
+              "theme": 1}]
+        )
+
         response = self.client.post('/save_recording',
-                                    data={"recording": "[]"},
+                                    data={"keypresses": keypresses},
                                     follow_redirects=True)
 
         self.assertEquals(200, response.status_code)
-        self.assertIn('saved', response.data)
+        self.assertIn('success', response.data)
 
     def test_save_recording_not_logged_in(self):
         """Save recording while user is not logged in."""
 
         response = self.client.post('/save_recording',
-                                    data={"recording": "[]"},
+                                    data={"keypresses": None},
                                     follow_redirects=True)
 
         self.assertEquals(200, response.status_code)
         self.assertIn('login_required', response.data)
+
+    def tearDown(self):
+        """Reset db for next test."""
+
+        db.session.close()
+        db.drop_all()
 
 if __name__ == '__main__':
     unittest.main()

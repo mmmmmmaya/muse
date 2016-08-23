@@ -1,6 +1,8 @@
 import random
 import time
 
+from Crypto.Hash import SHA256
+
 from model import db, KeyPress, Recording, Theme, User
 
 
@@ -40,9 +42,12 @@ def populate_test_db_themes():
 def populate_test_db_users():
     """Create user data in fake db for testing."""
 
+    hashed_password = SHA256.new()
+    hashed_password.update('pass')
+
     fake_user = User(name='Angie',
                      email='angie@fake.com',
-                     password='pass')
+                     password=hashed_password.hexdigest())
 
     db.session.add(fake_user)
     db.session.commit()
