@@ -35,7 +35,7 @@ function updateMsgDivStatus(status) {
     if (status === 'success') {
         msgDiv.html('Saved!');
     } else {
-        msgDiv.html('Error!');
+        msgDiv.html('Error! ' + status);
     }
 }
 
