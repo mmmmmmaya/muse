@@ -13,7 +13,7 @@ class User(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(50), nullable=False)
-    password = db.Column(db.String(50), nullable=False)
+    password = db.Column(db.String(64), nullable=False)
     zipcode = db.Column(db.String(10))
     country = db.Column(db.String(2))
 
