@@ -1,7 +1,7 @@
 import json
 import os
 
-from flask import flash, Flask, jsonify, redirect, render_template, request, session
+from flask import flash, Flask, g, jsonify, redirect, render_template, request, session
 from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.exceptions import BadRequest
 
@@ -191,7 +191,8 @@ def rename():
         rename_song(id, title)
 
         return jsonify({'status': 'success',
-                        'title': title})
+                        'title': title,
+                        'id': id})
 
     else:
         return jsonify({'status': 'malformed request'})
