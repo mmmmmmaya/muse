@@ -41,5 +41,13 @@
 
 {% block more_scripts %}{% endblock %}
 
+
+{% if g.jasmine_tests %}
+    <link rel="stylesheet" href="/static/jasmine/jasmine.css">
+    <script src="/static/jasmine/jasmine.js"></script>
+    <script src="/static/jasmine//jasmine-html.js"></script>
+    <script src="/static/jasmine/boot.js"></script>
+{% endif %}
+
 </body>
 </html>

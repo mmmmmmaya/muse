@@ -16,6 +16,12 @@ from utils.register import all_fields_filled, register_user
 
 app = Flask(__name__)
 app.secret_key = os.environ['FLASK_APP_SECRET_KEY']
+JS_TESTING_MODE = False
+
+
+@app.before_request
+def add_tests():
+    g.jasmine_tests = JS_TESTING_MODE
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -233,6 +239,11 @@ def teapot():
 
 
 if __name__ == '__main__':
+    # set up javascript testing
+    import sys
+    if sys.argv[-1] == "jasmine":
+        JS_TESTING_MODE = True
+
     app.debug = True
     connect_to_db(app)
     app.run(host='0.0.0.0')
