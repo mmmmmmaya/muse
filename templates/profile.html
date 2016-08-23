@@ -42,8 +42,7 @@
 
                     var dataIdSelector = '[data-id*="' + data.id + '"]';
 
-                    $('.renameForm').find("input[name='title']")
-                                    .find(dataIdSelector)
+                    $('.renameForm').find(dataIdSelector)
                                     .attr('value', data.title);
                 });
             }

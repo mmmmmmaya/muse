@@ -185,8 +185,6 @@ def rename():
     title = request.form.get('title')
     id = request.form.get('id')
 
-    print request.form
-
     if id and title:
         rename_song(id, title)
 
