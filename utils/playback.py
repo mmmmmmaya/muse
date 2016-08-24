@@ -3,7 +3,17 @@ import json
 from md5 import md5
 from sqlalchemy.orm.exc import NoResultFound
 
-from model import db, KeyPress, Recording
+from model import db, KeyPress, Recording, View
+
+
+def add_view_to_db(recording_id, ip_address):
+    """Add a new recording View to the db."""
+
+    view = View(recording_id=recording_id,
+                ip_address=ip_address)
+
+    db.session.add(view)
+    db.session.commit()
 
 
 def delete_recording_by_id(id):

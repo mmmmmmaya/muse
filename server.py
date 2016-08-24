@@ -9,7 +9,7 @@ from countries import countries
 from model import connect_to_db, db, KeyPress, Recording, User
 from utils.authentication import add_session_info, attempt_login, remove_session_info
 from utils.general import ALERT_COLORS, flash_message, get_current_user, is_logged_in
-from utils.playback import (delete_recording_by_id, get_recording_by_id,
+from utils.playback import (add_view_to_db, delete_recording_by_id, get_recording_by_id,
                             make_keypress_list, rename_recording)
 from utils.record import add_keypress_to_db_session, add_recording_to_db, process_raw_keypresses
 from utils.register import all_fields_filled, register_user
@@ -60,15 +60,15 @@ def fetch_recording(recording_id):
         keypresses = make_keypress_list(recording.keypresses)
 
     if keypresses:
-        response = ({
+        response = {
             'status': 'success',
             'content': keypresses
-        })
+        }
     else:
-        response = ({
+        response = {
             'status': 'failure',
             'content': None
-        })
+        }
 
     return jsonify(response)
 
@@ -79,6 +79,23 @@ def listen(recording_id):
 
     return render_template('listen.html',
                            recording_id=recording_id)
+
+
+@app.route('/log_view', methods=['POST'])
+def log_view():
+    """Store information about recording views."""
+    print request.form
+    recording_id = request.form.get('recording_id')
+    ip_address = request.form.get('ip_address')
+
+    if recording_id:
+        add_view_to_db(recording_id, ip_address)
+        response = {'status': 'success'}
+
+    else:
+        response = {'status': 'malformed request'}
+
+    return jsonify(response)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -178,17 +195,19 @@ def rename():
     """Rename a recording."""
 
     title = request.form.get('title')
-    id = request.form.get('id')
+    recording_id = request.form.get('id')
 
-    if id and title:
-        rename_recording(id, title)
+    if recording_id and title:
+        rename_recording(recording_id, title)
 
-        return jsonify({'status': 'success',
-                        'title': title,
-                        'id': id})
+        response = {'status': 'success',
+                    'title': title,
+                    'id': recording_id}
 
     else:
-        return jsonify({'status': 'malformed request'})
+        response = {'status': 'malformed request'}
+
+    return jsonify(response)
 
 
 @app.route('/save_recording', methods=['POST'])
@@ -203,10 +222,12 @@ def save_recording():
             recording_id = add_recording_to_db()
             process_raw_keypresses(raw_keypress_list, recording_id)
 
-        return jsonify({'status': 'success'})
+        response = {'status': 'success'}
 
     else:
-        return jsonify({'status': 'login_required'})
+        response = {'status': 'login_required'}
+
+    return jsonify(response)
 
 
 @app.route('/teapot', methods=['BREW', 'GET', 'PROPFIND', 'WHEN'])

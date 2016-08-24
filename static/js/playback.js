@@ -18,8 +18,24 @@ function playbackRecording(content) {
     }
 }
 
+function logRecordingView(recordingId) {
+    $.get("http://ipinfo.io", function(response) {
+
+        var ipAddress = response.ip;
+        var data = {
+            "recording_id": recordingId,
+            "ip_address": ipAddress
+        };
+
+        $.post('/log_view', data);
+
+    }, "json");
+}
+
 function playbackPageLoaded(evt) {
     var recordingId = $('#svg').data('id');
+    logRecordingView(recordingId);
+
     var urlString = '/fetch_recording/' + recordingId;
 
     $.get(urlString, function(data) {
