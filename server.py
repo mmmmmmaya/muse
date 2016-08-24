@@ -10,7 +10,8 @@ from model import connect_to_db, db, KeyPress, Recording, User
 from utils.authentication import add_session_info, attempt_login, remove_session_info
 from utils.general import ALERT_COLORS, flash_message, get_current_user, is_logged_in
 from utils.playback import (add_view_to_db, delete_recording_by_id, get_recording_by_id,
-                            make_keypress_list, rename_recording)
+                            make_keypress_list, recording_belongs_to_user,
+                            recording_is_public, rename_recording)
 from utils.record import add_keypress_to_db_session, add_recording_to_db, process_raw_keypresses
 from utils.register import all_fields_filled, register_user
 
@@ -77,14 +78,21 @@ def fetch_recording(recording_id):
 def listen(recording_id):
     """Playback a recording, given a recording's id."""
 
-    return render_template('listen.html',
-                           recording_id=recording_id)
+    if recording_is_public(recording_id) or recording_belongs_to_user(recording_id):
+        response = render_template('listen.html',
+                                   recording_id=recording_id)
+
+    else:
+        flash_message('It looks like that recording is private or does not exist.',
+                      ALERT_COLORS['red'])
+        response = redirect('/')
+
+    return response
 
 
 @app.route('/log_view', methods=['POST'])
 def log_view():
     """Store information about recording views."""
-    print request.form
     recording_id = request.form.get('recording_id')
     ip_address = request.form.get('ip_address')
 

@@ -4,6 +4,7 @@ from md5 import md5
 from sqlalchemy.orm.exc import NoResultFound
 
 from model import db, KeyPress, Recording, View
+from utils.general import get_current_user
 
 
 def add_view_to_db(recording_id, ip_address):
@@ -59,6 +60,29 @@ def make_keypress_list(keypresses):
         keypress_list.append(keypress_dict)
 
     return keypress_list
+
+
+def recording_belongs_to_user(recording_id):
+    """Determines whether the accessed recording belongs to the authenticated user."""
+
+    belongs_to_user = False
+
+    user = get_current_user()
+    recording = get_recording_by_id(recording_id)
+
+    if recording and user:
+        if recording.user_id == user.id:
+            belongs_to_user = True
+
+    return belongs_to_user
+
+
+def recording_is_public(recording_id):
+    """Determines whether a given recording is publicly viewable."""
+
+    recording = get_recording_by_id(recording_id)
+
+    return recording.public
 
 
 def rename_recording(id, title):
