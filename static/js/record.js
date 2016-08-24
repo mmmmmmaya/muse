@@ -81,16 +81,6 @@ function updateSong(keyPressed) {
     });
 }
 
-function nextTheme() {
-    if (currentTheme === 5) {
-        currentTheme = 1;
-    } else {
-        currentTheme++;
-    }
-
-    updateBgColor(currentTheme);
-}
-
 function onKeyPress(evt) {
     var keyPressed = evt.key;
     konamiTracker(keyPressed);

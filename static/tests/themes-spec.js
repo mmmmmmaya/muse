@@ -19,6 +19,15 @@ describe('Tests theme getters and setters functionality', function() {
         expect(bgColor).toBe('#ededed');
     });
 
+    it('should be able to change the theme', function() {
+        var theme = currentTheme;
+
+        nextTheme();
+
+        expect(theme).not.toBe(currentTheme);
+        expect(currentTheme).toBe(theme + 1);
+    });
+
     it('should update the bgColor to match that of a given theme', function() {
         updateBgColor(2);
 
@@ -29,5 +38,5 @@ describe('Tests theme getters and setters functionality', function() {
         var currentBgColor = $('body').css('background-color');
 
         expect(currentBgColor).toBe(themeBgColor);
-    })
+    });
 });

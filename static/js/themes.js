@@ -26,6 +26,16 @@ function getThemeBg(theme) {
     return backgrounds[theme-1];
 }
 
+function nextTheme() {
+    if (currentTheme === 5) {
+        currentTheme = 1;
+    } else {
+        currentTheme++;
+    }
+
+    updateBgColor(currentTheme);
+}
+
 function updateBgColor(theme) {
     $('body').css("background-color", backgrounds[theme-1]);
 }

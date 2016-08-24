@@ -55,15 +55,6 @@ describe('Tests recording functionality', function() {
 
     });
 
-    it('should be able to change the theme', function() {
-        var theme = currentTheme;
-
-        nextTheme();
-
-        expect(theme).not.toBe(currentTheme);
-        expect(currentTheme).toBe(theme + 1);
-    });
-
     it('should track the konami code easter egg', function() {
 
     });
