@@ -393,5 +393,54 @@ class TestListenToRecording(unittest.TestCase):
         self.assertIn('data-id=1', response.data)
 
 
+class TestRenameRecording(unittest.TestCase):
+    """Test what happens when we rename a recording."""
+
+    def setUp(self):
+        """Set up app and fake client."""
+
+        app.config['TESTING'] = True
+        self.client = app.test_client()
+
+        connect_to_db(app, 'postgresql:///testdb')
+        db.create_all()
+
+        populate_test_db_users()
+        populate_test_db_recordings()
+
+    def test_rename_recording(self):
+        """Test renaming a recording."""
+
+        id = '1'
+        name = 'new name'
+
+        response = self.client.post('/rename',
+                                    data={"id": id,
+                                          "title": name},
+                                    follow_redirects=True)
+
+        self.assertEquals(200, response.status_code)
+        self.assertIn('success', response.data)
+        self.assertIn(id, response.data)
+        self.assertIn(name, response.data)
+
+    def test_rename_recording_missing_params(self):
+        """Test error returned when required param missing in request."""
+
+        id = '1'
+
+        response = self.client.post('/rename',
+                                    data={"id": id},
+                                    follow_redirects=True)
+
+        self.assertIn('malformed request', response.data)
+
+    def tearDown(self):
+        """Reset db for next test."""
+
+        db.session.close()
+        db.drop_all()
+
+
 if __name__ == '__main__':
     unittest.main()
