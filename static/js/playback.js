@@ -1,8 +1,8 @@
 'use strict';
 
 function waitThenPress(keypress, waitTime) {
-    setTimeout(function() {
-        currentTheme = keypress.theme;
+    setTimeout(function() {                 // because of differences in indexing,
+        currentTheme = keypress.theme - 1;  // theme id in the db is 1 more than in js
         actionApp(keypress.key_pressed);
     }, waitTime);
 }
