@@ -68,17 +68,12 @@ class TestGetCurrentUser(unittest.TestCase):
 
         with app.test_request_context():
             # log in
-            session['user_id'] = 1
-
-            # somehow, user is removed from db
-            db_user = User.query.get(1)
-            db.session.delete(db_user)
-            db.session.commit()
+            session['user_id'] = -1
 
             user = get_current_user()
 
             self.assertIn('user_id', session)
-            self.assertEquals(1, session['user_id'])
+            self.assertEquals(-1, session['user_id'])
             self.assertEquals(user, None)
 
     def test_user_logged_in(self):

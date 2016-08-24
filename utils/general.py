@@ -35,11 +35,7 @@ def get_current_user():
     user = None
 
     if 'user_id' in session:
-        try:
-            user = User.query.get(session['user_id'])
-
-        except NoResultFound:
-            pass
+        user = User.query.get(session['user_id'])
 
     return user
 

@@ -1,8 +1,6 @@
 import json
 import unittest
 
-from flask import session
-
 from model import connect_to_db, db
 from server import app
 from utils.test import (populate_test_db_keypresses,
@@ -102,15 +100,43 @@ class TestLogout(unittest.TestCase):
         """Set up app and fake client."""
 
         app.config['TESTING'] = True
+        app.config['SECRET_KEY'] = 'super secret'
         self.client = app.test_client()
 
-    def test_logout(self):
-        """General logout case."""
+        connect_to_db(app, 'postgresql:///testdb')
+        db.create_all()
+
+        populate_test_db_users()
+
+    def test_logout_logged_in(self):
+        """Logout when user is logged in."""
+
+        self.client.post('/login',
+                         data={
+                             "email": "angie@fake.com",
+                             "password": "pass"
+                         })
 
         response = self.client.get('/logout',
                                    follow_redirects=True)
 
         self.assertEquals(200, response.status_code)
+        self.assertIn('You were successfully logged out.', response.data)
+
+    def test_logout_not_logged_in(self):
+        """Logout when user is not logged in."""
+
+        response = self.client.get('/logout',
+                                   follow_redirects=True)
+
+        self.assertEquals(200, response.status_code)
+        self.assertIn('You were successfully logged out.', response.data)
+
+    def tearDown(self):
+        """Reset db for next test."""
+
+        db.session.close()
+        db.drop_all()
 
 
 class TestProfile(unittest.TestCase):
@@ -238,6 +264,20 @@ class TestRegister(unittest.TestCase):
         self.assertNotIn('That user already exists. Please log in.', response.data)
         self.assertIn('Account created successfully.', response.data)
 
+    def test_register_mmissing_params(self):
+        """Test what happens when you try to register a user without necessary params."""
+
+        response = self.client.post('/register',
+                                    data={
+                                        "email": "angie2@fake.com",
+                                        "password": "password"
+                                    },
+                                    follow_redirects=True)
+
+        self.assertEquals(400, response.status_code)
+        self.assertIn('You are missing a field necessary for registration.', response.data)
+        self.assertNotIn('Account created successfully.', response.data)
+
     def tearDown(self):
         """Reset db for next test."""
 
@@ -297,6 +337,61 @@ class TestSaveRecording(unittest.TestCase):
 
         db.session.close()
         db.drop_all()
+
+
+class TestDeleteRecording(unittest.TestCase):
+    """Test removing a recording via the web."""
+
+    def setUp(self):
+        """Set up app and fake client."""
+
+        app.config['TESTING'] = True
+        self.client = app.test_client()
+
+        connect_to_db(app, 'postgresql:///testdb')
+        db.create_all()
+
+        populate_test_db_users()
+        populate_test_db_recordings()
+
+    def test_delete_recording(self):
+        """Test removing a single recording."""
+
+        id = '1'
+        response = self.client.post('/delete',
+                                    data={"id": id},
+                                    follow_redirects=True)
+
+        self.assertEquals(200, response.status_code)
+        self.assertIn('success', response.data)
+        self.assertIn(id, response.data)
+
+    def tearDown(self):
+        """Reset db for next test."""
+
+        db.session.close()
+        db.drop_all()
+
+
+class TestListenToRecording(unittest.TestCase):
+    """Test what appears on the page when you listen to a recording."""
+
+    def setUp(self):
+        """Set up app and fake client."""
+
+        app.config['TESTING'] = True
+        self.client = app.test_client()
+
+    def test_listen_to_recording(self):
+        """Test removing a single recording."""
+
+        response = self.client.get('/listen/1',
+                                   follow_redirects=True)
+
+        self.assertEquals(200, response.status_code)
+        self.assertIn('svg', response.data)
+        self.assertIn('data-id=1', response.data)
+
 
 if __name__ == '__main__':
     unittest.main()

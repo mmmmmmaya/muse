@@ -6,7 +6,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from model import db, KeyPress, Recording
 
 
-def delete_recording_from_db(id):
+def delete_recording_by_id(id):
     """Remove a recording from the db, given an id."""
 
     recording = get_recording_by_id(id)
@@ -31,15 +31,7 @@ def delete_keypresses_by_recording_id(id):
 def get_recording_by_id(id):
     """Grab recording from db using recording id."""
 
-    recording = None
-
-    try:
-        recording = Recording.query.get(id)
-
-    except NoResultFound:
-        pass
-
-    return recording
+    return Recording.query.get(id)
 
 
 def make_keypress_list(keypresses):
@@ -59,8 +51,8 @@ def make_keypress_list(keypresses):
     return keypress_list
 
 
-def rename_song(id, title):
-    """Rename a song, given a new name and a recording id."""
+def rename_recording(id, title):
+    """Rename a recording, given a new name and a recording id."""
 
     recording = get_recording_by_id(id)
 
