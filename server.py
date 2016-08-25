@@ -42,12 +42,13 @@ def index():
 def delete():
     """Delete a recording from the db."""
 
-    id = request.form.get('id')
-
-    delete_recording_by_id(id)
+    recording_id = request.form.get('recording_id')
+    print request.form
+    if recording_id:
+        delete_recording_by_id(recording_id)
 
     return jsonify({"status": "success",
-                    "id": id})
+                    "id": recording_id})
 
 
 @app.route('/fetch_recording/<int:recording_id>')

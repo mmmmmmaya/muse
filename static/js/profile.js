@@ -12,11 +12,6 @@ function recordingRenamed(evt) {
 
     $.post("/rename", params, function (data) {
         updateMsgDivStatus(data.status);
-
-        var dataIdSelector = makeDataIdSelector();
-
-        $('.rename-form').find(dataIdSelector)
-                        .attr('value', data.title);
     });
 }
 
@@ -41,9 +36,14 @@ $('.delete').click(recordingDeleted);
 
 function updateButtonText(recordingId) {
     var dataIdSelector = makeDataIdSelector(recordingId);
-    var toggleButton = $('.toggle-public').find(dataIdSelector)[0];
-    console.log(toggleButton);
-    // if (toggleButton.classList.)
+    var buttonSelector = '.toggle-public' + dataIdSelector;
+    var toggleButton = $(buttonSelector);
+
+    var isPublic = toggleButton.hasClass('public');
+    var toggleButtonHTML = isPublic ? 'Make Private' : 'Make Public';
+
+    toggleButton.html(toggleButtonHTML);
+    toggleButton.toggleClass('public');
 }
 
 function toggleRecordingPublic(evt) {
