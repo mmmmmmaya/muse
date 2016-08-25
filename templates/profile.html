@@ -9,7 +9,7 @@
     <h2 id='profile-header'>{{ user.name }}'s Profile</h2>
     <br>
     {% for recording in user.recordings %}
-        <form class='renameForm' action='#' data-id={{ recording.id }}>
+        <form class='rename-form' action='#' data-id={{ recording.id }}>
             <input type='text' name='title' value='{{ recording.name }}' />
             <input type='hidden' name='id' value={{ recording.id }} />
             <br>
@@ -21,11 +21,19 @@
         <button class='btn delete' data-id={{ recording.id }}>
             Delete
         </button>
+        <button class='btn toggle-public public' data-id={{ recording.id }}>
+            {% if recording.public %}
+                Make Private
+            {% else %}
+                Make Public
+            {% endif %}
+        </button>
 
     {% endfor %}
 
 {% endblock %}
 
 {% block more_scripts %}
+    <script src='/static/js/messages.js'></script>
     <script src='/static/js/profile.js'></script>
 {% endblock %}

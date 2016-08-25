@@ -11,7 +11,7 @@ from utils.authentication import add_session_info, attempt_login, remove_session
 from utils.general import ALERT_COLORS, flash_message, get_current_user, is_logged_in
 from utils.playback import (add_view_to_db, delete_recording_by_id, get_recording_by_id,
                             make_keypress_list, recording_belongs_to_user,
-                            recording_is_public, rename_recording)
+                            recording_is_public, rename_recording, toggle_recording_visibility)
 from utils.record import add_keypress_to_db_session, add_recording_to_db, process_raw_keypresses
 from utils.register import all_fields_filled, register_user
 
@@ -206,16 +206,21 @@ def rename():
     recording_id = request.form.get('id')
 
     if recording_id and title:
-        rename_recording(recording_id, title)
+        if recording_belongs_to_user(recording_id):
+            rename_recording(recording_id, title)
 
-        response = {'status': 'success',
-                    'title': title,
-                    'id': recording_id}
+            response = jsonify({'status': 'success',
+                                'title': title,
+                                'id': recording_id})
+        else:
+            flash_message('Recording name can only be changed by recording author.',
+                          ALERT_COLORS['red'])
+            response = redirect('/profile')
 
     else:
-        response = {'status': 'malformed request'}
+        response = jsonify({'status': 'malformed request'})
 
-    return jsonify(response)
+    return response
 
 
 @app.route('/save_recording', methods=['POST'])
@@ -259,6 +264,25 @@ def teapot():
     elif method == 'WHEN':
         return jsonify({'status': 'stopped_pouring',
                         'content': 'milk'})
+
+
+@app.route('/toggle_public', methods=['POST'])
+def toggle_public():
+    """Change the visibility of a recording."""
+
+    recording_id = request.form.get('recording_id')
+
+    if recording_belongs_to_user(recording_id):
+        toggle_recording_visibility(recording_id)
+
+        response = jsonify({"status": "success"})
+
+    else:
+        flash_message('Visibility can only be changed by recording author.',
+                      ALERT_COLORS['red'])
+        response = redirect('/')
+
+    return response
 
 
 if __name__ == '__main__':

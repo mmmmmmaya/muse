@@ -93,3 +93,13 @@ def rename_recording(id, title):
     if recording:
         recording.name = title
         db.session.commit()
+
+
+def toggle_recording_visibility(recording_id):
+    """Change recording from public to private or vice versa."""
+
+    recording = get_recording_by_id(recording_id)
+
+    if recording:
+        recording.public = not recording.public
+        db.session.commit()
