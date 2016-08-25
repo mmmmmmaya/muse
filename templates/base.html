@@ -52,5 +52,35 @@
         {% block jasmine_specs %}{% endblock %}
     {% endif %}
 
+    <div id='embed'>
+        <textarea>
+            &lt;iframe src="localhost:5000" style="border: 3px solid #ccc" width="640" height="480"&gt;&lt;/iframe&gt;
+        </textarea>
+    </div>
+
+    <script>
+        var hideEmbed = function(e) {
+            if (!!$embed.has(e.target).length) {
+                return;
+            }
+
+            $embed.fadeOut(function() {
+                embedding = false;
+            });
+
+            $window.unbind('click', hideEmbed);
+        };
+
+        $('#embed-button').click(function(e) {
+          e.preventDefault();
+          $hint.fadeOut();
+          $merchandise.fadeOut();
+          $embed.fadeIn(function() {
+            embedding = true;
+            $embed.find('textarea').select();
+            $window.bind('click', hideEmbed);
+          });
+        });
+    </script>
 </body>
 </html>

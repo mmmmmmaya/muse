@@ -39,3 +39,22 @@ svg {
     left: 0px;
     z-index: 1000;
 }
+
+#embed {
+    display: hidden;
+    left: 50%;
+    position: fixed;
+    top: 50%;
+}
+
+#embed textarea {
+    display: inline-block;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 400;
+    padding: 16px;
+    border-radius: 10.56px;
+    border: 0;
+    outline: none;
+    resize: none;
+}
