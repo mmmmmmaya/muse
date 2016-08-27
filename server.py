@@ -43,12 +43,23 @@ def delete():
     """Delete a recording from the db."""
 
     recording_id = request.form.get('recording_id')
-    print request.form
-    if recording_id:
-        delete_recording_by_id(recording_id)
 
-    return jsonify({"status": "success",
-                    "id": recording_id})
+    if recording_id:
+        if recording_belongs_to_user(recording_id):
+            delete_recording_by_id(recording_id)
+
+            response = jsonify({"status": "success",
+                                "id": recording_id})
+
+        else:
+            flash_message('Recording can only be deleted by recording author.',
+                          ALERT_COLORS['red'])
+            response = redirect('/profile')
+
+    else:
+        response = jsonify({'status': 'malformed request'})
+
+    return response
 
 
 @app.route('/fetch_recording/<int:recording_id>')

@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from model import connect_to_db, db
+from model import connect_to_db, db, Recording
 from server import app
 from utils.test import (populate_test_db_keypresses,
                         populate_test_db_recordings,
@@ -65,6 +65,75 @@ class TestFetchRecording(unittest.TestCase):
         self.assertEquals(200, response.status_code)
         self.assertIn('failure', response.data)
         self.assertNotIn('key_pressed', response.data)
+
+    def tearDown(self):
+        """Reset db for next test."""
+
+        db.session.close()
+        db.drop_all()
+
+
+class TestListen(unittest.TestCase):
+    """Test the page that plays recordings."""
+
+    def setUp(self):
+        """Set up app, db, and fake client."""
+
+        app.config['TESTING'] = True
+        self.client = app.test_client()
+
+        connect_to_db(app, 'postgresql:///testdb')
+        db.create_all()
+
+        populate_test_db_themes()
+        populate_test_db_users()
+        populate_test_db_recordings()
+        populate_test_db_keypresses()
+
+    def test_recording_public(self):
+        """Test listening to public recording."""
+
+        response = self.client.get('/listen/1',
+                                   follow_redirects=True)
+
+        self.assertIn('svg', response.data)
+        self.assertIn('Public Playback', response.data)
+
+    def test_recording_private_logged_in(self):
+        """Test user listening to own private recording."""
+
+        with app.test_request_context():
+            self.client.post('/login',
+                             data={
+                                 "email": "angie2@fake.com",
+                                 "password": "pass"
+                             })
+
+            response = self.client.get('/listen/2',
+                                       follow_redirects=True)
+
+            self.assertIn('svg', response.data)
+            self.assertIn('Public Playback', response.data)
+
+    def test_recording_private_not_logged_in(self):
+        """Test listening to other private recording."""
+
+        response = self.client.get('/listen/2',
+                                   follow_redirects=True)
+
+        self.assertIn('Play with Muse!', response.data)
+        self.assertIn('It looks like that recording is private or does not exist.',
+                      response.data)
+
+    def test_no_recording(self):
+        """Test what happens when recording does not exist."""
+
+        response = self.client.get('/listen/3',
+                                   follow_redirects=True)
+
+        self.assertIn('Play with Muse!', response.data)
+        self.assertIn('It looks like that recording is private or does not exist.',
+                      response.data)
 
     def tearDown(self):
         """Reset db for next test."""
@@ -254,7 +323,7 @@ class TestRegister(unittest.TestCase):
 
         response = self.client.post('/register',
                                     data={
-                                        "email": "angie2@fake.com",
+                                        "email": "nobody@hasthis.email",
                                         "password": "password",
                                         "name": "Angie"
                                     },
@@ -264,12 +333,12 @@ class TestRegister(unittest.TestCase):
         self.assertNotIn('That user already exists. Please log in.', response.data)
         self.assertIn('Account created successfully.', response.data)
 
-    def test_register_mmissing_params(self):
+    def test_register_missing_params(self):
         """Test what happens when you try to register a user without necessary params."""
 
         response = self.client.post('/register',
                                     data={
-                                        "email": "angie2@fake.com",
+                                        "email": "nobody@hasthis.email",
                                         "password": "password"
                                     },
                                     follow_redirects=True)
@@ -346,6 +415,7 @@ class TestDeleteRecording(unittest.TestCase):
         """Set up app and fake client."""
 
         app.config['TESTING'] = True
+        app.config['SECRET_KEY'] = 'super secret'
         self.client = app.test_client()
 
         connect_to_db(app, 'postgresql:///testdb')
@@ -357,14 +427,49 @@ class TestDeleteRecording(unittest.TestCase):
     def test_delete_recording(self):
         """Test removing a single recording."""
 
-        id = '1'
+        with app.test_request_context():
+            num_before = len(Recording.query.all())
+
+            self.client.post('/login',
+                             data={
+                                 "email": "angie@fake.com",
+                                 "password": "pass"
+                             })
+
+            response = self.client.post('/delete',
+                                        data={"recording_id": "1"},
+                                        follow_redirects=True)
+
+            num_after = len(Recording.query.all())
+
+            self.assertEquals(200, response.status_code)
+            self.assertIn('success', response.data)
+            self.assertEquals(num_before, num_after + 1)
+
+    def test_delete_recording_not_logged_in(self):
+        """Test deleting when you aren't logged in."""
+
+        num_before = len(Recording.query.all())
+
         response = self.client.post('/delete',
-                                    data={"id": id},
+                                    data={"recording_id": "1"},
                                     follow_redirects=True)
 
+        num_after = len(Recording.query.all())
+
         self.assertEquals(200, response.status_code)
-        self.assertIn('success', response.data)
-        self.assertIn(id, response.data)
+        self.assertIn('Recording can only be deleted by recording author.',
+                      response.data)
+        self.assertEquals(num_before, num_after)
+
+    def test_delete_no_recording_id(self):
+        """Test what happens when no recording id is given."""
+
+        response = self.client.post('/delete',
+                                    data={},
+                                    follow_redirects=True)
+
+        self.assertIn('malformed request', response.data)
 
     def tearDown(self):
         """Reset db for next test."""
@@ -380,10 +485,17 @@ class TestListenToRecording(unittest.TestCase):
         """Set up app and fake client."""
 
         app.config['TESTING'] = True
+        app.config['SECRET_KEY'] = 'super secret'
         self.client = app.test_client()
 
-    def test_listen_to_recording(self):
-        """Test removing a single recording."""
+        connect_to_db(app, 'postgresql:///testdb')
+        db.create_all()
+
+        populate_test_db_users()
+        populate_test_db_recordings()
+
+    def test_public_listen(self):
+        """Test listening to a public recording."""
 
         response = self.client.get('/listen/1',
                                    follow_redirects=True)
@@ -391,6 +503,41 @@ class TestListenToRecording(unittest.TestCase):
         self.assertEquals(200, response.status_code)
         self.assertIn('svg', response.data)
         self.assertIn('data-id=1', response.data)
+
+    def test_private_listen_logged_in(self):
+        """Test listening to a private recording you created."""
+
+        with app.test_request_context():
+            self.client.post('/login',
+                             data={
+                                 "email": "angie2@fake.com",
+                                 "password": "pass"
+                             })
+
+            response = self.client.get('/listen/2',
+                                       follow_redirects=True)
+
+            self.assertEquals(200, response.status_code)
+            self.assertIn('svg', response.data)
+            self.assertIn('data-id=2', response.data)
+
+    def test_private_listen_not_logged_in(self):
+        """Test listening to a private recording you did not create."""
+
+        with app.test_request_context():
+            response = self.client.get('/listen/2',
+                                       follow_redirects=True)
+
+            self.assertEquals(200, response.status_code)
+            self.assertIn('It looks like that recording is private or does not exist.',
+                          response.data)
+            self.assertIn('Play with Muse!', response.data)
+
+    def tearDown(self):
+        """Reset db for next test."""
+
+        db.session.close()
+        db.drop_all()
 
 
 class TestRenameRecording(unittest.TestCase):
@@ -408,8 +555,31 @@ class TestRenameRecording(unittest.TestCase):
         populate_test_db_users()
         populate_test_db_recordings()
 
-    def test_rename_recording(self):
-        """Test renaming a recording."""
+    def test_rename_recording_logged_in(self):
+        """Test renaming a recording when you are logged in."""
+
+        with app.test_request_context():
+            self.client.post('/login',
+                             data={
+                                 "email": "angie@fake.com",
+                                 "password": "pass"
+                             })
+
+            id = '1'
+            name = 'new name'
+
+            response = self.client.post('/rename',
+                                        data={"id": id,
+                                              "title": name},
+                                        follow_redirects=True)
+
+            self.assertEquals(200, response.status_code)
+            self.assertIn('success', response.data)
+            self.assertIn(id, response.data)
+            self.assertIn(name, response.data)
+
+    def test_rename_recording_not_logged_in(self):
+        """Test renaming a recording when you are not logged in."""
 
         id = '1'
         name = 'new name'
@@ -420,9 +590,8 @@ class TestRenameRecording(unittest.TestCase):
                                     follow_redirects=True)
 
         self.assertEquals(200, response.status_code)
-        self.assertIn('success', response.data)
-        self.assertIn(id, response.data)
-        self.assertIn(name, response.data)
+        self.assertIn('Recording name can only be changed by recording author.',
+                      response.data)
 
     def test_rename_recording_missing_params(self):
         """Test error returned when required param missing in request."""

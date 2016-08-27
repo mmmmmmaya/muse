@@ -80,9 +80,13 @@ def recording_belongs_to_user(recording_id):
 def recording_is_public(recording_id):
     """Determines whether a given recording is publicly viewable."""
 
+    is_public = False
     recording = get_recording_by_id(recording_id)
 
-    return recording.public
+    if recording:
+        is_public = recording.public
+
+    return is_public
 
 
 def rename_recording(id, title):

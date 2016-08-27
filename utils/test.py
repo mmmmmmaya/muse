@@ -25,8 +25,11 @@ def populate_test_db_recordings():
     """Add keypress data in fake db for testing."""
 
     fake_recording = Recording(user_id=1)
+    fake_recording2 = Recording(user_id=2,
+                                public=False)
 
     db.session.add(fake_recording)
+    db.session.add(fake_recording2)
     db.session.commit()
 
 
@@ -49,5 +52,13 @@ def populate_test_db_users():
                      email='angie@fake.com',
                      password=hashed_password.hexdigest())
 
+    hashed_password2 = SHA256.new()
+    hashed_password2.update('pass')
+
+    fake_user2 = User(name='Angie2',
+                      email='angie2@fake.com',
+                      password=hashed_password2.hexdigest())
+
     db.session.add(fake_user)
+    db.session.add(fake_user2)
     db.session.commit()
