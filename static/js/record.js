@@ -6,13 +6,6 @@ var recordingArray = [];
 var currentTheme = 1;
 updateBgColor(currentTheme);
 
-function toggleRecording() {
-    appIsRecording = !appIsRecording;
-
-    var icon = $('#record-button-icon');
-    icon.toggleClass('fa-circle');
-    icon.toggleClass('fa-square');
-}
 
 function sendSongToServer() {
     if (recordingArray.length > 0) {
@@ -30,7 +23,7 @@ function sendSongToServer() {
 }
 
 
-function recordButtonPressed(evt) {
+function toggleRecording(evt) {
     if (appIsRecording) {
         sendSongToServer();
     } else {
@@ -38,10 +31,8 @@ function recordButtonPressed(evt) {
         clearMsgDiv();
     }
 
-    toggleRecording();
+    appIsRecording = !appIsRecording;
 }
-
-$('#record-button').click(recordButtonPressed);
 
 
 // validate key pressed is a letter
@@ -51,7 +42,7 @@ function isLetter(char) {
 }
 
 function actionApp(keyPressed) {
-    var soundFilepath = 'static/sounds/' + currentTheme + '/' + keyPressed + '.mp3';
+    var soundFilepath = '/static/sounds/' + currentTheme + '/' + keyPressed + '.mp3';
 
     var audio = new Audio(soundFilepath);
 
@@ -68,6 +59,10 @@ function updateSong(keyPressed) {
     });
 }
 
+function showHelp() {
+
+}
+
 function onKeyPress(evt) {
     var keyPressed = evt.key;
     konamiTracker(keyPressed);
@@ -80,6 +75,12 @@ function onKeyPress(evt) {
         }
     } else if (keyPressed === ' ') {
         nextTheme();
+    } else if (keyPressed === '?') {
+        showHelp();
+    } else if (keyPressed === 'Enter') {
+        toggleRecording();
+    } else {
+        console.log(keyPressed);
     }
 }
 

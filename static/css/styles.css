@@ -22,14 +22,6 @@ svg {
     stroke-width: 1.5px;
 }
 
-.fa-circle {
-    color: red;
-}
-
-.fa-square {
-    color: black;
-}
-
 #loading-screen-div {
     background-color: #ededed;
     position: fixed;
@@ -57,4 +49,16 @@ svg {
     border: 0;
     outline: none;
     resize: none;
+}
+
+.fa-facebook-square {
+    color: #3b5998;
+}
+
+.fa-github {
+    color: #000000;
+}
+
+.fa-linkedin-square {
+    color: #1883bb;
 }

@@ -16,22 +16,45 @@
 
 </head>
 <body>
-        <a href='/'>Home</a>
-    {% if 'user_id' in session %}
-        <a href='/logout'>Log out</a>
-        <a href='/profile'>Profile</a>
-        <div id='save-message-div'></div>
-    {% else %}
-        <a href='/login'>Log in</a>
-    {% endif %}
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Muse</a>
+        </div>
 
-    <br>
-    <br>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+          {% if 'user_id' in session %}
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                  <li><a href="/profile">Profile</a></li>
+                  <li><a href="/logout">Logout</a></li>
+              </ul>
+            </li>
+            {% else %}
+            <li>
+              <a href='/login'>Log in</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
 
     <div class='container'>
         {% for flashed_msg in get_flashed_messages() %}
             {{ flashed_msg }}
         {% endfor %}
+
+
+        <div id='save-message-div'></div>
 
         {% block content %}
             BODY GOES HERE
@@ -52,11 +75,46 @@
         {% block jasmine_specs %}{% endblock %}
     {% endif %}
 
-    <div id='embed'>
-        <textarea>
-            &lt;iframe src="localhost:5000" style="border: 3px solid #ccc" width="640" height="480"&gt;&lt;/iframe&gt;
-        </textarea>
-    </div>
+
+<!-- <div id='embed'>
+    <textarea>
+        &lt;iframe src="localhost:5000" style="border: 3px solid #ccc" width="640" height="480"&gt;&lt;/iframe&gt;
+    </textarea>
+</div> -->
+
+<nav class="navbar navbar-default navbar-fixed-bottom">
+  <div class="container-fluid">
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="https://www.github.com/ainjii/muse">
+             <i class="fa fa-2x fa-github" aria-hidden="true"></i>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.linkedin.com/in/angieroscioli">
+            <i class="fa fa-2x fa-linkedin-square" aria-hidden="true"></i>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.facebook.com/angie.nichol">
+            <i class="fa fa-2x fa-facebook-square" aria-hidden="true"></i>
+          </a>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+            <a href='#'><i class="fa fa-2x fa-code" aria-hidden="true"></i></a>
+        </li>
+        <li>
+            <a href='#'><i class="fa fa-2x fa-question" aria-hidden="true"></i></a>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
 
     <script>
         var hideEmbed = function(e) {

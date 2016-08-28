@@ -10,7 +10,6 @@
     <link href='/static/css/animations.css' rel='stylesheet'>
 {% endblock %}
 
-
 {% block content %}
     {% if konami %}
         <svg id='svg' />
@@ -18,20 +17,11 @@
         <div id='loading-screen-div'>
             Loading Resources ...
             <div class="progress">
-              <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="audio-progress">
-                <span class="sr-only">Loading resources ...</span>
+              <div class="progress-bar progress-bar-striped progress-bar-info active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="audio-progress">
+                <span class="sr-only"></span>
               </div>
             </div>
         </div>
-        {% set disabled = '' if 'user_id' in session else 'disabled' %}
-        {% set wrapperTooltip = 'data-toggle="tooltip" data-placement="bottom" title="Please log in to record."'|safe if disabled else '' %}
-
-        <span {{ wrapperTooltip }}>
-            <button type='button' class='btn' id='record-button' {{ disabled }}>
-                <i class='fa fa-circle' id='record-button-icon' aria-hidden='true'> </i>
-                Record
-            </button>
-        </span>
 
         <svg id='svg' />
 
