@@ -3,3 +3,4 @@ env
 *secret*
 *.cache
 htmlcov
+.coverage
