@@ -26,7 +26,6 @@ class TestIndex(unittest.TestCase):
 
         self.assertEquals(200, response.status_code)
         self.assertIn('Play with Muse!', response.data)
-        self.assertIn('record-button', response.data)
 
 
 class TestFetchRecording(unittest.TestCase):
@@ -208,6 +207,53 @@ class TestLogout(unittest.TestCase):
         db.drop_all()
 
 
+class TestLogView(unittest.TestCase):
+    """Test that a View is logged in the db when someone watches a recording."""
+
+    def setUp(self):
+        """Set up app and fake client."""
+
+        app.config['TESTING'] = True
+        app.config['SECRET_KEY'] = 'super secret'
+        self.client = app.test_client()
+
+        connect_to_db(app, 'postgresql:///testdb')
+        db.create_all()
+
+        populate_test_db_users()
+        populate_test_db_themes()
+        populate_test_db_recordings()
+        populate_test_db_keypresses()
+
+    def test_fully_qualified_view(self):
+        """Test logging a view when recording_id and ip_address provided."""
+
+        response = self.client.post('/log_view', data={"recording_id": "1",
+                                                       "ip_address": "0.0.0.0"})
+
+        self.assertIn('success', response.data)
+
+    def test_only_required_params(self):
+        """Test logging a view when only recording_id provided."""
+
+        response = self.client.post('/log_view', data={"recording_id": "1"})
+
+        self.assertIn('success', response.data)
+
+    def test_missing_required_params(self):
+        """Test that a failure occurs when required information (recording_id) not provided"""
+
+        response = self.client.post('/log_view', data={})
+
+        self.assertIn('malformed request', response.data)
+
+    def tearDown(self):
+        """Reset db for next test."""
+
+        db.session.close()
+        db.drop_all()
+
+
 class TestProfile(unittest.TestCase):
     """Test profile page."""
 
@@ -300,7 +346,6 @@ class TestRegister(unittest.TestCase):
 
         self.assertEquals(200, response.status_code)
         self.assertIn('Play with Muse!', response.data)
-        self.assertIn('record-button', response.data)
         self.assertNotIn('registration-form', response.data)
 
     def test_register_existing_user(self):
