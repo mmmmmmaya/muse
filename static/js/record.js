@@ -60,7 +60,8 @@ function updateSong(keyPressed) {
 }
 
 function showHelp() {
-
+    $('#helpModal').modal('toggle');
+    $('#start-message').remove();
 }
 
 function onKeyPress(evt) {

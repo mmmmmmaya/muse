@@ -32,25 +32,6 @@ svg {
     z-index: 1000;
 }
 
-#embed {
-    display: hidden;
-    left: 50%;
-    position: fixed;
-    top: 50%;
-}
-
-#embed textarea {
-    display: inline-block;
-    font-size: 12px;
-    line-height: 16px;
-    font-weight: 400;
-    padding: 16px;
-    border-radius: 10.56px;
-    border: 0;
-    outline: none;
-    resize: none;
-}
-
 .fa-facebook-square {
     color: #3b5998;
 }
@@ -61,4 +42,13 @@ svg {
 
 .fa-linkedin-square {
     color: #1883bb;
+}
+
+#start-message {
+    color: #707070;
+    left: 50%;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }

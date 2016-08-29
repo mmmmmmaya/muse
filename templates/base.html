@@ -73,12 +73,23 @@
         {% block jasmine_specs %}{% endblock %}
     {% endif %}
 
-
-<!-- <div id='embed'>
-    <textarea>
+<!-- Embed Modal -->
+<div class="modal fade bs-example-modal-sm" id="embedModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Embed Muse in Your Site!</h4>
+      </div>
+      <div class="modal-body">
         &lt;iframe src="localhost:5000" style="border: 3px solid #ccc" width="640" height="480"&gt;&lt;/iframe&gt;
-    </textarea>
-</div> -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <nav class="navbar navbar-default navbar-fixed-bottom">
   <div class="container-fluid">
@@ -104,39 +115,15 @@
 
       <ul class="nav navbar-nav navbar-right">
         <li>
-            <a href='#'><i class="fa fa-2x fa-code" aria-hidden="true"></i></a>
+            <a href='#'><i class="fa fa-2x fa-code" aria-hidden="true"  data-toggle="modal" data-target="#embedModal"></i></a>
         </li>
         <li>
-            <a href='#'><i class="fa fa-2x fa-question" aria-hidden="true"></i></a>
+            <a href='#'><i class="fa fa-2x fa-question" aria-hidden="true" data-toggle="modal" data-target="#helpModal"></i></a>
         </li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
 
-    <script>
-        var hideEmbed = function(e) {
-            if (!!$embed.has(e.target).length) {
-                return;
-            }
-
-            $embed.fadeOut(function() {
-                embedding = false;
-            });
-
-            $window.unbind('click', hideEmbed);
-        };
-
-        $('#embed-button').click(function(e) {
-          e.preventDefault();
-          $hint.fadeOut();
-          $merchandise.fadeOut();
-          $embed.fadeIn(function() {
-            embedding = true;
-            $embed.find('textarea').select();
-            $window.bind('click', hideEmbed);
-          });
-        });
-    </script>
 </body>
 </html>
