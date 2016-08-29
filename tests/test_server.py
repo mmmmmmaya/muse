@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from model import connect_to_db, db, Recording
+from model import connect_to_db, db, Recording, User
 from server import app
 from utils.test import (populate_test_db_keypresses,
                         populate_test_db_recordings,
@@ -297,6 +297,27 @@ class TestProfile(unittest.TestCase):
         self.assertEquals(200, response.status_code)
         self.assertIn('Please log in to view your profile.', response.data)
         self.assertNotIn('s Profile', response.data)
+
+    def test_profile_not_in_db(self):
+        """Test what happens when the logged in user is not in the db."""
+
+        with app.test_request_context():
+            self.client.post('/login',
+                             data={
+                                 "email": "angie@fake.com",
+                                 "password": "pass"
+                             })
+
+            user = User.query.get(1)
+            db.session.delete(user)
+            db.session.commit()
+
+            response = self.client.get('/profile',
+                                       follow_redirects=True)
+
+            self.assertEquals(200, response.status_code)
+            self.assertIn('There was an error. Please log in and try again.', response.data)
+            self.assertNotIn('s Profile', response.data)
 
     def tearDown(self):
         """Reset db for next test."""
