@@ -59,12 +59,18 @@ function updateSong(keyPressed) {
     });
 }
 
-function showHelp() {
-    $('#helpModal').modal('toggle');
+function removeStartMessage() {
     $('#start-message').remove();
 }
 
+function showHelp() {
+    $('#helpModal').modal('toggle');
+    removeStartMessage();
+}
+
 function onKeyPress(evt) {
+    removeStartMessage();
+
     var keyPressed = evt.key;
     konamiTracker(keyPressed);
 
