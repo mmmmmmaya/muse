@@ -4,6 +4,7 @@ import time
 from Crypto.Hash import SHA256
 
 from model import db, KeyPress, Recording, Theme, User
+from utils.authentication import hash_password
 
 
 def populate_test_db_keypresses():
@@ -45,19 +46,15 @@ def populate_test_db_themes():
 def populate_test_db_users():
     """Create user data in fake db for testing."""
 
-    hashed_password = SHA256.new()
-    hashed_password.update('pass')
+    hashed_password = hash_password('pass')
 
     fake_user = User(name='Angie',
                      email='angie@fake.com',
-                     password=hashed_password.hexdigest())
-
-    hashed_password2 = SHA256.new()
-    hashed_password2.update('pass')
+                     password=hashed_password)
 
     fake_user2 = User(name='Angie2',
                       email='angie2@fake.com',
-                      password=hashed_password2.hexdigest())
+                      password=hashed_password)
 
     db.session.add(fake_user)
     db.session.add(fake_user2)

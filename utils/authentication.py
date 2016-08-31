@@ -1,3 +1,5 @@
+import os
+
 from Crypto.Hash import SHA256
 from flask import redirect, session
 from sqlalchemy.orm.exc import NoResultFound
@@ -38,8 +40,10 @@ def attempt_login(email, password):
 def hash_password(password):
     """Take a password and return its hashed version."""
 
+    salt = os.environ['PASSWORD_SALT']
+
     hashed_password = SHA256.new()
-    hashed_password.update(password)
+    hashed_password.update(password + salt)
 
     return hashed_password.hexdigest()
 
