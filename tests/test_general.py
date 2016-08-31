@@ -49,6 +49,8 @@ class TestGetCurrentUser(unittest.TestCase):
         """Set up app, session key, and db."""
 
         app.config['TESTING'] = True
+        app.config['SECRET_KEY'] = 'super secret'
+        self.client = app.test_client()
 
         # set up db
         connect_to_db(app, 'postgresql:///testdb')
@@ -67,27 +69,33 @@ class TestGetCurrentUser(unittest.TestCase):
         """Test what happens when we try to get a user that is not in the db."""
 
         with app.test_request_context():
-            # log in
-            session['user_id'] = -1
+            user = {
+                'id': -1,
+                'name': 'Angie'
+            }
 
-            user = get_current_user()
+            session['user'] = user
+            current_user = get_current_user()
 
-            self.assertIn('user_id', session)
-            self.assertEquals(-1, session['user_id'])
-            self.assertEquals(user, None)
+            self.assertIn('user', session)
+            self.assertEquals(-1, session['user']['id'])
+            self.assertEquals(current_user, None)
 
     def test_user_logged_in(self):
         """Test what happens when someone is logged in."""
 
         with app.test_request_context():
-            # log in
-            session['user_id'] = 1
+            user = {
+                'id': 1,
+                'name': 'Angie'
+            }
 
-            user = get_current_user()
+            session['user'] = user
+            current_user = get_current_user()
 
-            self.assertNotEquals(user, None)
-            self.assertIsInstance(user, User)
-            self.assertEquals(user.name, 'Angie')
+            self.assertNotEquals(current_user, None)
+            self.assertIsInstance(current_user, User)
+            self.assertEquals(current_user.name, 'Angie')
 
     def tearDown(self):
         """Reset db for next test."""
@@ -146,12 +154,25 @@ class TestIsLoggedIn(unittest.TestCase):
         """Set up app, session key, and db."""
 
         app.config['TESTING'] = True
+        app.config['SECRET_KEY'] = 'super secret'
+
+        # set up db
+        connect_to_db(app, 'postgresql:///testdb')
+        db.create_all()
+        populate_test_db_users()
 
     def test_logged_in(self):
         """Test what happens when someone is logged in."""
 
         with app.test_request_context():
-            session['user_id'] = 1
+            user = {
+                'id': 1,
+                'name': 'Angie'
+            }
+
+            session['user'] = user
+
+            current_user = get_current_user()
             logged_in = is_logged_in()
 
             self.assertEquals(logged_in, True)
@@ -165,10 +186,10 @@ class TestIsLoggedIn(unittest.TestCase):
             self.assertEquals(logged_in, False)
 
     def test_user_in_session_is_null(self):
-        """Test what happen if session is in wonky state (user_id=None)."""
+        """Test what happen if session is in wonky state (user=None)."""
 
         with app.test_request_context():
-            session['user_id'] = None
+            session['user'] = None
             logged_in = is_logged_in()
 
             self.assertEquals(logged_in, False)

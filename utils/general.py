@@ -34,8 +34,9 @@ def get_current_user():
 
     user = None
 
-    if 'user_id' in session:
-        user = User.query.get(session['user_id'])
+    if 'user' in session:
+        user_id = session.get('user', {}).get('id')
+        user = User.query.get(user_id)
 
     return user
 
@@ -58,8 +59,8 @@ def is_logged_in():
 
     logged_in = False
 
-    # if 'user_id' in session and session['user_id'] is not None
-    if session.get('user_id', None):
+    # if 'user' in session and session['user'] is not None
+    if session.get('user', None):
         logged_in = True
 
     return logged_in

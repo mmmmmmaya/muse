@@ -87,7 +87,12 @@ class TestAddRecordingToDb(unittest.TestCase):
         """Add a recording that contains all possible pieces of information."""
 
         with app.test_request_context():
-            session['user_id'] = 1
+            user = {
+                'id': 1,
+                'name': 'Angie'
+            }
+
+            session['user'] = user
             add_recording_to_db()
 
             recording = Recording.query.one()

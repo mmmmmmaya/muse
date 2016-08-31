@@ -18,7 +18,7 @@ def add_recording_to_db():
     Returns the id of the new Recording.
     """
 
-    user_id = session['user_id']
+    user_id = session.get('user', {}).get('id')
     new_recording = Recording(user_id=user_id)
 
     db.session.add(new_recording)

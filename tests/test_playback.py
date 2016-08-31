@@ -1,5 +1,7 @@
 import unittest
 
+from flask import session
+
 from model import connect_to_db, db, Recording, View
 from server import app
 from utils.authentication import add_session_info
@@ -202,7 +204,12 @@ class TestRecordingBelongsToUser(unittest.TestCase):
         """Test a recording that belongs to the user."""
 
         with app.test_request_context():
-            add_session_info(1)
+            user = {
+                'id': 1,
+                'name': 'Angie'
+            }
+
+            session['user'] = user
             belongs_to_user = recording_belongs_to_user(1)
             self.assertEquals(True, belongs_to_user)
 
@@ -210,7 +217,12 @@ class TestRecordingBelongsToUser(unittest.TestCase):
         """Test a recording that does not belong to the user."""
 
         with app.test_request_context():
-            add_session_info(1)
+            user = {
+                'id': 1,
+                'name': 'Angie'
+            }
+
+            session['user'] = user
             belongs_to_user = recording_belongs_to_user(2)
             self.assertEquals(False, belongs_to_user)
 
@@ -218,7 +230,12 @@ class TestRecordingBelongsToUser(unittest.TestCase):
         """Test what happens when a recording does not exist."""
 
         with app.test_request_context():
-            add_session_info(1)
+            user = {
+                'id': 1,
+                'name': 'Angie'
+            }
+
+            session['user'] = user
             belongs_to_user = recording_belongs_to_user(3)
             self.assertEquals(False, belongs_to_user)
 

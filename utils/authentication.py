@@ -6,11 +6,14 @@ from model import User
 from utils.general import ALERT_COLORS, flash_message, get_user_by_email
 
 
-def add_session_info(user_id):
-    """Add user_id to session."""
+def add_session_info(user):
+    """Add user info to session."""
 
-    if user_id:
-        session['user_id'] = user_id
+    if user:
+        session['user'] = {
+            'id': user.id,
+            'name': user.name
+        }
 
 
 def attempt_login(email, password):
@@ -42,10 +45,10 @@ def hash_password(password):
 
 
 def remove_session_info():
-    """Remove user_id from session."""
+    """Remove user info from session."""
 
-    if 'user_id' in session:
-        del session['user_id']
+    if 'user' in session:
+        del session['user']
 
 
 def verify_password(user, password):
@@ -54,7 +57,7 @@ def verify_password(user, password):
     hashed_password = hash_password(password)
 
     if user.password == hashed_password:
-        add_session_info(user.id)
+        add_session_info(user)
         flash_message('You were successfully logged in.', ALERT_COLORS['green'])
         response = redirect('/')
 

@@ -1,13 +1,13 @@
 import json
 import os
 
-from flask import flash, Flask, g, jsonify, redirect, render_template, request, session
+from flask import flash, Flask, g, jsonify, redirect, render_template, request
 from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.exceptions import BadRequest
 
 from countries import countries
 from model import connect_to_db, db, KeyPress, Recording, User
-from utils.authentication import add_session_info, attempt_login, remove_session_info
+from utils.authentication import attempt_login, remove_session_info
 from utils.general import ALERT_COLORS, flash_message, get_current_user, is_logged_in
 from utils.playback import (add_view_to_db, delete_recording_by_id, get_recording_by_id,
                             make_keypress_list, recording_belongs_to_user,

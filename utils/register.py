@@ -22,7 +22,7 @@ def add_user_to_db(name, email, password, zipcode, country):
     db.session.add(new_user)
     db.session.commit()
 
-    return new_user.id
+    return new_user
 
 
 def all_fields_filled(name, email, password):
@@ -45,8 +45,8 @@ def register_user(name, email, password, zipcode, country):
         response = redirect('/login')
 
     else:
-        user_id = add_user_to_db(name, email, password, zipcode, country)
-        add_session_info(user_id)
+        user = add_user_to_db(name, email, password, zipcode, country)
+        add_session_info(user)
         flash_message('Account created successfully.',
                       ALERT_COLORS['green'])
         response = redirect('/')
