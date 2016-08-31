@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Popular Recordings
+{% endblock %}
+
+{% block content %}
+    {% if popular_recordings %}
+        <ol>
+            {% for recording in popular_recordings %}
+                <li>
+                    <a href='/listen/{{ recording.id }}'>{{ recording.name }}</a>
+                </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        There are no recordings yet. Make one <a href='/'>here</a>.
+    {% endif %}
+{% endblock %}

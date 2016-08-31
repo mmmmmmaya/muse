@@ -9,9 +9,10 @@ from countries import countries
 from model import connect_to_db, db, KeyPress, Recording, User
 from utils.authentication import attempt_login, remove_session_info
 from utils.general import ALERT_COLORS, flash_message, get_current_user, is_logged_in
-from utils.playback import (add_view_to_db, delete_recording_by_id, get_recording_by_id,
-                            make_keypress_list, recording_belongs_to_user,
-                            recording_is_public, rename_recording, toggle_recording_visibility)
+from utils.playback import (add_view_to_db, delete_recording_by_id, get_popular_recordings,
+                            get_recording_by_id, make_keypress_list,
+                            recording_belongs_to_user, recording_is_public,
+                            rename_recording, toggle_recording_visibility)
 from utils.record import add_keypress_to_db_session, add_recording_to_db, process_raw_keypresses
 from utils.register import all_fields_filled, register_user
 
@@ -147,6 +148,16 @@ def logout():
     flash_message('You were successfully logged out.', ALERT_COLORS['green'])
 
     return redirect('/')
+
+
+@app.route('/popular')
+def popular():
+    """Return a page of popular songs."""
+
+    popular_recordings = get_popular_recordings()
+
+    return render_template('popular.html',
+                           popular_recordings=popular_recordings)
 
 
 @app.route('/profile')

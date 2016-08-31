@@ -1,6 +1,7 @@
 import json
 
 from md5 import md5
+from sqlalchemy import func
 from sqlalchemy.orm.exc import NoResultFound
 
 from model import db, KeyPress, Recording, View
@@ -43,6 +44,22 @@ def get_recording_by_id(id):
     """Grab recording from db using recording id."""
 
     return Recording.query.get(id)
+
+
+def get_popular_recordings():
+    """Get the top 10 most-viewed recordings."""
+
+    view_count = func.count(View.id).label('view_count')
+
+    recordings = db.session.query(Recording, view_count) \
+                           .join(View) \
+                           .group_by(Recording.id) \
+                           .order_by('view_count DESC') \
+                           .limit(10) \
+                           .all()
+    popular_recordings = [recording[0] for recording in recordings]
+
+    return popular_recordings
 
 
 def make_keypress_list(keypresses):
