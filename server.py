@@ -234,7 +234,7 @@ def rename():
 
             response = jsonify({'status': 'success',
                                 'title': title,
-                                'id': recording_id})
+                                'recording_id': recording_id})
         else:
             flash_message('Recording name can only be changed by recording author.',
                           ALERT_COLORS['red'])

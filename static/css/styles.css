@@ -32,6 +32,14 @@ svg {
     color: #1883bb;
 }
 
+.fa-times {
+    color: red;
+}
+
+.hide {
+    display: none;
+}
+
 .node circle {
     stroke-width: 1.5px;
 }
@@ -40,6 +48,10 @@ svg {
     fill: none;
     stroke: #ccc;
     stroke-width: 1.5px;
+}
+
+.playback {
+    color: #000000;
 }
 
 #loading-screen-div {

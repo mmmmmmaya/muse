@@ -8,27 +8,75 @@
 
     <h2 id='profile-header'>{{ user.name }}'s Profile</h2>
     <br>
-    {% for recording in user.recordings %}
-        <form class='rename-form' action='#' data-id={{ recording.id }}>
-            <input type='text' name='title' value='{{ recording.name }}' />
-            <input type='hidden' name='id' value={{ recording.id }} />
-            <br>
-        </form>
 
-        <a href='/listen/{{ recording.id }}' style='color:black;'><button class='btn playback' data-id={{ recording.id }}>Play</button></a>
-        <button class='btn delete' data-id={{ recording.id }}>
-            Delete
-        </button>
-        <button class='btn toggle-public public' data-id={{ recording.id }}>
-            {% if recording.public %}
-                Make Private
-            {% else %}
-                Make Public
-            {% endif %}
-        </button>
-        <div class="fb-share-button" data-href="http://www.google.com" data-layout="button" data-size="small" data-mobile-iframe="true" data-id={{ recording.id }}><a class="fb-xfbml-parse-ignore" target="_blank" >Share</a></div>
+    <div class='table-responsive'>
+        <table class='table table-hover'>
+            <tr>
+                <th>Name</th>
+                <th>Rename</th>
+                <th>Public</th>
+                <th>Playback</th>
+                <th>Delete</th>
+                <th>Share</th>
+            </tr>
 
-    {% endfor %}
+            {% for recording in user.recordings %}
+            <tr>
+                <td>
+                    <div class='recording-name' data-id={{ recording.id }}>
+                        {{ recording.name }}
+                    </div>
+                    <form class='rename-form form-inline hide' action='#' data-id={{ recording.id }}>
+                        <div class='form-group'>
+                            <input type='text' name='title' value='{{ recording.name }}' />
+                            <input type='hidden' name='id' value='{{ recording.id }}' />
+                            <button type='button' class='btn btn-default cancel-rename' data-id={{ recording.id }}>
+                                <i class="fa fa-times"></i>
+                            </button>
+                            <button type="submit" class="btn btn-default">
+                                <i class="fa fa-check"></i>
+                            </button>
+                        </div>
+                    </form>
+                </td>
+
+                <td>
+                    <button type='button' class='btn btn-default rename-button' data-id={{ recording.id }}>
+                        <i class="fa fa-pencil rename-button" aria-hidden="true"></i>
+                    </button>
+                </td>
+
+                <td>
+                    <button type='button' class='btn btn-default toggle-public public' data-id={{ recording.id }}>
+                        {% if recording.public %}
+                            Make Private
+                        {% else %}
+                            Make Public
+                        {% endif %}
+                    </button>
+                </td>
+
+                <td>
+                    <button type='button' class='btn btn-default playback'>
+                        <a href='/listen/{{ recording.id }}' target='_blank'>
+                            <i class="fa fa-play playback" aria-hidden="true" data-id={{ recording.id }}></i>
+                        </a>
+                    </button>
+                </td>
+
+                <td>
+                    <button class='btn btn-default delete'>
+                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                    </button>
+                </td>
+
+                <td>
+                    <div class="fb-share-button" data-href="http://www.google.com" data-layout="button" data-size="small" data-mobile-iframe="true" data-id={{ recording.id }}><a class="fb-xfbml-parse-ignore" target="_blank" >Share</a></div>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 
 {% endblock %}
 

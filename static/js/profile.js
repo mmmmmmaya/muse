@@ -4,6 +4,38 @@ function makeDataIdSelector(recordingId) {
     return '[data-id*="' + recordingId + '"]';
 }
 
+function getElementByClassAndId(className, recordingId) {
+    var dataIdSelector = makeDataIdSelector(recordingId);
+    var divSelector = className + dataIdSelector;
+    var nameDiv = $(divSelector);
+
+    return nameDiv;
+}
+
+function toggleRenameForm(evt) {
+    var recordingId = $(evt.originalEvent.target).data('id');
+
+    var nameDiv = getElementByClassAndId('.recording-name', recordingId);
+    var renameForm = getElementByClassAndId('.rename-form', recordingId);
+
+    nameDiv.toggleClass('hide');
+    renameForm.toggleClass('hide');
+}
+
+$('.rename-button').click(toggleRenameForm);
+$('.cancel-rename').click(toggleRenameForm);
+
+
+function updateRecordingNameDiv(data) {
+    var nameDiv = getElementByClassAndId('.recording-name', data.recording_id);
+    var html = data.title;
+
+    nameDiv.html(html);
+
+    $('.rename-form').addClass('hide');
+    $('.recording-name').removeClass('hide');
+}
+
 function recordingRenamed(evt) {
     evt.preventDefault();
     $('#save-message-div').html('Saving ...');
@@ -12,6 +44,7 @@ function recordingRenamed(evt) {
 
     $.post("/rename", params, function (data) {
         updateMsgDivStatus(data.status);
+        updateRecordingNameDiv(data);
     });
 }
 
@@ -35,9 +68,7 @@ $('.delete').click(recordingDeleted);
 
 
 function updateButtonText(recordingId) {
-    var dataIdSelector = makeDataIdSelector(recordingId);
-    var buttonSelector = '.toggle-public' + dataIdSelector;
-    var toggleButton = $(buttonSelector);
+    var toggleButton = getElementByClassAndId('.toggle-public', recordingId);
 
     var isPublic = toggleButton.hasClass('public');
     var toggleButtonHTML = isPublic ? 'Make Private' : 'Make Public';
