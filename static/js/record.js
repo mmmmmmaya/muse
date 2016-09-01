@@ -42,19 +42,19 @@ function isLetter(char) {
 }
 
 function actionApp(keyPressed) {
-    var soundFilepath = '/static/sounds/' + currentTheme + '/' + keyPressed + '.mp3';
-
+    var lowerKey = keyPressed.toLowerCase();
+    var soundFilepath = '/static/sounds/' + currentTheme + '/' + lowerKey + '.mp3';
     var audio = new Audio(soundFilepath);
 
     audio.play();
-    letterAnimationMap[keyPressed]();
+    letterAnimationMap[lowerKey]();
     collectGarbage();
 }
 
 function updateSong(keyPressed) {
     recordingArray.push({
         "timestamp": Date.now(),
-        "key": keyPressed,
+        "key": lowerKey,
         "theme": currentTheme
     });
 }

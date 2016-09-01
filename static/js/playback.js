@@ -14,7 +14,7 @@ function playbackRecording(content) {
     for (var i = 0; i < content.length; i++) {
         keypress = content[i];
         waitThenPress(keypress, waitTime);
-        waitTime += keypress.time_to_next;
+        waitTime += keypress.time_to_next_key;
     }
 }
 
