@@ -55,7 +55,7 @@ def delete():
         else:
             flash_message('Recording can only be deleted by recording author.',
                           ALERT_COLORS['red'])
-            response = redirect('/profile')
+            response = redirect('/recordings')
 
     else:
         response = jsonify({'status': 'malformed request'})
@@ -160,15 +160,15 @@ def popular():
                            popular_recordings=popular_recordings)
 
 
-@app.route('/profile')
-def profile():
-    """Return the profile page for the logged in user."""
+@app.route('/recordings')
+def recordings():
+    """Return the recordings page for the logged in user."""
 
     if is_logged_in():
         user = get_current_user()
 
         if user:
-            response = render_template('profile.html',
+            response = render_template('recordings.html',
                                        user=user)
         else:
             # in this case, there is a user_id in the session, but that
@@ -181,7 +181,7 @@ def profile():
             response = redirect('/login')
 
     else:
-        flash_message('Please log in to view your profile.',
+        flash_message('Please log in to view your recordings.',
                       ALERT_COLORS['yellow'])
         response = redirect('/login')
 
@@ -238,7 +238,7 @@ def rename():
         else:
             flash_message('Recording name can only be changed by recording author.',
                           ALERT_COLORS['red'])
-            response = redirect('/profile')
+            response = redirect('/recordings')
 
     else:
         response = jsonify({'status': 'malformed request'})

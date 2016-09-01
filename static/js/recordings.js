@@ -53,9 +53,10 @@ $('.rename-form').submit(recordingRenamed);
 
 function recordingDeleted(evt) {
     $('#save-message-div').html('Deleting ...');
-
+    console.log($(evt.originalEvent.target));
     var recordingId = $(evt.originalEvent.target).data('id');
     var params = {"recording_id": recordingId};
+    console.log(params);
 
     $.post("/delete", params, function (data) {
         updateMsgDivStatus(data.status);

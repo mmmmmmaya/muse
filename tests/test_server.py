@@ -310,7 +310,7 @@ class TestLogView(unittest.TestCase):
 
 
 class TestProfile(unittest.TestCase):
-    """Test profile page."""
+    """Test recordings page."""
 
     def setUp(self):
         """Set up app, session key, and fake client."""
@@ -327,31 +327,31 @@ class TestProfile(unittest.TestCase):
         populate_test_db_recordings()
         populate_test_db_keypresses()
 
-    def test_profile_logged_in(self):
-        """Test profile page displays when logged in."""
+    def test_recordings_logged_in(self):
+        """Test recordings page displays when logged in."""
 
         self.client.post('/login',
                          data={"email": "angie@fake.com",
                                "password": "pass"})
 
-        response = self.client.get('/profile',
+        response = self.client.get('/recordings',
                                    follow_redirects=True)
 
         self.assertEquals(200, response.status_code)
-        self.assertNotIn('Please log in to view your profile.', response.data)
+        self.assertNotIn('Please log in to view your recordings.', response.data)
         self.assertIn('s Profile', response.data)
 
-    def test_profile_not_logged_in(self):
-        """Test profile page displays when not logged in."""
+    def test_recordings_not_logged_in(self):
+        """Test recordings page displays when not logged in."""
 
-        response = self.client.get('/profile',
+        response = self.client.get('/recordings',
                                    follow_redirects=True)
 
         self.assertEquals(200, response.status_code)
-        self.assertIn('Please log in to view your profile.', response.data)
+        self.assertIn('Please log in to view your recordings.', response.data)
         self.assertNotIn('s Profile', response.data)
 
-    def test_profile_not_in_db(self):
+    def test_recordings_not_in_db(self):
         """Test what happens when the logged in user is not in the db."""
 
         self.client.post('/login',
@@ -362,7 +362,7 @@ class TestProfile(unittest.TestCase):
         db.session.delete(user)
         db.session.commit()
 
-        response = self.client.get('/profile',
+        response = self.client.get('/recordings',
                                    follow_redirects=True)
 
         self.assertEquals(200, response.status_code)

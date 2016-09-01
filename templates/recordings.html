@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    {{ user.name }}'s Profile
+    {{ user.name }}'s Recordings
 {% endblock %}
 
 {% block content %}
 
-    <h2 id='profile-header'>{{ user.name }}'s Profile</h2>
+    <h2 id='recordings-header'>{{ user.name }}'s Recordings</h2>
     <br>
 
     <div class='table-responsive'>
@@ -21,7 +21,7 @@
             </tr>
 
             {% for recording in user.recordings %}
-            <tr>
+            <tr data-id={{ recording.id }}>
                 <td>
                     <div class='recording-name' data-id={{ recording.id }}>
                         {{ recording.name }}
@@ -42,7 +42,7 @@
 
                 <td>
                     <button type='button' class='btn btn-default rename-button' data-id={{ recording.id }}>
-                        <i class="fa fa-pencil rename-button" aria-hidden="true"></i>
+                        <i class="fa fa-pencil rename-button" aria-hidden="true" data-id={{ recording.id }}></i>
                     </button>
                 </td>
 
@@ -57,7 +57,7 @@
                 </td>
 
                 <td>
-                    <button type='button' class='btn btn-default playback'>
+                    <button type='button' class='btn btn-default playback' data-id={{ recording.id }}>
                         <a href='/listen/{{ recording.id }}' target='_blank'>
                             <i class="fa fa-play playback" aria-hidden="true" data-id={{ recording.id }}></i>
                         </a>
@@ -65,8 +65,8 @@
                 </td>
 
                 <td>
-                    <button class='btn btn-default delete'>
-                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                    <button class='btn btn-default delete' data-id={{ recording.id }}>
+                        <i class="fa fa-trash-o" aria-hidden="true" data-id={{ recording.id }}></i>
                     </button>
                 </td>
 
@@ -82,5 +82,5 @@
 
 {% block more_scripts %}
     <script src='/static/js/messages.js'></script>
-    <script src='/static/js/profile.js'></script>
+    <script src='/static/js/recordings.js'></script>
 {% endblock %}

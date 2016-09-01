@@ -1,4 +1,4 @@
-describe('Tests profile page functionality', function() {
+describe('Tests recordings page functionality', function() {
 
     it('should rename songs', function () {
 
