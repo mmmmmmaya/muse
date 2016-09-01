@@ -84,6 +84,7 @@ function updateProgressBar(percent) {
     progressBar.css('width', width+'%').attr('aria-valuenow', width);
 
     if (percent >= 100) {
+        $('#start-message').removeClass('hide');
         loadingScreen.toggle();
     }
 }

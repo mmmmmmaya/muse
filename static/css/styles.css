@@ -55,12 +55,11 @@ svg {
 }
 
 #loading-screen-div {
-    background-color: #ededed;
-    position: fixed;
-    width: 100%;
+    color: #707070;
     height: 100%;
-    top: 0px;
     left: 0px;
+    top: 0px;
+    width: 100%;
     z-index: 1000;
 }
 
