@@ -30,6 +30,7 @@ def get_popular_recordings():
 
     recordings = db.session.query(Recording, view_count) \
                            .join(View) \
+                           .filter(Recording.public == True) \
                            .group_by(Recording.id) \
                            .order_by('view_count DESC') \
                            .limit(10) \
