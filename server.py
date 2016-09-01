@@ -39,6 +39,24 @@ def index():
                            konami=konami)
 
 
+@app.route('/account')
+def account():
+    """Show account details."""
+
+    user = get_current_user()
+
+    if user:
+        response = render_template('account.html',
+                                   user=user)
+
+    else:
+        flash_message('Please log in to view your account.',
+                      ALERT_COLORS['yellow'])
+        response = redirect('/login')
+
+    return response
+
+
 @app.route('/delete', methods=['POST'])
 def delete():
     """Delete a recording from the db."""
@@ -147,7 +165,7 @@ def logout():
 
     flash_message('You were successfully logged out.', ALERT_COLORS['green'])
 
-    return redirect('/')
+    return redirect('/login')
 
 
 @app.route('/popular')
