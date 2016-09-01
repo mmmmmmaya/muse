@@ -1,25 +1,37 @@
-from model import db, KeyPress
+from model import db, KeyPress, View
 from utils.playback import get_recording_by_id
 
 
-def delete_recording_by_id(id):
+def delete_recording_by_id(recording_id):
     """Remove a recording from the db, given an id."""
 
-    recording = get_recording_by_id(id)
+    recording = get_recording_by_id(recording_id)
 
     if recording:
-        delete_keypresses_by_recording_id(id)
+        delete_keypresses_by_recording_id(recording_id)
+        delete_views_by_recording_id(recording_id)
         db.session.delete(recording)
         db.session.commit()
 
 
-def delete_keypresses_by_recording_id(id):
-    """Delete all keypressess associated with a given recording."""
+def delete_keypresses_by_recording_id(recording_id):
+    """Delete all keypresses associated with a given recording."""
 
-    keypresses = KeyPress.query.filter_by(recording_id=id).all()
+    keypresses = KeyPress.query.filter_by(recording_id=recording_id).all()
 
     for keypress in keypresses:
         db.session.delete(keypress)
+
+    db.session.commit()
+
+
+def delete_views_by_recording_id(recording_id):
+    """Delete all views associated with a given recording."""
+
+    views = View.query.filter_by(recording_id=recording_id).all()
+
+    for view in views:
+        db.session.delete(view)
 
     db.session.commit()
 

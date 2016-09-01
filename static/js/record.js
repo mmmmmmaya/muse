@@ -38,23 +38,22 @@ function toggleRecording(evt) {
 // validate key pressed is a letter
 // and action app based on input
 function isLetter(char) {
-    return /^[A-Za-z]$/.test(char);
+    return /^[a-z]$/.test(char);
 }
 
 function actionApp(keyPressed) {
-    var lowerKey = keyPressed.toLowerCase();
-    var soundFilepath = '/static/sounds/' + currentTheme + '/' + lowerKey + '.mp3';
+    var soundFilepath = '/static/sounds/' + currentTheme + '/' + keyPressed + '.mp3';
     var audio = new Audio(soundFilepath);
 
     audio.play();
-    letterAnimationMap[lowerKey]();
+    letterAnimationMap[keyPressed]();
     collectGarbage();
 }
 
 function updateSong(keyPressed) {
     recordingArray.push({
         "timestamp": Date.now(),
-        "key": lowerKey,
+        "key": keyPressed,
         "theme": currentTheme
     });
 }
@@ -70,7 +69,7 @@ function showHelp() {
 
 function onKeyPress(evt) {
     removeStartMessage();
-    var keyPressed = evt.key;
+    var keyPressed = evt.key.toLowerCase();
 
     if (isLetter(keyPressed)) {
         actionApp(keyPressed);
@@ -82,8 +81,9 @@ function onKeyPress(evt) {
         nextTheme();
     } else if (keyPressed === '?') {
         showHelp();
-    } else if (keyPressed === 'Enter') {
+    } else if (keyPressed === 'enter') {
         toggleRecording();
+
     }
 }
 
