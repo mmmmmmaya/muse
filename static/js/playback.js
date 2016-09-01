@@ -3,6 +3,7 @@
 function waitThenPress(keypress, waitTime) {
     setTimeout(function() {
         currentTheme = keypress.theme;
+        updateBgColor(currentTheme);
         actionApp(keypress.key_pressed);
     }, waitTime);
 }
