@@ -17,7 +17,7 @@
 
 </head>
 <body>
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default" id='top-nav'>
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -67,11 +67,44 @@
         {% endblock %}
     </div>
 
+    <nav class="navbar navbar-default navbar-fixed-bottom" id='bottom-nav'>
+      <div class="container-fluid">
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li>
+              <a href="https://www.github.com/ainjii/muse">
+                 <i class="fa fa-2x fa-github" aria-hidden="true"></i>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.linkedin.com/in/angieroscioli">
+                <i class="fa fa-2x fa-linkedin-square" aria-hidden="true"></i>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.facebook.com/angie.nichol">
+                <i class="fa fa-2x fa-facebook-square" aria-hidden="true"></i>
+              </a>
+            </li>
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a href='#'><i class="fa fa-2x fa-code" aria-hidden="true"  data-toggle="modal" data-target="#embedModal"></i></a>
+            </li>
+            <li>
+                <a href='#'><i class="fa fa-2x fa-question" aria-hidden="true" data-toggle="modal" data-target="#helpModal"></i></a>
+            </li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
     <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
     <script src='/static/js/konami.js'></script>
 
     {% block more_scripts %}{% endblock %}
-
 
     {% if g.jasmine_tests %}
         <link rel='stylesheet' href='/static/tests/jasmine/jasmine.css'>
@@ -81,57 +114,23 @@
         {% block jasmine_specs %}{% endblock %}
     {% endif %}
 
-<!-- Embed Modal -->
-<div class="modal fade bs-example-modal-sm" id="embedModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-sm" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Embed Muse in Your Site!</h4>
-      </div>
-      <div class="modal-body">
-        &lt;iframe src="localhost:5000" style="border: 3px solid #ccc" width="640" height="480"&gt;&lt;/iframe&gt;
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <!-- Embed Modal -->
+    <div class="modal fade bs-example-modal-sm" id="embedModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Embed Muse in Your Site!</h4>
+          </div>
+          <div class="modal-body">
+            &lt;iframe src="localhost:5000" style="border: 3px solid #ccc" width="640" height="480"&gt;&lt;/iframe&gt;
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-
-<nav class="navbar navbar-default navbar-fixed-bottom">
-  <div class="container-fluid">
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li>
-          <a href="https://www.github.com/ainjii/muse">
-             <i class="fa fa-2x fa-github" aria-hidden="true"></i>
-          </a>
-        </li>
-        <li>
-          <a href="https://www.linkedin.com/in/angieroscioli">
-            <i class="fa fa-2x fa-linkedin-square" aria-hidden="true"></i>
-          </a>
-        </li>
-        <li>
-          <a href="https://www.facebook.com/angie.nichol">
-            <i class="fa fa-2x fa-facebook-square" aria-hidden="true"></i>
-          </a>
-        </li>
-      </ul>
-
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-            <a href='#'><i class="fa fa-2x fa-code" aria-hidden="true"  data-toggle="modal" data-target="#embedModal"></i></a>
-        </li>
-        <li>
-            <a href='#'><i class="fa fa-2x fa-question" aria-hidden="true" data-toggle="modal" data-target="#helpModal"></i></a>
-        </li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
 
 </body>
 </html>
