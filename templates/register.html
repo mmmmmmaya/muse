@@ -27,14 +27,14 @@
             <br />
 
         <label for='field-country'>Country:</label>
-            <select id='field-country' name='country'>
+            <select class="form-control" id="field-country" name='country'>
                 {% for country in countries %}
                     <option value={{ country.code }}>{{ country.name }}</option>
                 {% endfor %}
             </select>
             <br />
 
-        <input type='submit' />
+        <input type='submit' class='btn btn-default' />
     </form>
 {% endblock %}
 
