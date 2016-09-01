@@ -15,9 +15,7 @@
             <br>
         </form>
 
-        <button class='btn playback' data-id={{ recording.id }}>
-            Play
-        </button>
+        <a href='/listen/{{ recording.id }}' style='color:black;'><button class='btn playback' data-id={{ recording.id }}>Play</button></a>
         <button class='btn delete' data-id={{ recording.id }}>
             Delete
         </button>
