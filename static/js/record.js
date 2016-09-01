@@ -70,9 +70,7 @@ function showHelp() {
 
 function onKeyPress(evt) {
     removeStartMessage();
-
     var keyPressed = evt.key;
-    konamiTracker(keyPressed);
 
     if (isLetter(keyPressed)) {
         actionApp(keyPressed);

@@ -29,14 +29,6 @@ var letterAnimationMap = {
     'z': function() {zigzag();}
 }
 
-var svgContainer = d3.select('svg');
-var bottomSVGLayer = svgContainer.append('g');
-var topSVGLayer = svgContainer.append('g');
-
-var svgHeight;
-var svgWidth;
-
-resetSVGDims();
 preloadAudio();
 
 
@@ -1051,11 +1043,3 @@ function zigzag() {
     var zigzag = drawZigzag();
     animateZigZag(zigzag);
 }
-
-
-function resetSVGDims(evt) {
-    svgWidth = svgContainer[0][0]['clientWidth'];
-    svgHeight = svgContainer[0][0]['clientHeight'];
-}
-
-$(window).resize(resetSVGDims);

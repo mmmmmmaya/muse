@@ -12,6 +12,26 @@ svg {
     z-index: -1;
 }
 
+.center {
+    left: 50%;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.fa-facebook-square {
+    color: #3b5998;
+}
+
+.fa-github {
+    color: #000000;
+}
+
+.fa-linkedin-square {
+    color: #1883bb;
+}
+
 .node circle {
     stroke-width: 1.5px;
 }
@@ -32,23 +52,6 @@ svg {
     z-index: 1000;
 }
 
-.fa-facebook-square {
-    color: #3b5998;
-}
-
-.fa-github {
-    color: #000000;
-}
-
-.fa-linkedin-square {
-    color: #1883bb;
-}
-
 #start-message {
     color: #707070;
-    left: 50%;
-    margin: 0;
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
 }

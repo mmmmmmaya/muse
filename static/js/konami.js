@@ -6,8 +6,8 @@ var konamiCode = ['arrowup', 'arrowup',
                   'b', 'a'];
 
 /** Functions to Track User Progress **/
-function konamiTracker(key) {
-    var key = key.toLowerCase();
+function konamiTracker(evt) {
+    var key = evt.key.toLowerCase();
     var nextNeededIndex = codeProgress.length;
 
     if (key === konamiCode[nextNeededIndex]) {
@@ -17,6 +17,8 @@ function konamiTracker(key) {
         codeProgress = [];
     }
 }
+
+$(document).keydown(konamiTracker);
 
 function checkCodeComplete() {
     var equal = false;
@@ -52,10 +54,12 @@ function konamiRedirect() {
 
 /** Functions to show reward **/
 function playKonamiPrize() {
+    $('#home-button').toggle();
+
     playSong();
     playDDR();
 
-    collectGarbage();
+    $('#home-button').toggle();
 }
 
 function playSong() {
@@ -66,38 +70,47 @@ function playSong() {
 
 function playDDR() {
     showTopArrows();
-    scrollRandomArrows();
+    updateScore(0);
+
+    var score = scrollArrows();
+    flashScore(score);
 }
 
 function showTopArrows() {
-    var arrowStartPosition = 5
-    var arrowSpacing = 60
-    var verticalStrokeColor = "black"
-    var arrowYStartPosition = 5
-    var arrowYEndStartPosition = 150
-    var margin = 150;
+    var dirs = ['left', 'down', 'up', 'right'];
+    var size = 120;
+    var gap = size / 8;
+    var startX = (svgWidth / 2) - ((2 * size) + (1.5 * gap));
 
-    var labelLine = svgContainer.append("line")
-            .attr("x1", arrowStartPosition + margin)
-            .attr("y1", arrowYStartPosition)
-            .attr("x2", arrowStartPosition + margin)
-            .attr("y2", arrowYEndStartPosition)
-            .attr("stroke-width", 2)
-            .attr("stroke", verticalStrokeColor);
+    for (var i = 0; i < dirs.length; i++) {
+        var imagePath = '/static/images/' + dirs[i] + '.png';
+        var x = startX + (i * (size + gap));
 
-    var right = svgContainer.append("line")
-            .attr("x1", arrowStartPosition + margin)
-            .attr("y1", arrowYStartPosition)
-            .attr("x2", 20 + margin)
-            .attr("y2", 20)
-            .attr("stroke-width", 2)
-            .attr("stroke", "black");
+        bottomSVGLayer.append('image')
+                      .attr('class', 'top-arrow')
+                      .attr('x', x)
+                      .attr('y', size/2)
+                      .attr('height', size)
+                      .attr('width', size)
+                      .attr('xlink:href', imagePath);
+    }
+}
 
-    var left = svgContainer.append("line")
-            .attr("x1", right.attr("x1"))
-            .attr("y1", right.attr("y1"))
-            .attr("x2", right.attr("x2")-30)
-            .attr("y2", right.attr("y2"))
-            .attr("stroke-width", 2)
-            .attr("stroke", "black");
+function scrollArrows() {
+    flashScore(100);
+}
+
+function updateScore(score) {
+    var html = 'Score: ' + score;
+
+    topSVGLayer.append('text')
+               .attr('x', 30)
+               .attr('y', 100)
+               .attr('id', 'score')
+               .attr('font-size', '200%')
+               .html(html);
+}
+
+function flashScore(score) {
+    $('#score').addClass('ddr-score');
 }

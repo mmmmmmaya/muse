@@ -491,3 +491,75 @@
         opacity: 0;
     }
 }
+
+/***********************************************/
+/* CSS for arrows that scroll up on the screen */
+/***********************************************/
+
+.arrow-scroll {
+    -webkit-animation-name: arrow-scroll;
+            animation-name: arrow-scroll;
+    -webkit-animation-timing-function: linear;
+            animation-timing-function: linear;
+    -webkit-animation-duration: 1s;
+            animation-duration: 1s;
+    -webkit-animation-fill-mode:both;
+            animation-fill-mode:both;
+}
+
+@-webkit-keyframes arrow-scroll {
+    0% {
+        -webkit-transform: ;
+    }
+
+    100% {
+        -webkit-transform: ;
+    }
+}
+
+@keyframes arrow-scroll {
+    0% {
+        transform: ;
+    }
+
+    100% {
+        transform: ;
+    }
+}
+
+/**********************************************/
+/* CSS for flashing score after DDR mini-game */
+/**********************************************/
+
+.ddr-score {
+    -webkit-animation-name: ddr-score;
+            animation-name: ddr-score;
+    -webkit-animation-timing-function: linear;
+            animation-timing-function: linear;
+    -webkit-animation-duration: 1s;
+            animation-duration: 1s;
+    -webkit-animation-fill-mode:both;
+            animation-fill-mode:both;
+    -webkit-animation-iteration-count: 5;
+            animation-iteration-count: 5;
+}
+
+@-webkit-keyframes ddr-score {
+    0% {
+        -webkit-opacity: 0;
+    }
+
+    100% {
+        -webkit-opacity: 100;
+    }
+}
+
+@keyframes ddr-score {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 100;
+    }
+}

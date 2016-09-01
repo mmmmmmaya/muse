@@ -12,6 +12,7 @@
 {% block content %}
     {% if konami %}
         <svg id='svg' />
+        <button class='btn center' id='home-button'>Go Home</button>
     {% else %}
         <div id='loading-screen-div'>
             Loading Resources ...
@@ -23,7 +24,7 @@
         </div>
 
         <svg id='svg' />
-        <div id='start-message'>
+        <div class='center' id='start-message'>
             Press ? to begin.
         </div>
 
@@ -74,15 +75,16 @@
 
 {% block more_scripts %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
-
-    <script src='/static/js/themes.js'></script>
-    <script src='/static/js/messages.js'></script>
-    <script src='/static/js/record.js'></script>
-    <script src='/static/js/animations.js'></script>
-    <script src='/static/js/konami.js'></script>
+    <script src='/static/js/svg.js'></script>
 
     {% if konami %}
         <script>playKonamiPrize();</script>
+    {% else %}
+
+        <script src='/static/js/themes.js'></script>
+        <script src='/static/js/messages.js'></script>
+        <script src='/static/js/record.js'></script>
+        <script src='/static/js/animations.js'></script>
     {% endif %}
 {% endblock %}
 
