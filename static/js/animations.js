@@ -354,7 +354,7 @@ function piano() {
     var pianoHeight = (2/3) * svgHeight;
 
     var x = (svgWidth - totalPianoWidth) / 2;
-    var y = (svgHeight - pianoHeight) / 2;
+    var y = (svgHeight - pianoHeight + yOffset) / 2;
 
     var majorKeyColor = chooseRandomColor();
     var minorKeyColor = ensureDifferentColor(majorKeyColor);
@@ -714,7 +714,7 @@ function drawRainbowRect(uniqueClass, x, y, height) {
 function rainbow() {
     var uniqueClass = Date.now() + 'rainbow';
     var x = svgWidth/2;
-    var y = (4/5) * svgHeight;
+    var y = (9/10) * svgHeight;
     var height = (svgHeight/2) + 1;
 
     drawOverlappingCircles(uniqueClass, x, y);
@@ -893,7 +893,7 @@ function drawLights(i, size, uniqueClass) {
     var x = size * (i+1);
     var fill = chooseRandomColor();
 
-    var light = makeCircle(size/2, x, 0, fill)
+    var light = makeCircle(size/2, x, yOffset, fill)
                     .attr('class', uniqueClass);
 
     d3Delete(uniqueClass, 2500);
