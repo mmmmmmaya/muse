@@ -68,10 +68,10 @@ function showHelp() {
 }
 
 function onKeyPress(evt) {
-    removeStartMessage();
     var keyPressed = evt.key.toLowerCase();
 
     if (isLetter(keyPressed)) {
+        removeStartMessage();
         actionApp(keyPressed);
 
         if (appIsRecording) {
