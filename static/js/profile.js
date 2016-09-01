@@ -75,5 +75,5 @@ function setupFacebookButtons(d, s, id) {
 }
 
 $(document).ready(function() {
-        setupFacebookButtons(document, 'script', 'facebook-jssdk');
+    setupFacebookButtons(document, 'script', 'facebook-jssdk');
 });

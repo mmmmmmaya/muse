@@ -12,7 +12,9 @@
 {% block content %}
     {% if konami %}
         <svg id='svg' />
-        <button class='btn center' id='home-button'>Go Home</button>
+        <a href='/'>
+          <button class='btn center' id='home-button'>Go Home</button>
+        </a>
     {% else %}
         <div id='loading-screen-div'>
             Loading Resources ...
