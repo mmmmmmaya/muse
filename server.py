@@ -354,7 +354,7 @@ if __name__ == '__main__':
     if sys.argv[-1] == "jasmine":
         JS_TESTING_MODE = True
 
-    app.debug = True
-    connect_to_db(app)
-    port = int(os.environ.get("PORT", 5000))
+    app.debug = os.environ.get('DEBUG', False)
+    connect_to_db(app, os.environ.get('DATABASE_URL'))
+    port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
