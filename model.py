@@ -99,6 +99,16 @@ class View(db.Model):
         return '<View id: %s>' % (self.id)
 
 
+class Konami(db.Model):
+    """Each step in the konami easter egg step chart."""
+
+    __tablename__ = 'konami'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    direction = db.Column(db.String(5), nullable=False)
+    time_to_next_arrow = db.Column(db.Integer, nullable=True)
+
+
 # These help connect us to the database.
 def connect_to_db(app, uri='postgresql:///muse'):
     """Connect the database to our Flask app."""

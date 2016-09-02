@@ -507,7 +507,7 @@
 
 @-webkit-keyframes arrow-scroll {
   100% {
-     top: 0px;
+        top: 0px;
   }
 }
 

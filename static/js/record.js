@@ -83,7 +83,6 @@ function onKeyPress(evt) {
         showHelp();
     } else if (keyPressed === 'enter') {
         toggleRecording();
-
     }
 }
 

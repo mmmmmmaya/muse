@@ -3,7 +3,7 @@ import json
 from sqlalchemy import func
 from sqlalchemy.orm.exc import NoResultFound
 
-from model import db, Recording, View
+from model import db, Konami, Recording, View
 from utils.general import get_current_user
 
 
@@ -15,6 +15,22 @@ def add_view_to_db(recording_id, ip_address):
 
     db.session.add(view)
     db.session.commit()
+
+
+def get_arrow_list():
+    """Create a JSON string containing keypress information."""
+    arrow_list = []
+    arrows = Konami.query.order_by(Konami.id).all()
+
+    for arrow in arrows:
+        arrow_dict = {
+            "direction": arrow.direction,
+            "time_to_next_arrow": arrow.time_to_next_arrow
+        }
+
+        arrow_list.append(arrow_dict)
+
+    return arrow_list
 
 
 def get_recording_by_id(id):

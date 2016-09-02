@@ -10,7 +10,7 @@ from model import connect_to_db, db, KeyPress, Recording, User
 from utils.authentication import attempt_login, remove_session_info
 from utils.edit import delete_recording_by_id, rename_recording, toggle_recording_visibility
 from utils.general import ALERT_COLORS, flash_message, get_current_user, is_logged_in
-from utils.playback import (add_view_to_db, get_popular_recordings,
+from utils.playback import (add_view_to_db, get_arrow_list, get_popular_recordings,
                             get_recording_by_id, make_keypress_list,
                             recording_belongs_to_user, recording_is_public)
 from utils.record import add_keypress_to_db_session, add_recording_to_db, process_raw_keypresses
@@ -81,6 +81,27 @@ def delete():
     return response
 
 
+@app.route('/fetch_konami')
+def fetch_konami():
+    """Return keypresses for konami easter egg."""
+
+    arrows = get_arrow_list()
+
+    if arrows:
+        response = {
+            'status': 'success',
+            'content': arrows
+        }
+
+    else:
+        response = {
+            'status': 'failure',
+            'content': None
+        }
+
+    return jsonify(response)
+
+
 @app.route('/fetch_recording/<int:recording_id>')
 def fetch_recording(recording_id):
     """Fetch recording with matching recording id from database."""
@@ -96,6 +117,7 @@ def fetch_recording(recording_id):
             'status': 'success',
             'content': keypresses
         }
+
     else:
         response = {
             'status': 'failure',
