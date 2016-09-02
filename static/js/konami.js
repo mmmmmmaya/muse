@@ -54,12 +54,12 @@ function konamiRedirect() {
 
 /** Functions to show reward **/
 function playKonamiPrize() {
-    $('#home-button').toggle();
+    $('#home-button').addClass('hide');
 
     playSong();
     playDDR();
 
-    $('#home-button').toggle();
+    $('#home-button').removeClass('hide');
 }
 
 function playSong() {
@@ -69,22 +69,40 @@ function playSong() {
 }
 
 function playDDR() {
-    showTopArrows();
-    updateScore(0);
-
-    var score = scrollArrows();
-    flashScore(score);
-}
-
-function showTopArrows() {
-    var dirs = ['left', 'down', 'up', 'right'];
     var size = 120;
     var gap = size / 8;
+
+    showTopArrows(size, gap);
+    updateScore(0);
+
+    scrollArrows(size, gap);
+    flashScore();
+}
+
+function getXDims(size, gap) {
+    var dirs = ['left', 'down', 'up', 'right'];
     var startX = (svgWidth / 2) - ((2 * size) + (1.5 * gap));
+    var xDims = {
+
+    };
 
     for (var i = 0; i < dirs.length; i++) {
-        var imagePath = '/static/images/' + dirs[i] + '.png';
-        var x = startX + (i * (size + gap));
+        var dim = startX + (i * (size + gap));
+        var direction = dirs[i];
+        xDims[direction] = dim;
+    }
+
+    return xDims;
+}
+
+function showTopArrows(size, gap) {
+    var dirs = ['left', 'down', 'up', 'right'];
+    var xDims = getXDims(size, gap);
+
+    for (var i = 0; i < dirs.length; i++) {
+        var direction = dirs[i];
+        var imagePath = '/static/images/' + direction + '.png';
+        var x = xDims[direction];
 
         bottomSVGLayer.append('image')
                       .attr('class', 'top-arrow')
@@ -96,21 +114,56 @@ function showTopArrows() {
     }
 }
 
-function scrollArrows() {
-    flashScore(100);
+function getRecordedArrows() {
+  return[{'time_to_next_arrow': 500,
+          'direction': 'up'},
+          {'time_to_next_arrow': 500,
+          'direction': 'down'},
+          {'time_to_next_arrow': 500,
+          'direction': 'left'},
+          {'time_to_next_arrow': 0,
+          'direction': 'right'}]
+}
+
+function makeArrow(direction, size, x) {
+    var imagePath = '/static/images/color_' + direction + '.png';
+
+    topSVGLayer.append('image')
+               .attr('x', x)
+               .attr('y', svgHeight)
+               .attr('height', size)
+               .attr('width', size)
+               .attr('xlink:href', imagePath)
+               .attr('class', 'arrow-scroll');
+}
+
+function makeAndScrollArrow(direction, size, x, waitTime) {
+    setTimeout(function() {
+        makeArrow(direction, size, x);
+    }, waitTime);
+}
+
+function scrollArrows(size, gap) {
+    var arrows = getRecordedArrows();
+    var waitTime = 1;
+    var xDims = getXDims(size, gap);
+
+    for (var i = 0; i < arrows.length; i++) {
+        arrow = arrows[i];
+        var direction = arrow.direction;
+
+        var x = xDims[direction];
+
+        makeAndScrollArrow(direction, size, x, waitTime);
+        waitTime += arrow.time_to_next_arrow;
+    }
 }
 
 function updateScore(score) {
     var html = 'Score: ' + score;
-
-    topSVGLayer.append('text')
-               .attr('x', 30)
-               .attr('y', 100)
-               .attr('id', 'score')
-               .attr('font-size', '200%')
-               .html(html);
+    $('#score').html(html);
 }
 
-function flashScore(score) {
+function flashScore() {
     $('#score').addClass('ddr-score');
 }

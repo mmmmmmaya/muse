@@ -12,9 +12,13 @@
 {% block content %}
     {% if konami %}
         <svg id='svg' />
-        <a href='/'>
-          <button class='btn center' id='home-button'>Go Home</button>
-        </a>
+        <div class='center'>
+          <text id='score'></text>
+          <br />
+          <a href='/'>
+            <button class='btn btn-default hide' id='home-button'>Go Home</button>
+          </a>
+        </div>
     {% else %}
         <div id='loading-screen-div'>
           <div class='center'>
@@ -84,7 +88,6 @@
     {% if konami %}
         <script>playKonamiPrize();</script>
     {% else %}
-
         <script src='/static/js/themes.js'></script>
         <script src='/static/js/messages.js'></script>
         <script src='/static/js/record.js'></script>

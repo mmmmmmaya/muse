@@ -12,6 +12,10 @@ svg {
     z-index: -1;
 }
 
+.arrow-scroll {
+    z-index: 1;
+}
+
 .center {
     left: 50%;
     margin: 0;
@@ -61,6 +65,11 @@ svg {
     top: 0px;
     width: 100%;
     z-index: 1000;
+}
+
+#score {
+    color: #707070;
+    font-size: 200%;
 }
 
 #start-message {

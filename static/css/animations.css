@@ -396,8 +396,6 @@
     }
 }
 
-
-
 /**********************/
 /* CSS for Footprints */
 /**********************/
@@ -501,29 +499,21 @@
             animation-name: arrow-scroll;
     -webkit-animation-timing-function: linear;
             animation-timing-function: linear;
-    -webkit-animation-duration: 1s;
-            animation-duration: 1s;
+    -webkit-animation-duration: 3s;
+            animation-duration: 3s;
     -webkit-animation-fill-mode:both;
             animation-fill-mode:both;
 }
 
 @-webkit-keyframes arrow-scroll {
-    0% {
-        -webkit-transform: ;
-    }
-
-    100% {
-        -webkit-transform: ;
-    }
+  100% {
+     top: 0px;
+  }
 }
 
 @keyframes arrow-scroll {
-    0% {
-        transform: ;
-    }
-
     100% {
-        transform: ;
+        top: 0px;
     }
 }
 
