@@ -5,8 +5,8 @@
 {% endblock %}
 
 {% block content %}
+    <h3>Most Played Recordings</h3>
     {% if popular_recordings %}
-        <h3>Most Played Recordings</h3>
         <ol>
             {% for recording in popular_recordings %}
                 <li>
@@ -15,6 +15,7 @@
             {% endfor %}
         </ol>
     {% else %}
-        There are no recordings yet. Make one <a href='/'>here</a>.
+        No recordings have been viewed yet. <br />
+        You can make a new recording on the <a href='/'>homepage</a>, or playback one of your creations from your <a href='/recordings'> recordings page</a>.
     {% endif %}
 {% endblock %}

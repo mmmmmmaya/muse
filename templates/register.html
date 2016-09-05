@@ -5,34 +5,41 @@
 {% endblock %}
 
 {% block content %}
+    <h3>Register with Muse!</h3>
     <form method='POST' action='/register' id='registration-form'>
-        <label for='field-name'>Name*:</label>
-            <input type='text' id='field-name' name='name' />
-            <br />
+        <div class='form-group'>
+            <label for='field-name'>Name*</label>
+                <input type='text' class='form-control' id='field-name' name='name' />
+        </div>
 
-        <label for='field-email'>Email Address*:</label>
-            <input type='email' id='field-email' name='email' />
-            <br />
+        <div class='form-group'>
+            <label for='field-email'>Email Address*</label>
+                <input type='email' class='form-control' id='field-email' name='email' />
+        </div>
 
-        <label for='field-password'>Choose Password*:</label>
-            <input type='password' id='field-password' name='password' />
-            <br />
+        <div class='form-group'>
+            <label for='field-password'>Choose Password*</label>
+                <input type='password' class='form-control' id='field-password' name='password' />
+        </div>
 
-        <label for='field-confirm-password'>Confirm Password*:</label>
-            <input type='password' id='field-confirm-password' />
-            <br />
+        <div class='form-group'>
+            <label for='field-confirm-password'>Confirm Password*</label>
+                <input type='password' class='form-control' id='field-confirm-password' />
+        </div>
 
-        <label for='field-zipcode'>Postal Code:</label>
-            <input type='text' id='field-zipcode' name='zipcode' />
-            <br />
+        <div class='form-group'>
+            <label for='field-zipcode'>Postal Code</label>
+                <input type='text' class='form-control' id='field-zipcode' name='zipcode' />
+        </div>
 
-        <label for='field-country'>Country:</label>
-            <select class="form-control" id="field-country" name='country'>
-                {% for country in countries %}
-                    <option value={{ country.code }}>{{ country.name }}</option>
-                {% endfor %}
-            </select>
-            <br />
+        <div class='form-group'>
+            <label for='field-country'>Country</label>
+                <select class='form-control' id="field-country" name='country'>
+                    {% for country in countries %}
+                        <option value={{ country.code }}>{{ country.name }}</option>
+                    {% endfor %}
+                </select>
+        </div>
 
         <input type='submit' class='btn btn-default' />
     </form>

@@ -7,29 +7,33 @@
 {% block content %}
     <h3>Update Account Details</h3>
     <form method='POST' action='/update_account' id='update-account-form'>
-        <label for='field-name'>Name:</label>
-            <input type='text' id='field-name' name='name' value='{{ user.name }}' />
-            <br />
+        <div class='form-group'>
+            <label for='field-name'>Name</label>
+                <input type='text' class='form-control' id='field-name' name='name' value='{{ user.name }}' />
+        </div>
 
-        <label for='field-email'>Email Address:</label>
-            <input type='email' id='field-email' name='email' value='{{ user.email }}' />
-            <br />
+        <div class='form-group'>
+            <label for='field-email'>Email Address</label>
+                <input type='email' class='form-control' id='field-email' name='email' value='{{ user.email }}' />
+        </div>
 
-        <label for='field-zipcode'>Postal Code:</label>
-            <input type='text' id='field-zipcode' name='zipcode' value='{{ user.zipcode }}'/>
-            <br />
+        <div class='form-group'>
+            <label for='field-zipcode'>Postal Code</label>
+                <input type='text' class='form-control' id='field-zipcode' name='zipcode' value='{{ user.zipcode }}'/>
+        </div>
 
-        <label for='field-country'>Country:</label>
-            <select class="form-control" id="field-country" name='country' value='countries.get{{ user.country }}'>
-                {% for country in countries %}
-                    <option value={{ country.code }} 
-                        {% if user.country == country.code %}
-                            selected
-                        {% endif %}
-                    >{{ country.name }}</option>
-                {% endfor %}
-            </select>
-            <br />
+        <div class='form-group'>
+            <label for='field-country'>Country</label>
+                <select class='form-control' id="field-country" name='country' value='countries.get{{ user.country }}'>
+                    {% for country in countries %}
+                        <option value={{ country.code }}
+                            {% if user.country == country.code %}
+                                selected
+                            {% endif %}
+                        >{{ country.name }}</option>
+                    {% endfor %}
+                </select>
+        </div>
 
         <input type='submit' class='btn btn-default' />
     </form>
@@ -37,17 +41,21 @@
 
     <h3>Update Password</h3>
     <form method='POST' action='/update_account' id='update-password-form'>
-        <label for='field-old-password'>Current Password:</label>
-            <input type='password' id='field-old-password' name='old-password' />
-            <br />
 
-        <label for='field-password'>Choose Password:</label>
-            <input type='password' id='field-password' name='password' />
-            <br />
+        <div class='form-group'>
+            <label for='field-old-password'>Current Password</label>
+                <input type='password' class='form-control' id='field-old-password' name='old-password' />
+        </div>
 
-        <label for='field-confirm-password'>Confirm Password:</label>
-            <input type='password' id='field-confirm-password' />
-            <br />
+        <div class='form-group'>
+            <label for='field-password'>Choose Password</label>
+                <input type='password' class='form-control' id='field-password' name='password' />
+        </div>
+
+        <div class='form-group'>
+            <label for='field-confirm-password'>Confirm Password</label>
+                <input type='password' class='form-control' id='field-confirm-password' />
+        </div>
 
         <input type='submit' class='btn btn-default' value='Update'>
     </form>
