@@ -19,18 +19,21 @@ function checkFieldMissing(fieldName) {
     }
 }
 
-function formSubmitted(evt){
+function showAlerts(evt) {
+    if (alerts.length > 0) {
+        evt.preventDefault();
+        alert(alerts.join(''));
+        alerts = [];
+    }
+}
 
+function formSubmitted(evt){
     checkPasswordsMatch();
     checkFieldMissing('name');
     checkFieldMissing('email');
     checkFieldMissing('password');
 
-    if (alerts.length > 0) {
-        evt.preventDefault();
-        alert(alerts);
-        alerts = [];
-    }
+    showAlerts(evt);
 }
 
 $('#registration-form').submit(formSubmitted);

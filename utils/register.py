@@ -54,6 +54,60 @@ def register_user(name, email, password, zipcode, country):
     return response
 
 
+def update_account_info(user, form):
+    """Update information stored about a user in the db."""
+
+    if 'password' in form:
+        response = update_password(user, form)
+
+    else:
+        response = update_user_details(user, form)
+
+    return response
+
+
+def update_password(user, form):
+    """Update the password stored in db."""
+
+    old_password = form.get('old-password', '')
+
+    if hash_password(old_password) == user.password:
+        user.password = hash_password(form['password'])
+        db.session.commit()
+
+        flash_message('Account successfully updated.',
+                      ALERT_COLORS['green'])
+        response = redirect('/account')
+
+    else:
+        flash_message('Incorrect current password.',
+                      ALERT_COLORS['red'])
+        response = redirect('/account')
+
+    return response
+
+
+def update_user_details(user, form):
+    """Update name, email, etc on user account."""
+
+    user.name = form.get('name', user.name)
+    user.email = form.get('email', user.email)
+    user.zipcode = form.get('zipcode', user.zipcode)
+    user.country = form.get('country', user.country)
+
+    try:
+        db.session.commit()
+
+        flash_message('Account successfully updated.',
+                      ALERT_COLORS['green'])
+
+    except:
+        flash_message('An account with that email address already exists.',
+                      ALERT_COLORS['red'])
+
+    return redirect('/account')
+
+
 def user_already_exists(email):
     """Checks to make sure new registration does not conflict with
     an existing user.

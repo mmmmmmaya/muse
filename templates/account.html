@@ -8,21 +8,25 @@
     <h3>Update Account Details</h3>
     <form method='POST' action='/update_account' id='update-account-form'>
         <label for='field-name'>Name:</label>
-            <input type='text' id='field-name' name='name' />
+            <input type='text' id='field-name' name='name' value='{{ user.name }}' />
             <br />
 
         <label for='field-email'>Email Address:</label>
-            <input type='email' id='field-email' name='email' />
+            <input type='email' id='field-email' name='email' value='{{ user.email }}' />
             <br />
 
         <label for='field-zipcode'>Postal Code:</label>
-            <input type='text' id='field-zipcode' name='zipcode' />
+            <input type='text' id='field-zipcode' name='zipcode' value='{{ user.zipcode }}'/>
             <br />
 
         <label for='field-country'>Country:</label>
-            <select class="form-control" id="field-country" name='country'>
+            <select class="form-control" id="field-country" name='country' value='countries.get{{ user.country }}'>
                 {% for country in countries %}
-                    <option value={{ country.code }}>{{ country.name }}</option>
+                    <option value={{ country.code }} 
+                        {% if user.country == country.code %}
+                            selected
+                        {% endif %}
+                    >{{ country.name }}</option>
                 {% endfor %}
             </select>
             <br />
@@ -32,7 +36,7 @@
     <br />
 
     <h3>Update Password</h3>
-    <form method='POST' action='/update_password' id='update-password-form'>
+    <form method='POST' action='/update_account' id='update-password-form'>
         <label for='field-old-password'>Current Password:</label>
             <input type='password' id='field-old-password' name='old-password' />
             <br />
@@ -51,6 +55,7 @@
 
 {% block more_scripts %}
     <script src='/static/js/messages.js'></script>
+    <script src='/static/js/register.js'></script>
     <script src='/static/js/account.js'></script>
 {% endblock %}
 

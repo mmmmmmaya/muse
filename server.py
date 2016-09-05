@@ -14,7 +14,7 @@ from utils.playback import (add_view_to_db, get_arrow_list, get_popular_recordin
                             get_recording_by_id, make_keypress_list,
                             recording_belongs_to_user, recording_is_public)
 from utils.record import add_keypress_to_db_session, add_recording_to_db, process_raw_keypresses
-from utils.register import all_fields_filled, register_user
+from utils.register import all_fields_filled, register_user, update_account_info
 
 app = Flask(__name__)
 app.secret_key = os.environ['FLASK_APP_SECRET_KEY']
@@ -47,7 +47,8 @@ def account():
 
     if user:
         response = render_template('account.html',
-                                   user=user)
+                                   user=user,
+                                   countries=countries)
 
     else:
         flash_message('Please log in to view your account.',
@@ -347,6 +348,23 @@ def toggle_public():
 
     return response
 
+
+@app.route('/update_account', methods=['POST'])
+def update_account():
+    """Update account info."""
+
+    user = get_current_user()
+
+    if user:
+        form = request.form
+        response = update_account_info(user, form)
+
+    else:
+        flash('You must be logged in to update your account information.',
+              ALERT_COLORS['red'])
+        response = redirect('/login')
+
+    return response
 
 if __name__ == '__main__':
     # set up javascript testing
