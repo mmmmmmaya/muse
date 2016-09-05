@@ -179,6 +179,20 @@ def login():
     return response
 
 
+@app.route('/logged_in')
+def logged_in():
+    """Let UI know if someone is logged in."""
+
+    if is_logged_in():
+        response = {'status': 'success',
+                    'message': 'You are logged in.'}
+    else:
+        response = {'status': 'failure',
+                    'message': 'You need to log in before recording.'}
+
+    return jsonify(response)
+
+
 @app.route('/logout')
 def logout():
     """Remove user info from browser session."""

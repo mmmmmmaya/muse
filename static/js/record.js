@@ -24,14 +24,24 @@ function sendSongToServer() {
 
 
 function toggleRecording(evt) {
-    if (appIsRecording) {
-        sendSongToServer();
-    } else {
-        // so old save messages don't get confused with new ones
-        clearMsgDiv();
-    }
+    $.get('/logged_in', function(data) {
+        if (data.status === 'success') {
 
-    appIsRecording = !appIsRecording;
+            if (appIsRecording) {
+                sendSongToServer();
+            } else {
+                // so old save messages don't get confused with new ones
+                clearMsgDiv();
+            }
+
+            appIsRecording = !appIsRecording;
+
+        } else {
+            var div = $('#start-message');
+            div.html(data.message);
+            div.show();
+        }
+    });
 }
 
 
@@ -58,8 +68,8 @@ function updateSong(keyPressed) {
     });
 }
 
-function removeStartMessage() {
-    $('#start-message').remove();
+function hideStartMessage() {
+    $('#start-message').hide();
 }
 
 function showHelp() {
@@ -71,7 +81,7 @@ function onKeyPress(evt) {
     var keyPressed = evt.key.toLowerCase();
 
     if (isLetter(keyPressed)) {
-        removeStartMessage();
+        hideStartMessage();
         actionApp(keyPressed);
 
         if (appIsRecording) {
