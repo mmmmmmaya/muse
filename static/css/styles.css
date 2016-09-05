@@ -1,5 +1,6 @@
 html, body {
     color: #707070;
+    font-family: 'Ubuntu', sans-serif;
     margin: 0;
     padding: 0;
 }
@@ -25,15 +26,15 @@ svg {
     transform: translate(-50%, -50%);
 }
 
-.fa-facebook-square {
+.fa-facebook-square:hover {
     color: #3b5998;
 }
 
-.fa-github {
+.fa-github:hover {
     color: #000000;
 }
 
-.fa-linkedin-square {
+.fa-linkedin-square:hover {
     color: #1883bb;
 }
 
@@ -46,8 +47,8 @@ svg {
 }
 
 .navbar {
-  background: transparent;
-  border: none;
+    background: transparent;
+    border: none;
 }
 
 .node circle {

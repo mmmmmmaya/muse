@@ -4,7 +4,7 @@
 var appIsRecording = false;
 var recordingArray = [];
 var currentTheme = 1;
-updateBgColor(currentTheme);
+updateThemeBgColor(currentTheme);
 
 
 function sendSongToServer() {

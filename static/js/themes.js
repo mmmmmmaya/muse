@@ -15,7 +15,7 @@ var backgrounds = [
 ];
 
 var nonHovers = ['', '#6f4e37', '#a2a2d0', '#2c1e3f', '#000000'];
-var hovers = ['', '#802e0a', '#e7feff', '#bd8173', '#707070'];
+var hovers = ['', '#85c9cf', '#e7feff', '#bd8173', '#707070'];
 
 function getNumThemes() {
     return themeColors.length;
@@ -36,36 +36,89 @@ function nextTheme() {
         currentTheme++;
     }
 
-    updateBgColor(currentTheme);
+    updateThemeBgColor(currentTheme);
     updateTextColor(currentTheme);
+    updateDropdowns(currentTheme);
 }
 
-function updateBgColor(theme) {
-    $('body').css("background-color", backgrounds[theme-1]);
+function updateColor(element, color) {
+    $(element).css('color', color);
 }
 
+function updateThemeBgColor(theme) {
+    updateBgColor('body', backgrounds[theme-1]);
+}
+
+function updateBgColor (element, color) {
+    $(element).css('background-color', color);
+}
+
+function updateHoverBg(element, notHovering, hovering) {
+    $(element).hover(
+        function() {
+            updateBgColor(this, hovering);
+        },
+
+        function() {
+            updateBgColor(this, notHovering);
+        }
+    );
+}
+
+function updateHoverText(element, notHovering, hovering) {
+    $(element).hover(
+        function() {
+            updateColor(this, hovering);
+        },
+
+        function() {
+            updateColor(this, notHovering);
+        }
+    );
+}
 
 function updateTextColor(theme) {
     var color;
-    var updateWithHover = ['.navbar-brand', '.navbar-default .navbar-nav>li>a',
-                         '.fa-facebook-square', '.fa-github', '.fa-linkedin-square'];
+    var index = theme -1;
+    var updateWithHover = ['.navbar-brand', '.fa-facebook-square', '.fa-github',
+                           '.fa-linkedin-square', '.dropdown-menu>li>a', '.navbar-nav>li>a'];
     var updateNoHover = ['#start-message', '#save-message-div'];
 
     for (var i = 0; i < updateWithHover.length; i++) {
-        $(updateWithHover[i]).css('color', nonHovers[theme-1]);
-
-        $(updateWithHover[i]).hover(
-            function() {
-                $(this).css('color', hovers[theme-1]);
-            },
-
-            function() {
-                $(this).css('color', nonHovers[theme-1]);
-            }
-        );
+        updateColor(updateWithHover[i], nonHovers[index]);
+        updateHoverText(updateWithHover[i], nonHovers[index], hovers[index]);
     }
 
     for (var j = 0; j < updateNoHover.length; j++) {
-        $(updateNoHover[j]).css('color', nonHovers[theme-1]);
+        updateColor(updateNoHover[j], nonHovers[index]);
     }
+}
+
+function updateDropdowns(theme) {
+    var index = theme - 1;
+    var background = backgrounds[index];
+    var navItems = '.navbar-nav>li>a';
+    var toggler = navItems + '.dropdown-toggle';
+
+    // set background for all pieces of dropdown menu
+    updateBgColor('.dropdown', background);
+    updateBgColor('.dropdown-menu', background);
+    updateBgColor('.dropdown-menu>li>a', background);
+    updateBgColor(navItems, background);
+
+    // set the colors for dropdown toggle, both focused and unfocused
+    $(toggler).focus(
+        function() {
+            updateBgColor(this, hovers[index]);
+            updateColor(this, nonHovers[index]);
+            updateHoverText(this, nonHovers[index], nonHovers[index]);
+        }
+    );
+
+    $(toggler).blur(
+        function() {
+            updateBgColor(this, background);
+            updateHoverText(this, nonHovers[index], hovers[index]);
+        }
+    );
 }

@@ -637,7 +637,7 @@ function flash() {
 
     $('body').css('background-color', flashColor);
     setTimeout(function() {
-        updateBgColor(currentTheme);
+        updateThemeBgColor(currentTheme);
     }, 400);
 }
 

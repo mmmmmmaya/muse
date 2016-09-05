@@ -29,7 +29,7 @@ describe('Tests theme getters and setters functionality', function() {
     });
 
     it('should update the bgColor to match that of a given theme', function() {
-        updateBgColor(2);
+        updateThemeBgColor(2);
 
         // bg color is stored as rgb in css, but my colors are stored as
         // hex codes. I'll just hard code this color value as rgb instead
