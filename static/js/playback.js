@@ -20,7 +20,7 @@ function playbackRecording(content) {
 }
 
 function logRecordingView(recordingId) {
-    $.get("http://ipinfo.io", function(response) {
+    $.get("https://ipinfo.io", function(response) {
 
         var ipAddress = response.ip;
         var data = {
