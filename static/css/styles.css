@@ -1,4 +1,5 @@
 html, body {
+    color: #707070;
     margin: 0;
     padding: 0;
 }
@@ -44,6 +45,11 @@ svg {
     display: none;
 }
 
+.navbar {
+  background: transparent;
+  border: none;
+}
+
 .node circle {
     stroke-width: 1.5px;
 }
@@ -59,7 +65,6 @@ svg {
 }
 
 #loading-screen-div {
-    color: #707070;
     height: 100%;
     left: 0px;
     top: 0px;
@@ -68,14 +73,5 @@ svg {
 }
 
 #score {
-    color: #707070;
     font-size: 200%;
-}
-
-#start-message {
-    color: #707070;
-}
-
-#save-message-div {
-    color: #707070;
 }

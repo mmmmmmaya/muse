@@ -74,7 +74,7 @@ function hideStartMessage() {
 
 function showHelp() {
     $('#helpModal').modal('toggle');
-    removeStartMessage();
+    hideStartMessage();
 }
 
 function onKeyPress(evt) {
