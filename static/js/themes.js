@@ -29,6 +29,12 @@ function getThemeBg(theme) {
     return backgrounds[theme-1];
 }
 
+function updateThemeColors(theme) {
+    updateThemeBgColor(theme);
+    updateTextColor(theme);
+    updateDropdowns(theme);
+}
+
 function nextTheme() {
     if (currentTheme === 5) {
         currentTheme = 1;
@@ -36,9 +42,7 @@ function nextTheme() {
         currentTheme++;
     }
 
-    updateThemeBgColor(currentTheme);
-    updateTextColor(currentTheme);
-    updateDropdowns(currentTheme);
+    updateThemeColors(currentTheme);
 }
 
 function updateColor(element, color) {
@@ -101,10 +105,8 @@ function updateDropdowns(theme) {
     var toggler = navItems + '.dropdown-toggle';
 
     // set background for all pieces of dropdown menu
-    updateBgColor('.dropdown', background);
-    updateBgColor('.dropdown-menu', background);
-    updateBgColor('.dropdown-menu>li>a', background);
-    updateBgColor(navItems, background);
+    updateBgColor('.dropdown-menu', 'transparent');
+    updateBgColor('.dropdown-menu>li>a', 'transparent');
 
     // set the colors for dropdown toggle, both focused and unfocused
     $(toggler).focus(
@@ -117,7 +119,7 @@ function updateDropdowns(theme) {
 
     $(toggler).blur(
         function() {
-            updateBgColor(this, background);
+            updateBgColor(this, 'transparent');
             updateHoverText(this, nonHovers[index], hovers[index]);
         }
     );
