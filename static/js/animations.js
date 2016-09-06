@@ -894,7 +894,7 @@ function drawLights(i, size, uniqueClass) {
     var x = size * (i+1);
     var fill = chooseRandomColor();
 
-    var light = makeCircle(size/2, x, yOffset, fill)
+    var light = makeCircle(size/2, x, 0, fill)
                     .attr('class', uniqueClass);
 
     d3Delete(uniqueClass, 2500);
