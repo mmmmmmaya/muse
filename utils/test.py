@@ -3,12 +3,12 @@ import time
 
 from Crypto.Hash import SHA256
 
-from model import db, KeyPress, Recording, Theme, User
+from model import db, KeyPress, Recording, Theme, User, View
 from utils.authentication import hash_password
 
 
 def populate_test_db_keypresses():
-    """Add recording data in fake db for testing."""
+    """Add keypress data in fake db for testing."""
 
     for num in range(6):
         time_to_next_key = random.randint(0, 5000)
@@ -23,7 +23,7 @@ def populate_test_db_keypresses():
 
 
 def populate_test_db_recordings():
-    """Add keypress data in fake db for testing."""
+    """Add recording data in fake db for testing."""
 
     fake_recording = Recording(user_id=1)
     fake_recording2 = Recording(user_id=2,
@@ -58,4 +58,13 @@ def populate_test_db_users():
 
     db.session.add(fake_user)
     db.session.add(fake_user2)
+    db.session.commit()
+
+
+def populate_test_db_views(recording_id=1):
+    """Add view data in fake db for testing."""
+
+    fake_view = View(recording_id=recording_id)
+
+    db.session.add(fake_view)
     db.session.commit()

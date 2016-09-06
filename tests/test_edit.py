@@ -1,12 +1,13 @@
 import unittest
 
-from model import connect_to_db, db, Recording
+from model import connect_to_db, db, Recording, View
 from server import app
 from utils.playback import get_recording_by_id
 from utils.edit import (delete_recording_by_id, delete_keypresses_by_recording_id,
                         rename_recording, toggle_recording_visibility)
 from utils.test import (populate_test_db_keypresses, populate_test_db_recordings,
-                        populate_test_db_themes, populate_test_db_users)
+                        populate_test_db_themes, populate_test_db_users,
+                        populate_test_db_views)
 
 
 class TestDeleteRecordingById(unittest.TestCase):
@@ -23,15 +24,20 @@ class TestDeleteRecordingById(unittest.TestCase):
 
         populate_test_db_users()
         populate_test_db_recordings()
+        populate_test_db_views()
 
     def test_delete_existing_recording(self):
         """Delete an existing recording from the db."""
 
+        num_views_before = len(View.query.all())
         delete_recording_by_id(1)
         recording = get_recording_by_id(1)
+        num_views_after = len(View.query.all())
 
         self.assertEquals(recording, None)
         self.assertNotIsInstance(recording, Recording)
+        self.assertEquals(num_views_before, 1)
+        self.assertEquals(num_views_after, 0)
 
     def test_delete_non_existing_recording(self):
         """Delete a recording from the db that doesn't exist."""

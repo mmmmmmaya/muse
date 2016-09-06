@@ -19,6 +19,7 @@ def add_view_to_db(recording_id, ip_address):
 
 def get_arrow_list():
     """Create a JSON string containing keypress information."""
+
     arrow_list = []
     arrows = Konami.query.order_by(Konami.id).all()
 

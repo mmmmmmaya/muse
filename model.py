@@ -98,7 +98,7 @@ class View(db.Model):
     def __repr__(self):
         """String representation of View."""
 
-        return '<View id: %s>' % (self.id)
+        return '<View id: %s, recording_id: %s>' % (self.id, self.recording_id)
 
 
 class Konami(db.Model):
@@ -117,7 +117,7 @@ def connect_to_db(app, uri=None):
 
     # Configure to use our PstgreSQL database
     app.config['SQLALCHEMY_DATABASE_URI'] = uri or 'postgresql:///muse'
-    app.config['SQLALCHEMY_ECHO'] = True
+    # app.config['SQLALCHEMY_ECHO'] = True
 
     db.app = app
     db.init_app(app)

@@ -5,9 +5,11 @@ from flask import session
 from model import connect_to_db, db, Recording, View
 from server import app
 from utils.authentication import add_session_info
-from utils.playback import (add_view_to_db, get_recording_by_id, make_keypress_list,
-                            recording_belongs_to_user, recording_is_public)
-from utils.test import (populate_test_db_recordings, populate_test_db_users)
+from utils.playback import (add_view_to_db, get_popular_recordings, get_recording_by_id,
+                            make_keypress_list, recording_belongs_to_user,
+                            recording_is_public)
+from utils.test import (populate_test_db_recordings, populate_test_db_users,
+                        populate_test_db_views)
 
 
 class TestAddViewToDb(unittest.TestCase):
@@ -57,6 +59,72 @@ class TestAddViewToDb(unittest.TestCase):
         self.assertEquals(ip_address, db_view.ip_address)
         self.assertEquals(db_view.ip_address, None)
         self.assertEquals(1, len(all_views))
+
+    def tearDown(self):
+        """Clear db for next test."""
+
+        db.session.close()
+        db.drop_all()
+
+
+class TestGetPopularRecordings(unittest.TestCase):
+    """Test that recordings are returned in the proper order."""
+
+    def setUp(self):
+        """Set up app and db."""
+
+        app.config['TESTING'] = True
+
+        # setup test db
+        connect_to_db(app, 'postgresql:///testdb')
+        db.create_all()
+
+        populate_test_db_users()
+
+    def test_no_recordings(self):
+        """Test what is returned when no recordings in db."""
+
+        recordings = get_popular_recordings()
+
+        self.assertEquals(len(recordings), 0)
+        self.assertIsInstance(recordings, list)
+
+    def test_mixed_public_private_recordings(self):
+        """Test that only public recordings returned when both exist in db."""
+
+        for i in range(5):
+            populate_test_db_recordings()
+            populate_test_db_views(i + 1)  # even numbered recordings are private
+
+        recordings = get_popular_recordings()
+
+        self.assertEquals(len(recordings), 3)  # views only exist on recordings 1-5
+        for recording in recordings:           # but 2 and 4 are private
+            self.assertEquals(recording.public, True)
+
+    def test_public_ordered(self):
+        """Test that a max of 10 recordings are returned in desc order by number of views."""
+
+        for i in range(30):
+            populate_test_db_recordings()
+
+            for j in range(i):
+                populate_test_db_views(recording_id=i + 1)
+
+        recordings = get_popular_recordings()
+        prev_num_views = None
+
+        for recording in recordings:
+            num_views = len(recording.views)
+
+            if prev_num_views:
+                self.assertTrue(prev_num_views > num_views)
+
+            prev_num_views = num_views
+
+            self.assertEquals(recording.public, True)
+
+        self.assertEquals(len(recordings), 10)
 
     def tearDown(self):
         """Clear db for next test."""
