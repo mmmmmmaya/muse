@@ -1,7 +1,7 @@
 from flask import redirect
 
 from model import db, User
-from utils.authentication import add_session_info, hash_password
+from utils.authentication import add_session_info, hash_password, password_matches
 from utils.general import ALERT_COLORS, flash_message, get_user_by_email
 
 
@@ -71,11 +71,11 @@ def update_password(user, form):
 
     old_password = form.get('old-password', '')
 
-    if hash_password(old_password) == user.password:
+    if password_matches(user, old_password):
         user.password = hash_password(form['password'])
         db.session.commit()
 
-        flash_message('Account successfully updated.',
+        flash_message('Password successfully updated.',
                       ALERT_COLORS['green'])
         response = redirect('/account')
 
@@ -90,20 +90,20 @@ def update_password(user, form):
 def update_user_details(user, form):
     """Update name, email, etc on user account."""
 
-    user.name = form.get('name', user.name)
-    user.email = form.get('email', user.email)
-    user.zipcode = form.get('zipcode', user.zipcode)
-    user.country = form.get('country', user.country)
+    if get_user_by_email(form.get('email')):
+        flash_message('An account with that email address already exists.',
+                      ALERT_COLORS['red'])
 
-    try:
-        db.session.commit()
+    else:
+        user.name = form.get('name', user.name)
+        user.email = form.get('email', user.email)
+        user.zipcode = form.get('zipcode', user.zipcode)
+        user.country = form.get('country', user.country)
 
         flash_message('Account successfully updated.',
                       ALERT_COLORS['green'])
 
-    except:
-        flash_message('An account with that email address already exists.',
-                      ALERT_COLORS['red'])
+        db.session.commit()
 
     return redirect('/account')
 

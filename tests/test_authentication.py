@@ -4,7 +4,7 @@ from flask import session
 
 from model import connect_to_db, db, User
 from server import app
-from utils.authentication import (add_session_info, attempt_login,
+from utils.authentication import (add_session_info, attempt_login, password_matches,
                                   remove_session_info, verify_password)
 from utils.test import populate_test_db_users
 
@@ -94,6 +94,42 @@ class TestAttemptLogin(unittest.TestCase):
             self.assertEquals(302, response.status_code)
             self.assertEquals('/register', response.location)
             self.assertNotIn('user', session)
+
+    def tearDown(self):
+        """Clear db for next test."""
+
+        db.session.close()
+        db.drop_all()
+
+
+class TestPasswordMatches(unittest.TestCase):
+    """Test if an entered password matches the stored one."""
+
+    def setUp(self):
+        """Set up app, session key, and db."""
+
+        app.config['TESTING'] = True
+
+        # setup test db
+        connect_to_db(app, 'postgresql:///testdb')
+        db.create_all()
+        populate_test_db_users()
+
+    def test_passwords_match(self):
+        """Test that this check passes when entered password is same as stored."""
+
+        user = User.query.get(1)
+        match = password_matches(user, 'pass')
+
+        self.assertEquals(match, True)
+
+    def test_passwords_dont_match(self):
+        """Test that this check fails when entered password is different from stored."""
+
+        user = User.query.get(1)
+        match = password_matches(user, 'wrong_pass')
+
+        self.assertEquals(match, False)
 
     def tearDown(self):
         """Clear db for next test."""

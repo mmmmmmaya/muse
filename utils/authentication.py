@@ -48,6 +48,14 @@ def hash_password(password):
     return hashed_password.hexdigest()
 
 
+def password_matches(user, password):
+    """Determine whether two passwords match."""
+
+    hashed_password = hash_password(password)
+
+    return hashed_password == user.password
+
+
 def remove_session_info():
     """Remove user info from session."""
 
@@ -58,9 +66,7 @@ def remove_session_info():
 def verify_password(user, password):
     """Ensure user-entered password matches password in db."""
 
-    hashed_password = hash_password(password)
-
-    if user.password == hashed_password:
+    if password_matches(user, password):
         add_session_info(user)
         flash_message('You were successfully logged in.', ALERT_COLORS['green'])
         response = redirect('/')

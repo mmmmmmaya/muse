@@ -188,7 +188,7 @@ def logged_in():
                     'message': 'You are logged in.'}
     else:
         response = {'status': 'failure',
-                    'message': 'You need to log in before recording.'}
+                    'message': 'You need to log in.'}
 
     return jsonify(response)
 

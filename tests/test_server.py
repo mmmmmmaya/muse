@@ -4,9 +4,11 @@ import unittest
 from model import connect_to_db, db, Recording, User
 from server import app
 from utils.test import (populate_test_db_keypresses,
+                        populate_test_db_konami,
                         populate_test_db_recordings,
                         populate_test_db_themes,
-                        populate_test_db_users)
+                        populate_test_db_users,
+                        populate_test_db_views)
 
 
 class TestIndex(unittest.TestCase):
@@ -28,6 +30,52 @@ class TestIndex(unittest.TestCase):
         self.assertIn('Play with Muse!', response.data)
 
 
+class TestAccount(unittest.TestCase):
+    """Test /account view."""
+
+    def setUp(self):
+        """Set up app and fake client."""
+
+        app.config['TESTING'] = True
+        app.config['SECRET_KEY'] = 'super secret'
+        self.client = app.test_client()
+
+        connect_to_db(app, 'postgresql:///testdb')
+        db.create_all()
+
+        populate_test_db_users()
+
+    def test_account_not_logged_in(self):
+        """Test /account when user is not logged in."""
+
+        response = self.client.get('/account',
+                                   follow_redirects=True)
+
+        self.assertIn('Please log in to view your account.', response.data)
+        self.assertNotIn('/update_account', response.data)
+        self.assertNotIn("'s Account", response.data)
+
+    def test_account_logged_in(self):
+        """Test /account when user is logged in."""
+
+        self.client.post('/login',
+                         data={"email": "angie@fake.com",
+                               "password": "pass"})
+
+        response = self.client.get('/account',
+                                   follow_redirects=True)
+
+        self.assertNotIn('Please log in to view your account.', response.data)
+        self.assertIn('/update_account', response.data)
+        self.assertIn("Angie's Account", response.data)
+
+    def tearDown(self):
+        """Reset db for next test."""
+
+        db.session.close()
+        db.drop_all()
+
+
 class TestDeleteRecording(unittest.TestCase):
     """Test removing a recording via the web."""
 
@@ -47,22 +95,21 @@ class TestDeleteRecording(unittest.TestCase):
     def test_delete_recording(self):
         """Test removing a single recording."""
 
-        with app.test_request_context():
-            num_before = len(Recording.query.all())
+        num_before = len(Recording.query.all())
 
-            self.client.post('/login',
-                             data={"email": "angie@fake.com",
-                                   "password": "pass"})
+        self.client.post('/login',
+                         data={"email": "angie@fake.com",
+                               "password": "pass"})
 
-            response = self.client.post('/delete',
-                                        data={"recording_id": "1"},
-                                        follow_redirects=True)
+        response = self.client.post('/delete',
+                                    data={"recording_id": "1"},
+                                    follow_redirects=True)
 
-            num_after = len(Recording.query.all())
+        num_after = len(Recording.query.all())
 
-            self.assertEquals(200, response.status_code)
-            self.assertIn('success', response.data)
-            self.assertEquals(num_before, num_after + 1)
+        self.assertEquals(200, response.status_code)
+        self.assertIn('success', response.data)
+        self.assertEquals(num_before, num_after + 1)
 
     def test_delete_recording_not_logged_in(self):
         """Test deleting when you aren't logged in."""
@@ -88,6 +135,44 @@ class TestDeleteRecording(unittest.TestCase):
                                     follow_redirects=True)
 
         self.assertIn('malformed request', response.data)
+
+    def tearDown(self):
+        """Reset db for next test."""
+
+        db.session.close()
+        db.drop_all()
+
+
+class TestFetchKonami(unittest.TestCase):
+    """Test pulling the konami steps from db."""
+
+    def setUp(self):
+        """Set up app, db, and fake client."""
+
+        app.config['TESTING'] = True
+        self.client = app.test_client()
+
+        connect_to_db(app, 'postgresql:///testdb')
+        db.create_all()
+
+    def test_fetch_populated(self):
+        """Normal case (konami in db)."""
+
+        populate_test_db_konami()
+        response = self.client.get('/fetch_konami',
+                                   follow_redirects=True)
+
+        self.assertIn('success', response.data)
+        self.assertIn('up', response.data)
+
+    def test_fetch_unpopulated(self):
+        """Test what happens if this accidentally gets deleted from db somehow."""
+
+        response = self.client.get('/fetch_konami',
+                                   follow_redirects=True)
+
+        self.assertIn('failure', response.data)
+        self.assertNotIn('up', response.data)
 
     def tearDown(self):
         """Reset db for next test."""
@@ -218,6 +303,51 @@ class TestLogin(unittest.TestCase):
         self.assertIn('login-form', response.data)
 
 
+class TestLoggedIn(unittest.TestCase):
+    """Test if the front end can tell when a user is logged in."""
+
+    def setUp(self):
+        """Set up app, db, and fake client."""
+
+        app.config['TESTING'] = True
+        self.client = app.test_client()
+
+        connect_to_db(app, 'postgresql:///testdb')
+        db.create_all()
+
+        populate_test_db_users()
+
+    def test_logged_in(self):
+        """Test user logged in."""
+
+        self.client.post('/login',
+                         data={"email": "angie@fake.com",
+                               "password": "pass"})
+
+        response = self.client.get('/logged_in',
+                                   follow_redirects=True)
+
+        self.assertIn('success', response.data)
+        self.assertIn('You are logged in.', response.data)
+        self.assertNotIn('failure', response.data)
+
+    def test_not_logged_in(self):
+        """Test user not logged in."""
+
+        response = self.client.get('/logged_in',
+                                   follow_redirects=True)
+
+        self.assertNotIn('success', response.data)
+        self.assertIn('You need to log in.', response.data)
+        self.assertIn('failure', response.data)
+
+    def tearDown(self):
+        """Reset db for next test."""
+
+        db.session.close()
+        db.drop_all()
+
+
 class TestLogout(unittest.TestCase):
     """Test logout endpoint."""
 
@@ -301,6 +431,51 @@ class TestLogView(unittest.TestCase):
         response = self.client.post('/log_view', data={})
 
         self.assertIn('malformed request', response.data)
+
+    def tearDown(self):
+        """Reset db for next test."""
+
+        db.session.close()
+        db.drop_all()
+
+
+class TestPopular(unittest.TestCase):
+    """Test /popular view."""
+
+    def setUp(self):
+        """Set up app, session key, and fake client."""
+
+        app.config['TESTING'] = True
+        self.client = app.test_client()
+
+        connect_to_db(app, 'postgresql:///testdb')
+        db.create_all()
+
+    def test_popular_with_views(self):
+        """Test that /popular loads."""
+
+        populate_test_db_themes()
+        populate_test_db_users()
+        populate_test_db_recordings()
+        populate_test_db_keypresses()
+        populate_test_db_views()
+
+        response = self.client.get('/popular')
+
+        self.assertIn('Popular Recordings', response.data)
+        self.assertNotIn('No recordings have been viewed yet.', response.data)
+        self.assertIn('Play Count', response.data)
+        self.assertIn('<td>', response.data)
+
+    def test_popular_no_views(self):
+        """Test what happens if no recordings viewed yet."""
+
+        response = self.client.get('/popular')
+
+        self.assertIn('Popular Recordings', response.data)
+        self.assertIn('No recordings have been viewed yet.', response.data)
+        self.assertNotIn('Play Count', response.data)
+        self.assertNotIn('<td>', response.data)
 
     def tearDown(self):
         """Reset db for next test."""
@@ -645,6 +820,100 @@ class TestTogglePublic(unittest.TestCase):
         db.session.close()
         db.drop_all()
 
+
+class TestUpdateAccount(unittest.TestCase):
+    """Change details in a user's account."""
+
+    def setUp(self):
+        """Set up app and fake client."""
+
+        app.config['TESTING'] = True
+        self.client = app.test_client()
+
+        connect_to_db(app, 'postgresql:///testdb')
+        db.create_all()
+
+        populate_test_db_users()
+
+    def test_not_logged_in(self):
+        """Test what happens when unauthed user tries to change account details."""
+
+        response = self.client.post('/update_account',
+                                    data={"password": "newpassword"},
+                                    follow_redirects=True)
+
+        self.assertIn('You must be logged in to update your account information.', response.data)
+        self.assertNotIn('/update_account', response.data)
+
+    def test_change_password_wrong_old(self):
+        """Test password change when old password entered in wrong."""
+
+        self.client.post('/login',
+                         data={"email": "angie@fake.com",
+                               "password": "pass"})
+
+        response = self.client.post('/update_account',
+                                    data={"old-password": "wrongpass",
+                                          "password": "newpassword"},
+                                    follow_redirects=True)
+
+        self.assertNotIn('You must be logged in to update your account information.', response.data)
+        self.assertIn('/update_account', response.data)
+        self.assertIn('Incorrect current password.', response.data)
+
+    def test_change_password_correct_old(self):
+        """Test password change when old password entered in correct."""
+
+        self.client.post('/login',
+                         data={"email": "angie@fake.com",
+                               "password": "pass"})
+
+        response = self.client.post('/update_account',
+                                    data={"old-password": "pass",
+                                          "password": "newpassword"},
+                                    follow_redirects=True)
+
+        self.assertNotIn('You must be logged in to update your account information.', response.data)
+        self.assertIn('/update_account', response.data)
+        self.assertIn('Password successfully updated.', response.data)
+
+    def test_change_email(self):
+        """Test email change."""
+
+        self.client.post('/login',
+                         data={"email": "angie@fake.com",
+                               "password": "pass"})
+
+        response = self.client.post('/update_account',
+                                    data={"email": "nobodyhasthis@email.com"},
+                                    follow_redirects=True)
+
+        self.assertIn('Account successfully updated.', response.data)
+        self.assertNotIn('You must be logged in to update your account information.', response.data)
+        self.assertIn('/update_account', response.data)
+        self.assertIn('nobodyhasthis@email.com', response.data)
+
+    def test_change_email_conflict(self):
+        """Test email change when an existing account has new email."""
+
+        self.client.post('/login',
+                         data={"email": "angie@fake.com",
+                               "password": "pass"})
+
+        response = self.client.post('/update_account',
+                                    data={"email": "angie2@fake.com"},
+                                    follow_redirects=True)
+
+        self.assertIn('An account with that email address already exists.', response.data)
+        self.assertNotIn('You must be logged in to update your account information.', response.data)
+        self.assertIn('/update_account', response.data)
+        self.assertNotIn('angie2@fake.com', response.data)
+
+    def tearDown(self):
+        """Reset db for next test."""
+
+        db.session.close()
+        db.drop_all()
 
 if __name__ == '__main__':
     unittest.main()

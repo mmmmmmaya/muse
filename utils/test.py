@@ -3,7 +3,7 @@ import time
 
 from Crypto.Hash import SHA256
 
-from model import db, KeyPress, Recording, Theme, User, View
+from model import db, KeyPress, Konami, Recording, Theme, User, View
 from utils.authentication import hash_password
 
 
@@ -18,6 +18,20 @@ def populate_test_db_keypresses():
                                  theme=1)
 
         db.session.add(fake_keypress)
+
+    db.session.commit()
+
+
+def populate_test_db_konami():
+    """Add a few fake steps to Konami table for testing."""
+
+    fake_konami = Konami(direction='up', time_to_next_arrow=500)
+    fake_konami_2 = Konami(direction='down', time_to_next_arrow=750)
+    fake_konami_3 = Konami(direction='left', time_to_next_arrow=None)
+
+    db.session.add(fake_konami)
+    db.session.add(fake_konami_2)
+    db.session.add(fake_konami_3)
 
     db.session.commit()
 
