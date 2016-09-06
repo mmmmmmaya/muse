@@ -5,60 +5,74 @@
 {% endblock %}
 
 {% block content %}
-    <h3>Update Account Details</h3>
-    <form method='POST' action='/update_account' id='update-account-form'>
-        <div class='form-group'>
-            <label for='field-name'>Name</label>
-                <input type='text' class='form-control' id='field-name' name='name' value='{{ user.name }}' />
+    <div class='row'>
+        <h3 class='col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 col-lg-4 col-lg-offset-4'>Update Account Details</h3>
+    </div>
+
+    <div class='row'>
+        <div class='col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 col-lg-4 col-lg-offset-4'>
+            <form method='POST' action='/update_account' id='update-account-form'>
+                <div class='form-group'>
+                    <label for='field-name'>Name</label>
+                        <input type='text' class='form-control' id='field-name' name='name' value='{{ user.name }}' />
+                </div>
+
+                <div class='form-group'>
+                    <label for='field-email'>Email Address</label>
+                        <input type='email' class='form-control' id='field-email' name='email' value='{{ user.email }}' />
+                </div>
+
+                <div class='form-group'>
+                    <label for='field-zipcode'>Postal Code</label>
+                        <input type='text' class='form-control' id='field-zipcode' name='zipcode' value='{{ user.zipcode }}'/>
+                </div>
+
+                <div class='form-group'>
+                    <label for='field-country'>Country</label>
+                        <select class='form-control' id="field-country" name='country' value='countries.get{{ user.country }}'>
+                            {% for country in countries %}
+                                <option value={{ country.code }}
+                                    {% if user.country == country.code %}
+                                        selected
+                                    {% endif %}
+                                >{{ country.name }}</option>
+                            {% endfor %}
+                        </select>
+                </div>
+
+                <input type='submit' class='btn btn-default' />
+            </form>
+            <br />
         </div>
+    </div>
 
-        <div class='form-group'>
-            <label for='field-email'>Email Address</label>
-                <input type='email' class='form-control' id='field-email' name='email' value='{{ user.email }}' />
+    <div class='row'>
+        <h3 class='col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 col-lg-4 col-lg-offset-4'>Update Password</h3>
+    </div>
+
+    <div class='row'>
+        <div class='col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 col-lg-4 col-lg-offset-4'>
+            <form method='POST' action='/update_account' id='update-password-form'>
+
+                <div class='form-group'>
+                    <label for='field-old-password'>Current Password</label>
+                        <input type='password' class='form-control' id='field-old-password' name='old-password' />
+                </div>
+
+                <div class='form-group'>
+                    <label for='field-password'>Choose Password</label>
+                        <input type='password' class='form-control' id='field-password' name='password' />
+                </div>
+
+                <div class='form-group'>
+                    <label for='field-confirm-password'>Confirm Password</label>
+                        <input type='password' class='form-control' id='field-confirm-password' />
+                </div>
+
+                <input type='submit' class='btn btn-default' value='Update'>
+            </form>
         </div>
-
-        <div class='form-group'>
-            <label for='field-zipcode'>Postal Code</label>
-                <input type='text' class='form-control' id='field-zipcode' name='zipcode' value='{{ user.zipcode }}'/>
-        </div>
-
-        <div class='form-group'>
-            <label for='field-country'>Country</label>
-                <select class='form-control' id="field-country" name='country' value='countries.get{{ user.country }}'>
-                    {% for country in countries %}
-                        <option value={{ country.code }}
-                            {% if user.country == country.code %}
-                                selected
-                            {% endif %}
-                        >{{ country.name }}</option>
-                    {% endfor %}
-                </select>
-        </div>
-
-        <input type='submit' class='btn btn-default' />
-    </form>
-    <br />
-
-    <h3>Update Password</h3>
-    <form method='POST' action='/update_account' id='update-password-form'>
-
-        <div class='form-group'>
-            <label for='field-old-password'>Current Password</label>
-                <input type='password' class='form-control' id='field-old-password' name='old-password' />
-        </div>
-
-        <div class='form-group'>
-            <label for='field-password'>Choose Password</label>
-                <input type='password' class='form-control' id='field-password' name='password' />
-        </div>
-
-        <div class='form-group'>
-            <label for='field-confirm-password'>Confirm Password</label>
-                <input type='password' class='form-control' id='field-confirm-password' />
-        </div>
-
-        <input type='submit' class='btn btn-default' value='Update'>
-    </form>
+    </div>
 {% endblock %}
 
 {% block more_scripts %}
