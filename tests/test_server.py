@@ -339,7 +339,7 @@ class TestProfile(unittest.TestCase):
 
         self.assertEquals(200, response.status_code)
         self.assertNotIn('Please log in to view your recordings.', response.data)
-        self.assertIn('s Profile', response.data)
+        self.assertIn('s Recordings', response.data)
 
     def test_recordings_not_logged_in(self):
         """Test recordings page displays when not logged in."""
