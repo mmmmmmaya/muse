@@ -82,6 +82,12 @@
     {% endif %}
 {% endblock %}
 
+{% block help %}
+    <li>
+        <a href='#'><i class="fa fa-2x fa-question" aria-hidden="true" data-toggle="modal" data-target="#helpModal"></i></a>
+    </li>
+{% endblock %}
+
 {% block more_scripts %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
     <script src='/static/js/svg.js'></script>

@@ -9,20 +9,24 @@
     <br />
 
     {% if popular_recordings %}
-        <table class='table'>
-            <tr>
-                <th>Recording Name</th>
-                <th>Author</th>
-                <th>Play Count</th>
-            </tr>
-            {% for recording in popular_recordings %}
-                <tr>
-                    <td><a href='/listen/{{ recording.id }}'>{{ recording.name }}</a></td>
-                    <td>{{ recording.user.name }}</td>
-                    <td>{{ recording.views|length }}</td>
-                </tr>
-            {% endfor %}
-        </table>
+        <div class='table-responsive'>
+            <table class='table table-hover'>
+                <thead>
+                    <tr>
+                        <th>Recording Name</th>
+                        <th>Author</th>
+                        <th>Play Count</th>
+                    </tr>
+                </thead>
+                {% for recording in popular_recordings %}
+                    <tr>
+                        <td><a href='/listen/{{ recording.id }}'>{{ recording.name }}</a></td>
+                        <td>{{ recording.user.name }}</td>
+                        <td>{{ recording.views|length }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     {% else %}
         No recordings have been viewed yet. <br />
         You can make a new recording on the <a href='/'>homepage</a>, or playback one of your creations from your <a href='/recordings'> recordings page</a>.
