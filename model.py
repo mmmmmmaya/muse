@@ -44,8 +44,10 @@ class Recording(db.Model):
 
     __tablename__ = 'recordings'
 
+    default_name = 'Untitled %s' % datetime.now()
+
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    name = db.Column(db.String(200), nullable=True, default='Untitled')
+    name = db.Column(db.String(200), nullable=True, default=default_name)
     public = db.Column(db.Boolean, nullable=False, default=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
