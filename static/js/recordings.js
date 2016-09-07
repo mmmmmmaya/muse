@@ -71,11 +71,12 @@ $('.delete').click(recordingDeleted);
 function updateButtonText(recordingId) {
     var toggleButton = getElementByClassAndId('.toggle-public', recordingId);
 
+    toggleButton.toggleClass('public');
+
     var isPublic = toggleButton.hasClass('public');
     var toggleButtonHTML = isPublic ? 'Make Private' : 'Make Public';
 
     toggleButton.html(toggleButtonHTML);
-    toggleButton.toggleClass('public');
 }
 
 function toggleRecordingPublic(evt) {

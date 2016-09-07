@@ -48,13 +48,11 @@
                 </td>
 
                 <td>
-                    <button type='button' class='btn btn-default toggle-public public' data-id={{ recording.id }}>
-                        {% if recording.public %}
-                            Make Private
-                        {% else %}
-                            Make Public
-                        {% endif %}
-                    </button>
+                    {% if recording.public %}
+                        <button type='button' class='btn btn-default toggle-public public' data-id={{ recording.id }}>Make Private</button>
+                    {% else %}
+                        <button type='button' class='btn btn-default toggle-public' data-id={{ recording.id }}>Make Public</button>
+                    {% endif %}
                 </td>
 
                 <td>
