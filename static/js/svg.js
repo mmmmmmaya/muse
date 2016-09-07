@@ -15,7 +15,7 @@ function resetSVGDims(evt) {
     var bottomNavHeight = $('#bottom-nav')[0]['clientHeight'];
 
     svgWidth = svgContainer[0][0]['clientWidth'];
-    svgHeight = svgContainer[0][0]['clientHeight'] - (bottomNavHeight);
+    svgHeight = svgContainer[0][0]['clientHeight'];
 }
 
 $(window).resize(resetSVGDims);
