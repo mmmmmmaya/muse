@@ -105,7 +105,7 @@ function preloadAudio() {
 
 
 function collectGarbage() {
-    var maxElements = 500;
+    var maxElements = 400;
     var svgLayers = $('#svg g');
 
     for (var i = 0; i < svgLayers.length; i++) {
