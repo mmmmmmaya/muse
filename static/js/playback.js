@@ -1,5 +1,7 @@
 'use strict';
 
+var recordingEnabled = false;
+
 function waitThenPress(keypress, waitTime) {
     setTimeout(function() {
         currentTheme = keypress.theme;

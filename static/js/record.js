@@ -4,6 +4,7 @@
 var appIsRecording = false;
 var recordingArray = [];
 var currentTheme = 1;
+var recordingEnabled = true;
 updateThemeBgColor(currentTheme);
 
 
@@ -80,19 +81,21 @@ function showHelp() {
 function onKeyPress(evt) {
     var keyPressed = evt.key.toLowerCase();
 
-    if (isLetter(keyPressed)) {
-        hideStartMessage();
-        actionApp(keyPressed);
+    if (recordingEnabled) {
+        if (isLetter(keyPressed)) {
+            hideStartMessage();
+            actionApp(keyPressed);
 
-        if (appIsRecording) {
-            updateSong(keyPressed);
+            if (appIsRecording) {
+                updateSong(keyPressed);
+            }
+        } else if (keyPressed === ' ') {
+            nextTheme();
+        } else if (keyPressed === '?') {
+            showHelp();
+        } else if (keyPressed === 'enter') {
+            toggleRecording();
         }
-    } else if (keyPressed === ' ') {
-        nextTheme();
-    } else if (keyPressed === '?') {
-        showHelp();
-    } else if (keyPressed === 'enter') {
-        toggleRecording();
     }
 }
 
