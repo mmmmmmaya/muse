@@ -25,15 +25,29 @@ svg {
     transform: translate(-50%, -50%);
 }
 
-#facebook:hover, .fa-facebook-square:hover {
+@media (max-width: 768px) {
+    .navbar-nav>li, .navbar-nav {
+      float: left !important;
+    }
+
+    .navbar-right {
+      float: right!important;
+    }
+
+    #popular {
+        margin: 0 0 0 15px;
+    }
+}
+
+.fa-facebook-square:hover, #facebook:hover {
     color: #3b5998;
 }
 
-#github:hover, .fa-github:hover {
+.fa-github:hover , #github:hover{
     color: #000000;
 }
 
-#linkedin:hover, .fa-linkedin-square:hover {
+.fa-linkedin-square:hover, #linkedin:hover {
     color: #1883bb;
 }
 
@@ -49,7 +63,6 @@ svg {
     background: #ffffff;
     border: none;
     width: 100%;
-
 }
 
 .node circle {

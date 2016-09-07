@@ -25,15 +25,16 @@
 <body>
     <nav class="navbar navbar-default navbar-fixed-top" id='top-nav'>
         <div class="container-fluid">
-            <div class="navbar-header">
+            <div class="navbar-header pull-left">
                 <a class="navbar-brand" href="/"><b>Muse</b></a>
-
-                <ul class="nav navbar-nav">
-                    <li>
-                      <a href="/popular">Popular</a>
-                    </li>
-                </ul>
             </div>
+
+            <ul class="nav navbar-nav">
+                <li>
+                  <a href="/popular" id='popular'>Popular</a>
+                </li>
+            </ul>
+
             <ul class="nav navbar-nav navbar-right">
                 {% if 'user' in session %}
                 <li class="dropdown">
