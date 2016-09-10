@@ -148,7 +148,7 @@ def listen(recording_id):
 def log_view():
     """Store information about recording views."""
     recording_id = request.form.get('recording_id')
-    ip_address = request.form.get('ip_address')
+    ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
 
     if recording_id:
         add_view_to_db(recording_id, ip_address)

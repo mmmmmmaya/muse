@@ -22,17 +22,11 @@ function playbackRecording(content) {
 }
 
 function logRecordingView(recordingId) {
-    $.get("http://ipinfo.io", function(response) {
+    var data = {
+        "recording_id": recordingId
+    };
 
-        var ipAddress = response.ip;
-        var data = {
-            "recording_id": recordingId,
-            "ip_address": ipAddress
-        };
-
-        $.post('/log_view', data);
-
-    }, "json");
+    $.post('/log_view', data);
 }
 
 function playbackPageLoaded(evt) {
