@@ -12,14 +12,12 @@
 
 {% block content %}
     {% if konami %}
-        <svg id='svg' />
-        <div class='center'>
-          <text id='score'></text>
-          <br />
-          <a href='/'>
-            <button class='btn btn-default hide' id='home-button'>Go Home</button>
-          </a>
-        </div>
+        <text id='score' class='h-center'></text>
+        <svg id='konami-svg' class='h-center' />
+
+        <a href='/'>
+          <button class='btn btn-default hide center' id='home-button'>Go Home</button>
+        </a>
     {% else %}
         <div id='loading-screen-div'>
           <div class='center'>
@@ -89,7 +87,7 @@
 {% endblock %}
 
 {% block more_scripts %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
+    <script src="https://d3js.org/d3.v4.js"></script>
     <script src='/static/js/svg.js'></script>
 
     {% if konami %}
