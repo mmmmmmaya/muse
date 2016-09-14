@@ -14,7 +14,7 @@ svg {
 }
 
 .arrow-scroll {
-    z-index: 1;
+    z-index: 10;
 }
 
 .center {
@@ -55,6 +55,13 @@ svg {
     color: red;
 }
 
+.h-center {
+    left: 50%;
+    margin: 0;
+    position: absolute;
+    transform: translateX(-50%);
+}
+
 .hide {
     display: none;
 }
@@ -83,6 +90,10 @@ svg {
     padding: 50px 0 70px;
 }
 
+#konami-svg {
+    width: 530px;
+}
+
 #loading-screen-div {
     height: 100%;
     left: 0px;
@@ -93,4 +104,6 @@ svg {
 
 #score {
     font-size: 200%;
+    position: absolute;
+    top: 15px;
 }
