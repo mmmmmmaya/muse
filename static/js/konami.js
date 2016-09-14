@@ -57,9 +57,7 @@ function konamiRedirect() {
 /** Functions to show reward **/
 function playKonamiPrize() {
     $('#home-button').addClass('hide');
-
-    playDDR();
-    playSong();
+    $.when(playSong()).done(playDDR);
 
     $('#home-button').removeClass('hide');
 }
