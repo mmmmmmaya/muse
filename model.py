@@ -115,7 +115,7 @@ class Konami(db.Model):
 def connect_to_db(app, uri=None):
     """Connect the database to our Flask app."""
 
-    # Configure to use our PstgreSQL database
+    # Configure to use our PostgreSQL database
     app.config['SQLALCHEMY_DATABASE_URI'] = uri or 'postgresql:///muse'
     # app.config['SQLALCHEMY_ECHO'] = True
 

@@ -17,6 +17,8 @@ from utils.record import add_keypress_to_db_session, add_recording_to_db, proces
 from utils.register import all_fields_filled, register_user, update_account_info
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+
 app.secret_key = os.environ['FLASK_APP_SECRET_KEY']
 JS_TESTING_MODE = False
 
