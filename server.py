@@ -382,13 +382,15 @@ def update_account():
 
     return response
 
+
+app.debug = os.environ.get('DEBUG', False)
+connect_to_db(app, os.environ.get('DATABASE_URL'))
+
 if __name__ == '__main__':
     # set up javascript testing
     import sys
     if sys.argv[-1] == "jasmine":
         JS_TESTING_MODE = True
 
-    app.debug = os.environ.get('DEBUG', False)
-    connect_to_db(app, os.environ.get('DATABASE_URL'))
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
