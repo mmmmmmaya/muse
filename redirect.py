@@ -4,7 +4,7 @@ app = Flask(__name__)
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def any(path):
-    new_path = 'https://muse.angieroscioli.com/%s' % path
+    new_path = 'http://muse.angieroscioli.com/%s' % path
     return redirect(new_path, code=301)
 
 if __name__ == '__main__':
